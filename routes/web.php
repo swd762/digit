@@ -23,4 +23,10 @@ use Illuminate\Support\Facades\Route;
 
 
 // Route * to vue router template
-Route::get('/{any}', 'HomeController@index')->where('any','.*');
+Route::get('/', function () {
+    return view('home');
+});
+
+Route::get('/{any}', function () {
+    return redirect('/');
+})->where('any','.*');
