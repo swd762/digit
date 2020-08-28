@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 // Pages
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Register from './pages/Register'
+import Dashboard from './pages/user/Dashboard'
 
 //Routes
 const routes = [
@@ -15,11 +17,27 @@ const routes = [
         }
     },
     {
+        path: '/register',
+        name: 'register',
+        component: Register,
+        meta: {
+            auth:false
+        }
+    },
+    {
         path: '/login',
         name: 'login',
         component: Login,
         meta: {
-            auth:false
+            auth: false
+        }
+    },
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: Dashboard,
+        meta: {
+            auth:true
         }
     }
 ]

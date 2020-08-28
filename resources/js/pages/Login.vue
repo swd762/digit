@@ -16,11 +16,11 @@
                         </Input>
                     </FormItem>
                     <FormItem>
-                        <Button type="primary" @click="handleSubmit('formInline')">Войти</Button>
+                        <Button type="primary" @click="login('formInline')">Войти</Button>
                     </FormItem>
                 </Form>
             </Card>
-        </div>
+       </div>
 
 </template>
 <style>
@@ -51,14 +51,35 @@ export default {
         }
     },
     methods: {
-        handleSubmit(name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    this.$Message.success('Успешно!');
-                } else {
-                    this.$Message.error('Ошибка!');
-                }
-            })
+
+        login(name) {
+            var redirect = this.$auth.redirect()
+            var app = this
+            // this.$refs[name].validate((valid) => {
+            //     if (valid) {
+            //         this.$Message.success('Успешно!');
+            //
+            //     } else {
+            //         this.$Message.error('Ошибка!');
+            //     }
+            // });
+            this.$auth.login({
+                params: {
+                    name: app.formInline.user,
+                    password: app.formInline.password
+                },
+                success: function() {
+                    // const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'admin.dashboard' : 'dashboard'
+
+                    this.$router.push({name: redirectTo})
+                },
+                error: function() {},
+                rememberMe: true,
+                fetchUser: true,
+                redirect: ''
+            });
+
+
         }
     }
 }

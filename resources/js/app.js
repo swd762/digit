@@ -1,12 +1,17 @@
 
 require('./bootstrap');
 
+import 'es6-promise/auto'
 import App from './App.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueAuth from '@websanova/vue-auth'
+import VueAxios from 'vue-axios'
 import router from './router';
+import auth from './auth'
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
+
 
 // Set Vue globally
 window.Vue = Vue
@@ -17,6 +22,11 @@ Vue.use(VueRouter)
 
 // Set ViewUI
 Vue.use(ViewUI)
+
+// Set Vue authentication
+Vue.use(VueAxios, axios)
+axios.defaults.baseURL = `/api`
+Vue.use(VueAuth, auth)
 
 // Load App
 Vue.component('app', App)

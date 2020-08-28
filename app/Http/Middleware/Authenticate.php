@@ -13,26 +13,26 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-//    protected function redirectTo($request)
+    protected function redirectTo($request)
+    {
+        if (! $request->expectsJson()) {
+            return route('login');
+        }
+    }
+//    public function handle($request, Closure $next, ...$guards)
 //    {
-//        if (! $request->expectsJson()) {
-//            return route('login');
+//        if ($this->authenticate($request, $guards) === 'authentication_error') {
+//            return response()->json(['error'=>'Unauthorized']);
+//        }
+//
+//        return $next($request);
+//    }
+//
+//    protected function authenticate($request, array $guards) {
+//        if (empty($guards)) {
+//            $guards = [null];
 //        }
 //    }
-    public function handle($request, Closure $next, ...$guards)
-    {
-        if ($this->authenticate($request, $guards) === 'authentication_error') {
-            return response()->json(['error'=>'Unauthorized']);
-        }
-
-        return $next($request);
-    }
-
-    protected function authenticate($request, array $guards) {
-        if (empty($guards)) {
-            $guards = [null];
-        }
-    }
 
 
 }
