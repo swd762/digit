@@ -1,32 +1,21 @@
 <template>
-    <div id="app">
-        <div class="heading">
-            <h1>Cruds</h1>
+    <div id="main">
+        <header id="header">
+            <h1>
+                <router-link :to="{name: 'home'}">
+                    Laravel Vue SPA
+                </router-link>
+            </h1>
+            <navigationMenu></navigationMenu>
+        </header>
+        <div id="content">
+            <router-view></router-view>
         </div>
-
-
     </div>
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            test: []
-        }
-    },
-    methods: {
-        async read() {
-            const { data } = await window.axios.get('api/dashboard');
-            data.forEach();
-        }
-    },
-    created() {
-        this.read();
-    }
-}
+
 </script>
 
-<style scoped>
 
-</style>

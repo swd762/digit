@@ -17,8 +17,17 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
+Route::prefix('auth')->group(function () {
+    Route::post('register', 'AuthController@register');
+    Route::post('login', 'AuthController@login');
+    Route::post('refresh', 'AuthController@refresh');
 
-Route::group(['prefix' => 'dashboard','namespace' =>'Dashboard', 'as' => 'dashboard'], function() {
-    Route::get('/', 'DashboardController@index');
+
+
 });
+
+
+//Route::group(['prefix' => 'dashboard','namespace' =>'Dashboard', 'as' => 'dashboard'], function() {
+//    Route::get('/', 'DashboardController@index');
+//});
 
