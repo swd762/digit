@@ -1,7 +1,6 @@
 <template>
 
-
-        <div style="background:#eee;padding: 20px;display: flex;justify-content: center">
+        <div style="padding: 20px;display: flex;justify-content: center">
             <Card :bordered="false" style="width: 375px">
                 <p slot="title" style="text-align:center">Авторизация</p>
                 <Form ref="formInline" :model="formInline" :rules="ruleInline" inline class="login-form">
@@ -69,11 +68,13 @@ export default {
                     password: app.formInline.password
                 },
                 success: function() {
-                    // const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'admin.dashboard' : 'dashboard'
+                     const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'admin.dashboard' : 'dashboard'
 
                     this.$router.push({name: redirectTo})
                 },
-                error: function() {},
+                error: function() {
+                    this.$router.push('/login').catch(()=>{})
+                },
                 rememberMe: true,
                 fetchUser: true,
                 redirect: ''
