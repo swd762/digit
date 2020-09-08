@@ -10,7 +10,7 @@ const config = {
     router: router,
     tokenDefaultName: 'digit-spa',
     tokenStore: ['localStorage'],
-    // rolesVar: 'role',
+    rolesKey: 'role',
     registerData: {url: 'auth/register', method: 'POST', redirect: '/login'},
     loginData: {url: 'auth/login', method: 'POST', redirect: '/', fetchUser: true},
     logoutData: {url: 'auth/logout', method: 'POST', redirect: '/', makeRequest: true},

@@ -1,25 +1,25 @@
 <template>
 
-        <div style="padding: 20px;display: flex;justify-content: center">
-            <Card :bordered="false" style="width: 375px">
-                <p slot="title" style="text-align:center">Авторизация</p>
-                <Form ref="formInline" :model="formInline" :rules="ruleInline" inline class="login-form">
-                    <FormItem prop="user">
-                        <Input type="text" v-model="formInline.user" placeholder="Логин">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
-                        </Input>
-                    </FormItem>
-                    <FormItem prop="password">
-                        <Input type="password" v-model="formInline.password" placeholder="Пароль">
-                            <Icon type="ios-lock-outline" slot="prepend"></Icon>
-                        </Input>
-                    </FormItem>
-                    <FormItem>
-                        <Button type="primary" @click="login('formInline')">Войти</Button>
-                    </FormItem>
-                </Form>
-            </Card>
-       </div>
+    <div style="padding: 20px;display: flex;justify-content: center">
+        <Card :bordered="false" style="width: 375px">
+            <p slot="title" style="text-align:center">Авторизация</p>
+            <Form ref="loginForm" :model="loginForm"  inline class="login-form" autocomplete="off">
+                <FormItem prop="user">
+                    <Input type="text" v-model="loginForm.user" placeholder="Логин">
+                        <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    </Input>
+                </FormItem>
+                <FormItem prop="password">
+                    <Input type="password" v-model="loginForm.password" placeholder="Пароль">
+                        <Icon type="ios-lock-outline" slot="prepend"></Icon>
+                    </Input>
+                </FormItem>
+                <FormItem>
+                    <Button type="primary" @click="login()">Войти</Button>
+                </FormItem>
+            </Form>
+        </Card>
+    </div>
 
 </template>
 <style>
@@ -32,56 +32,36 @@
 </style>
 <script>
 export default {
-    data () {
+    data() {
         return {
-            formInline: {
+            loginForm: {
                 user: '',
                 password: ''
-            },
-            ruleInline: {
-                user: [
-                    { required: true, message: 'Пожайлуста, введите логин.', trigger: 'blur' }
-                ],
-                password: [
-                    { required: true, message: 'Пожайлуста, введите пароль.', trigger: 'blur' },
-                    { type: 'string', min: 6, message: 'Минимальная длина пароля - 6 символов', trigger: 'blur' }
-                ]
             }
         }
     },
     methods: {
-
-        login(name) {
-            var redirect = this.$auth.redirect()
-            var app = this
-            // this.$refs[name].validate((valid) => {
-            //     if (valid) {
-            //         this.$Message.success('Успешно!');
-            //
-            //     } else {
-            //         this.$Message.error('Ошибка!');
-            //     }
-            // });
+        login() {
+            let app = this
+            let redirect = this.$auth.redirect()
             this.$auth.login({
-                params: {
-                    name: app.formInline.user,
-                    password: app.formInline.password
-                },
-                success: function() {
-                     const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 2 ? 'admin.dashboard' : 'dashboard'
-
-                    this.$router.push({name: redirectTo})
-                },
-                error: function() {
-                    this.$router.push('/login').catch(()=>{})
+                data: {
+                    name: app.loginForm.user,
+                    password: app.loginForm.password
                 },
                 rememberMe: true,
+                redirect: null,
                 fetchUser: true,
-                redirect: ''
-            });
+            }).then(()=>{
+                const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 'admin' ?
+                    'admin' : 'dashboard'
+                this.$router.push({name: redirectTo})
+            })
+            //     .catch(error => {
+            //     this.$Message.error('Ошибка авторизации');
+            // });
+        },
 
-
-        }
     }
 }
 </script>

@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/user/Dashboard'
+import AdminDashboard from './pages/admin/Dashboard'
 
 //Routes
 const routes = [
@@ -32,12 +33,26 @@ const routes = [
             auth: false
         }
     },
+    // User Dashboard
     {
         path: '/dashboard',
         name: 'dashboard',
         component: Dashboard,
         meta: {
-            auth:true
+            auth:true,
+        }
+    },
+    // Admin Dashboard
+    {
+        path:'/admin',
+        name:'admin',
+        component: AdminDashboard,
+        meta: {
+            auth: {
+                roles: 'admin',
+                redirect: {name:'login'},
+                forbiddenRedirect:'dashboard'
+            }
         }
     }
 ]

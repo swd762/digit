@@ -20,7 +20,7 @@
             <Header>
                 <Menu mode="horizontal" theme="dark">
                     <div class="layout-logo">
-                        DIGIT
+                        ЦИФРА
                     </div>
                     <div class="layout-nav">
                         <MenuItem v-if="!$auth.check()" v-for="(route, key) in routes.unlogged"
@@ -43,23 +43,21 @@
 <!--                                {{ route.name }}-->
 <!--                            </router-link>-->
 <!--                        </MenuItem>-->
-<!--                        <MenuItem v-if="$auth.check()" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">-->
-<!--                            <Icon type="ios-navigate"></Icon>-->
-<!--                            <router-link :to="{ name : route.path }" :key="key">-->
-<!--                                {{ route.name }}-->
-<!--                            </router-link>-->
-<!--                        </MenuItem>-->
+                        <MenuItem v-if="$auth.check()"  name="logout" @click.native="$auth.logout()">
+                            <Icon type="ios-navigate"></Icon>
+                                logout
+                        </MenuItem>
                     </div>
                 </Menu>
             </Header>
             <Content :style="{padding: '0 50px'}">
                 <Breadcrumb :style="{margin: '20px 0'}">
                     <BreadcrumbItem>Home</BreadcrumbItem>
-                    <BreadcrumbItem v-if="$auth.check(1)">
-                        <router-link :to="{ name : route.path }" :key="key">
-                            {{ route.name }}
-                        </router-link>
-                    </BreadcrumbItem>
+<!--                    <BreadcrumbItem v-if="$auth.check()">-->
+<!--                        <router-link :to="{ name : routes.unlogged.path }" :key="key">-->
+<!--                            {{ route.name }}-->
+<!--                        </router-link>-->
+<!--                    </BreadcrumbItem>-->
                     <!--            <BreadcrumbItem>Layout</BreadcrumbItem>-->
                 </Breadcrumb>
 <!--                <Card>-->
@@ -68,7 +66,7 @@
 
 <!--                </Card>-->
             </Content>
-            <Footer class="layout-footer-center">2020 &copy; DIGIT</Footer>
+            <Footer class="layout-footer-center">2020 &copy; Цифра</Footer>
         </Layout>
     </div>
 </template>
@@ -148,10 +146,6 @@ export default {
             }
         }
     }
-
-     // props: {
-     //     name
-     // }
 }
 </script>
 

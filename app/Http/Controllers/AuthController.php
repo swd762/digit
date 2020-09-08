@@ -28,6 +28,7 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
         $user->save();
+        $user->role()->create(['user_id'=>$user->id,'role_name'=>'user']);
 
         return response()->json([
             'status' => 'success'
@@ -60,6 +61,8 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
+        $role = $user->role()->first()->role_name;
+        $user->role = $role;
 
         return response()->json([
             'status' => 'success',
