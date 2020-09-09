@@ -3,12 +3,17 @@
         <div class="card-header">Dashboard</div>
 
         Admin.dash
+        <userList></userList>
     </div>
 </template>
 
 <script>
+import userList from '../../components/Users-list.vue'
 export default {
-name: "Dashboard"
+    name: "Dashboard",
+    components: {
+        userList
+    }
 }
 </script>
 

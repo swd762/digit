@@ -28,6 +28,12 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+Route::group(['middleware' => 'auth:api'], function(){
+    // Users
+    Route::get('users', 'Dashboard\AdminController@list');
+//    Route::get('users/{id}', 'UserController@show');
+});
+
 
 
 
