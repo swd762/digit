@@ -1,16 +1,18 @@
 <template>
     <div>
-        <h3>Liste de utilisateurs</h3>
+        <h3>Список пользователей</h3>
 
-        <Table  border :columns="columns12" :data="data6">
+        <Table  border :columns="table_columns" :data="users_data">
 <!--            <template slot-scope="{ row }" slot="ID">-->
 <!--                <strong>{{ row.name }}</strong>-->
 <!--            </template>-->
             <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="show(index)">View</Button>
+                <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)">Edit
+                </Button>
                 <Button type="error" size="small" @click="remove(index)">Delete</Button>
             </template>
         </Table>
+<!--        <router-view></router-view>-->
     </div>
 </template>
 
@@ -21,7 +23,7 @@ name: "Users-list",
         return {
             has_error: false,
             users: null,
-            columns12: [
+            table_columns: [
                 {
                     title: 'ID',
                     key: 'id',
@@ -43,7 +45,7 @@ name: "Users-list",
                     align: 'center'
                 }
             ],
-            data6: [
+            users_data: [
                 // {
                 //     name: 'John Brown',
                 //     age: 18,
@@ -77,12 +79,21 @@ name: "Users-list",
                 method: 'GET'
             })
                 .then((res) => {
-                    this.data6 = res.data.users
-                    console.log(this.data6)
+                    this.users_data = res.data.users
+                    // console.log(this.users_data)
                 }, () => {
                     this.has_error = true
                 })
 
+        },
+        editUser(row) {
+            let id = row.id
+            // console.log(id)
+            this.$router.push({
+                name:'admin.edit_user',
+                params: {id: row.id}
+
+            })
         }
 
     }

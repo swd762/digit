@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/user/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
+import AdminEditUser from './pages/admin/EditUser'
 
 //Routes
 const routes = [
@@ -42,7 +43,7 @@ const routes = [
             auth:true,
         }
     },
-    // Admin Dashboard
+    // Admin pages
     {
         path:'/admin',
         name:'admin',
@@ -53,7 +54,21 @@ const routes = [
                 redirect: {name:'login'},
                 forbiddenRedirect:'dashboard'
             }
-        }
+        },
+
+    },
+    {
+        path: '/edit_user',
+        name: 'admin.edit_user',
+        component: AdminEditUser,
+        props: true,
+        meta: {
+            auth: {
+                roles: 'admin',
+                redirect: {name:'login'}
+            }
+        },
+
     }
 ]
 

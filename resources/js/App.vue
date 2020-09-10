@@ -18,7 +18,7 @@
     <div class="layout">
         <Layout>
             <Header>
-                <Menu mode="horizontal" theme="dark">
+                <Menu mode="horizontal" theme="primary">
                     <div class="layout-logo">
                         ЦИФРА
                     </div>
@@ -94,6 +94,9 @@
     align-items: center;
     color: #fff;
     font-size: 31px;
+}
+.ivu-layout-header {
+    background: #2d8cf0!important;
 }
 
 .layout-nav {
