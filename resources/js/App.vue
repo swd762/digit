@@ -20,7 +20,7 @@
             <Header>
                 <Menu mode="horizontal" theme="primary">
                     <div class="layout-logo">
-                        ЦИФРА
+                        ЦИФРА.PRO
                     </div>
                     <div class="layout-nav">
                         <MenuItem v-if="!$auth.check()" v-for="(route, key) in routes.unlogged"
@@ -66,7 +66,7 @@
 
 <!--                </Card>-->
             </Content>
-            <Footer class="layout-footer-center">2020 &copy; Цифра</Footer>
+            <Footer class="layout-footer-center">2020 &copy; Цифра.ПРО</Footer>
         </Layout>
     </div>
 </template>
@@ -110,6 +110,9 @@
 
 .layout-footer-center {
     text-align: center;
+    background: #818ba1!important;
+    color: #fff!important;
+    padding: 15px 50px!important;
 }
 </style>
 

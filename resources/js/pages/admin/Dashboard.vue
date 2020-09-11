@@ -1,10 +1,10 @@
 <template>
-    <div class="card card-default">
-<!--        <div class="card-header">Dashboard</div>-->
+    <div class="card">
+        <h2>Панель Администратора</h2>
+        <div class="table">
+            <usersList></usersList>
+        </div>
 
-<!--        Admin.dash-->
-
-        <usersList></usersList>
     </div>
 </template>
 
@@ -18,10 +18,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .card {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /*justify-content: center;*/
+    align-items: center;
+
+}
+.card h2 {
+    margin: 10px;
+    align-self: left;
+}
+
+.table {
+    display: flex;
 }
 
 </style>

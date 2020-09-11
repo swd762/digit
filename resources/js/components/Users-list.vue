@@ -1,18 +1,33 @@
+<style scoped>
+.buttons-cont {
+    margin: 15px;
+}
+.list-table {
+    display: block;
+}
+.list-table h3 {
+    text-align: center;
+    margin: 10px 0;
+}
+</style>
 <template>
-    <div>
+    <div class="list-table">
         <h3>Список пользователей</h3>
-
-        <Table  border :columns="table_columns" :data="users_data">
-<!--            <template slot-scope="{ row }" slot="ID">-->
-<!--                <strong>{{ row.name }}</strong>-->
-<!--            </template>-->
+        <Table  border :columns="table_columns" :data="users_data" >
+            <template slot-scope="{ row }" slot="login">
+                <strong>{{ row.name }}</strong>
+            </template>
             <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)">Edit
+                <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)">
+                    Редактировать
                 </Button>
-                <Button type="error" size="small" @click="remove(index)">Delete</Button>
+<!--                <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
             </template>
         </Table>
-<!--        <router-view></router-view>-->
+        <div class="buttons-cont">
+            <Button type="primary" @click="handleSubmit('formDynamic')">Создать нового пользователя</Button>
+            <Button type="error"  @click="remove(index)">Удалить пользователя</Button>
+        </div>
     </div>
 </template>
 
@@ -27,46 +42,30 @@ name: "Users-list",
                 {
                     title: 'ID',
                     key: 'id',
-                    width:50
+                    width:50,
+                    align: 'center'
                 },
                 {
                     title: 'Login',
+                    slot: 'login',
                     key: 'name',
-                    width: 150
+                    width: 150,
+                    align: 'center'
                 },
                 {
                     title: 'E-mail',
-                    key: 'email'
+                    key: 'email',
+                    width: 200,
+                    align: 'center'
                 },
                 {
-                    title: 'Action',
+                    title: ' ',
                     slot: 'action',
                     width: 150,
                     align: 'center'
                 }
             ],
-            users_data: [
-                // {
-                //     name: 'John Brown',
-                //     age: 18,
-                //     address: 'New York No. 1 Lake Park'
-                // },
-                // {
-                //     name: 'Jim Green',
-                //     age: 24,
-                //     address: 'London No. 1 Lake Park'
-                // },
-                // {
-                //     name: 'Joe Black',
-                //     age: 30,
-                //     address: 'Sydney No. 1 Lake Park'
-                // },
-                // {
-                //     name: 'Jon Snow',
-                //     age: 26,
-                //     address: 'Ottawa No. 2 Lake Park'
-                // }
-            ]
+            users_data: []
         }
     },
     mounted() {
@@ -91,15 +90,16 @@ name: "Users-list",
             // console.log(id)
             this.$router.push({
                 name:'admin.edit_user',
-                params: {id: row.id}
+                params: {id: id}
 
             })
+        },
+        delUser(row) {
+            let id = row.id
         }
 
     }
 }
 </script>
 
-<style scoped>
 
-</style>
