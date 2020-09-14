@@ -1,54 +1,8 @@
-<!--<template>-->
-<!--    <div id="main">-->
-<!--        <header id="header">-->
-<!--            <h1>-->
-<!--                <router-link :to="{name: 'home'}">-->
-<!--                    Laravel Vue SPA-->
-<!--                </router-link>-->
-<!--            </h1>-->
-<!--            <navigationMenu></navigationMenu>-->
-<!--        </header>-->
-<!--        <div id="content">-->
-<!--            <router-view></router-view>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</template>-->
-
 <template>
     <div class="layout">
         <Layout>
             <Header>
-                <Menu mode="horizontal" theme="primary">
-                    <div class="layout-logo">
-                        ЦИФРА.PRO
-                    </div>
-                    <div class="layout-nav">
-                        <MenuItem v-if="!$auth.check()" v-for="(route, key) in routes.unlogged"
-                                   v-bind:key="route.path" name="{name: route.path}"
-                                  :to="{ name : route.path }" :key="key">
-                            <Icon type="ios-navigate"></Icon>
-<!--                            <router-link :to="{ name : route.path }" :key="key">-->
-                                {{ route.name }}
-<!--                            </router-link>-->
-                        </MenuItem>
-<!--                        <MenuItem v-if="$auth.check(1)" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">-->
-<!--                            <Icon type="ios-navigate"></Icon>-->
-<!--                            <router-link :to="{ name : route.path }" :key="key">-->
-<!--                                {{ route.name }}-->
-<!--                            </router-link>-->
-<!--                        </MenuItem>-->
-<!--                        <MenuItem v-if="$auth.check(2)" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">-->
-<!--                            <Icon type="ios-navigate"></Icon>-->
-<!--                            <router-link :to="{ name : route.path }" :key="key">-->
-<!--                                {{ route.name }}-->
-<!--                            </router-link>-->
-<!--                        </MenuItem>-->
-                        <MenuItem v-if="$auth.check()"  name="logout" @click.native="$auth.logout()">
-                            <Icon type="ios-navigate"></Icon>
-                                logout
-                        </MenuItem>
-                    </div>
-                </Menu>
+                <navigationMenu></navigationMenu>
             </Header>
             <Content :style="{padding: '0 50px'}">
                 <Breadcrumb :style="{margin: '20px 0'}">
@@ -60,11 +14,7 @@
 <!--                    </BreadcrumbItem>-->
                     <!--            <BreadcrumbItem>Layout</BreadcrumbItem>-->
                 </Breadcrumb>
-<!--                <Card>-->
-
                         <router-view></router-view>
-
-<!--                </Card>-->
             </Content>
             <Footer class="layout-footer-center">2020 &copy; Цифра.ПРО</Footer>
         </Layout>
@@ -78,8 +28,6 @@
     border-radius: 4px;
     overflow: hidden;
 }
-
-
 .layout-logo {
     width: 100px;
     height: 30px;
@@ -118,7 +66,8 @@
 
 
 <script>
-// import navigationMenu from './components/Menu.vue'
+// подгрузка компонента меню
+import navigationMenu from './components/Menu.vue'
 export default {
     data() {
         return {
@@ -151,6 +100,10 @@ export default {
                 ]
             }
         }
+    },
+    // объявление компонента меню
+    components: {
+        navigationMenu
     }
 }
 </script>

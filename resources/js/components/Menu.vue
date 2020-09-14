@@ -1,30 +1,38 @@
+<!--Компонент навигационное меню-->
 <template>
-    <nav id="nav">
-        <ul>
-            <!--UNLOGGED-->
-            <li v-if="!$auth.check()" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGGED USER-->
-            <li v-if="$auth.check(1)" v-for="(route, key) in routes.user" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGGED ADMIN-->
-            <li v-if="$auth.check(2)" v-for="(route, key) in routes.admin" v-bind:key="route.path">
-                <router-link  :to="{ name : route.path }" :key="key">
-                    {{route.name}}
-                </router-link>
-            </li>
-            <!--LOGOUT-->
-            <li v-if="$auth.check()">
-                <a href="#" @click.prevent="$auth.logout()">Logout</a>
-            </li>
-        </ul>
-    </nav>
+    <Menu mode="horizontal" theme="primary">
+        <div class="layout-logo">
+            ЦИФРА.PRO
+        </div>
+        <div class="layout-nav">
+            <MenuItem v-if="!$auth.check()"
+                     name="{name: login}"
+                      :to="{ name : 'login' }">
+                <Icon type="ios-navigate"></Icon>
+               Вход
+            </MenuItem>
+            <MenuItem v-if="!$auth.check()"
+                      name="{name: register}"
+                      :to="{ name : 'register' }">
+                <Icon type="ios-navigate"></Icon>
+               Регистрация
+            </MenuItem>
+            <MenuItem v-if="$auth.check('admin')" name="admin.dashboard"
+                      :to="{ name: 'admin' }" >
+                <Icon type="ios-desktop-outline" />
+                 Панель
+            </MenuItem>
+            <MenuItem v-if="$auth.check('user')" name="user.dashboard"
+                      :to="{ name: 'dashboard' }" >
+                <Icon type="ios-desktop-outline" />
+                Панель
+            </MenuItem>
+            <MenuItem v-if="$auth.check()"  name="logout" @click.native="$auth.logout()">
+                <Icon type="ios-exit-outline" />
+                Выход
+            </MenuItem>
+        </div>
+    </Menu>
 </template>
 
 <script>
@@ -32,7 +40,7 @@ export default {
     data() {
         return {
             routes: {
-                // UNLOGGED
+                // Роуты для неавторизованных пользователей
                 unlogged: [
                     {
                         name: 'Register',
@@ -44,18 +52,18 @@ export default {
                     }
                 ],
 
-                // LOGGED USER
+                // Роуты для авторизованных пользователей
                 user: [
                     {
                         name: 'Dashboard',
                         path: 'dashboard'
                     }
                 ],
-                // LOGGED ADMIN
+                // Роуты для авторизованных пользователей с ролью ADMIN
                 admin: [
                     {
                         name: 'Dashboard',
-                        path: 'admin.dashboard'
+                        path: 'admin'
                     }
                 ]
             }

@@ -37,7 +37,8 @@ name: "Users-list",
     data() {
         return {
             has_error: false,
-            users: null,
+            // users: null,
+
             table_columns: [
                 {
                     title: 'ID',
@@ -65,13 +66,16 @@ name: "Users-list",
                     align: 'center'
                 }
             ],
+            // данные пользователей, полученные с сервера
             users_data: []
         }
     },
     mounted() {
+    // запрос с сервера списка пользователй после загрузки страницы
         this.getUsers()
     },
     methods: {
+    // метод получения данных пользователей сервера через api
         getUsers() {
             this.$http({
                 url: `users`,
@@ -79,25 +83,23 @@ name: "Users-list",
             })
                 .then((res) => {
                     this.users_data = res.data.users
-                    // console.log(this.users_data)
                 }, () => {
                     this.has_error = true
                 })
-
         },
+        // метод роутера на страницу редактирования пользователя
         editUser(row) {
             let id = row.id
             // console.log(id)
             this.$router.push({
                 name:'admin.edit_user',
                 params: {id: id}
-
             })
         },
+        // метод удаления полльзвателя
         delUser(row) {
             let id = row.id
         }
-
     }
 }
 </script>

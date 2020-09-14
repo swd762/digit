@@ -1,6 +1,6 @@
+<!--Шаблон страницы редактирования пользователя-->
 <template>
     <div style="max-width: 400px">
-        <p>вы будете редактипровать юзера с id = {{ this.id }} </p>
         <Form ref="formValidate" :model="formValidate"  :label-width="80">
             <FormItem label="Логин" prop="name">
                 <Input v-model="user_data.name" placeholder="Введите логин" disabled></Input>
@@ -55,40 +55,37 @@ export default {
         }
     },
     mounted() {
-         // console.log(this.id)
+        // когда страница загрузилась проверяем прилител ли параметр id, если нет возвращаемся в панель
+        // если прилетел то читаем юзера для редактирования
         if (this.id == null) {
             this.$router.push({
                 name: 'admin'
             })
         } else {
-            this.getUserData()
+            this.getUserData(this.id)
         }
     },
     methods: {
-        getUserData() {
-            //     let user_id = this.props.id
-            //  console.log (this.id)
-            // let user_id = this.id-1
-                this.$http({
-                    url: `users`,
-                    method: 'GET'
-                })
-                    .then((res) => {
-                        res.data.users.forEach((user, key)=>{
-                            // console.log(user)
-                            // console.log(key)
-                            // console.log(user.id)
-                            if(user.id == this.id) {
-                                this.user_data = user
-                                 console.log(this.user_data)
-                            }
-                        })
+        getUserData(id) {
+            // читаем
+            this.$http.get('users', {params: id
 
-                        // this.user_data = res.data.users[user_id]
-                        //   console.log(res.data.users)
-                    }, () => {
-                        this.has_error = true
-                    })
+            }).then((res)=>{
+                this.user_data = res.data.user
+            })
+            //     this.$http({
+            //         url: 'get_user/5',
+            //         method: 'GET'
+            //     })
+            //         .then((res) => {
+            //             res.data.users.forEach((user, key)=>{
+            //                 if(user.id == this.id) {
+            //                     this.user_data = user
+            //                 }
+            //             })
+            //         }, () => {
+            //             this.has_error = true
+            //         })
         },
         updateUser() {
             this.$http({

@@ -30,8 +30,9 @@ Route::prefix('auth')->group(function () {
 
 Route::group(['middleware' => 'auth:api'], function(){
     // Users
-    Route::get('users', 'Dashboard\AdminController@list');
+    Route::get('users', 'Dashboard\AdminController@usersList');
     Route::post('update_user', 'Dashboard\AdminController@updateUser');
+//    Route::get('get_user', 'Dashboard\AdminController@getUser');
 //    Route::get('users/{id}', 'UserController@show');
 });
 
