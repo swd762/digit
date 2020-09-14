@@ -42,7 +42,7 @@ return [
         ],
 
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'jwt', // драйвер для api аутентификации изменили на JWT
             'provider' => 'users',
             'hash' => false,
         ],
