@@ -1,6 +1,9 @@
+// Список и описание маршрутов для Vue Router
+
+
 import VueRouter from 'vue-router'
 
-// Pages
+// Импорт шаблонов страниц для маршрутов
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -34,7 +37,7 @@ const routes = [
             auth: false
         }
     },
-    // User Dashboard
+    // Страницы пользователей
     {
         path: '/dashboard',
         name: 'dashboard',
@@ -43,7 +46,7 @@ const routes = [
             auth:true,
         }
     },
-    // Admin pages
+    // Страницы администратора
     {
         path:'/admin',
         name:'admin',

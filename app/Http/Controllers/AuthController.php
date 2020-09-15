@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    // Контроллер аутентификации и регистрации пользователей
+
     // метод регистрации нового пользователя
     public function register(Request $request)
     {

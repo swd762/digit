@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
             return [];
     }
 
-    // свзяь один ко многим с таблицей 'roles'
+    // свзяь один к одному с таблицей 'roles'
     public function Role() {
         return $this->hasOne('App\Models\Role');
     }

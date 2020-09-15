@@ -15,9 +15,9 @@ class CreateModuleDataTable extends Migration
     {
         Schema::create('module_data', function (Blueprint $table) {
             $table->id();
-            $table->Biginteger('module_id')->unsigned();
-            $table->foreign('module_id')->references('id')->on('modules');
-            $table->string('data');
+            $table->Biginteger('module_key')->unsigned();
+            $table->foreign('module_key')->references('module_key')->on('modules');
+            $table->text('data');
             $table->timestamps();
         });
     }

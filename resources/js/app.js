@@ -5,30 +5,35 @@ import 'es6-promise/auto'
 import App from './App.vue';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+// Компонент для аутентификации и авторизации пользователй
 import VueAuth from '@websanova/vue-auth'
+
 import VueAxios from 'vue-axios'
 import router from './router';
 import auth from './auth'
+
+// Компонент viewUI для компонентов интерфейса
 import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
 
-// Set Vue globally
+// Устанавливаем Vue глобально
 window.Vue = Vue
 
-// Set Vue router
+// Устанавливаем Vue Router
 Vue.router = router
 Vue.use(VueRouter)
 
-// Set ViewUI
+// Устанавливаем ViewUI
 Vue.use(ViewUI)
 
-// Set Vue authentication
+// Устанавливаем Vue authentication
 Vue.use(VueAxios, axios)
+// базовый маршрут для запроса по api
 axios.defaults.baseURL = `${process.env.MIX_APP_URL}/api`
 Vue.use(VueAuth, auth)
 
-// Load App
+// Загружаем Vue App
 Vue.component('app', App)
 
 const app = new Vue({

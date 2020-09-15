@@ -1,11 +1,11 @@
 <!--Шаблон страницы редактирования пользователя-->
 <template>
     <div style="max-width: 400px">
-        <Form ref="formValidate" :model="formValidate"  :label-width="80">
+        <Form ref="formValidate" :model="formValidate" :label-width="80">
             <FormItem label="Логин" prop="name">
                 <Input v-model="user_data.name" placeholder="Введите логин" disabled></Input>
             </FormItem>
-            <FormItem label="E-mail" prop="mail">
+            <FormItem label="E-mail" prop="email">
                 <Input v-model="user_data.email" placeholder="Ввведите email"></Input>
             </FormItem>
             <FormItem label="Имя" prop="first_name">
@@ -17,19 +17,16 @@
             <FormItem label="Отчество" prop="middle_name">
                 <Input v-model="user_data.middle_name" placeholder="Введите отчество"></Input>
             </FormItem>
-            <FormItem label="Роль" prop="role">
-                <Input v-model="user_data.role" placeholder="Введите отчество"></Input>
+            <FormItem label="Role">
+                <Select v-model="user_data.role">
+                    <Option value="user">user</Option>
+                    <Option value="admin">admin</Option>
+                </Select>
             </FormItem>
-            <FormItem label="Role" prop="role">
-                <RadioGroup v-model="user_data.role">
-                    <Radio label="user">user</Radio>
-                    <Radio label="admin">admin</Radio>
-                </RadioGroup>
+            <FormItem>
+                <Button type="primary" @click="updateUser">Записать</Button>
+                <Button @click="getUserData" style="margin-left: 8px">Прочитать данные</Button>
             </FormItem>
-                    <FormItem>
-                        <Button type="primary" @click="updateUser" >Записать</Button>
-                        <Button @click="getUserData" style="margin-left: 8px">Прочитать данные</Button>
-                    </FormItem>
         </Form>
     </div>
 </template>
@@ -40,6 +37,7 @@ export default {
     props: ['id'],
     data() {
         return {
+            // данные для валидации формы
             formValidate: {
                 name: '',
                 mail: '',
@@ -66,46 +64,37 @@ export default {
         }
     },
     methods: {
+        // Метод чтения нужного пользователя из БД
         getUserData(id) {
-            // читаем
-            this.$http.get('users', {params: id
-
-            }).then((res)=>{
+            // читаем выбранного пользователя get запросом с параметром id
+            this.$http.get(
+                'users',
+                {params: id}
+            ).then((res) => {
+                // получаем от сервера массив и записываем его в наш user_data
                 this.user_data = res.data.user
             })
-            //     this.$http({
-            //         url: 'get_user/5',
-            //         method: 'GET'
-            //     })
-            //         .then((res) => {
-            //             res.data.users.forEach((user, key)=>{
-            //                 if(user.id == this.id) {
-            //                     this.user_data = user
-            //                 }
-            //             })
-            //         }, () => {
-            //             this.has_error = true
-            //         })
+
         },
+        // метод обновления данных пользовтеля в БД
         updateUser() {
+            // отправляем массив с данными пользователя на сервер для последующей записи в БД
             this.$http({
                 url: `update_user`,
                 method: 'POST',
                 data: this.user_data
-            }).then((res)=>{
-                console.log(res)
-                this.getUserData()
+            }).then((res) => {
+                // получаем ответ и обновлем данные формы для данного пользователя
+                this.getUserData(this.id)
             })
         },
         deleteUser(id) {
-
+            // TODO
         }
 
     }
 
 }
-
-
 </script>
 
 <style scoped>

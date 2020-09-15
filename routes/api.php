@@ -14,14 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
 Route::prefix('auth')->group(function () {
+    // маршруты аутентификации
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::get('refresh', 'AuthController@refresh');
 
+    // маршруты для информации для авторизованых пользователей
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', 'AuthController@user');
         Route::post('logout', 'AuthController@logout');
@@ -29,13 +28,11 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::group(['middleware' => 'auth:api'], function(){
-    // Users
-    Route::get('users', 'Dashboard\AdminController@usersList');
-    Route::post('update_user', 'Dashboard\AdminController@updateUser');
-//    Route::get('get_user', 'Dashboard\AdminController@getUser');
-//    Route::get('users/{id}', 'UserController@show');
+    // Маршруты для чтения и редактирования пользователей в бд
+    Route::get('users', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
+    Route::post('update_user', 'Dashboard\AdminController@updateUser')->middleware('isAdmin');
 });
 
-
+Route::post('data', 'DataController@import');
 
 

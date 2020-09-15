@@ -40,34 +40,6 @@
 export default {
     data() {
         return {
-            routes: {
-                // Роуты для неавторизованных пользователей
-                unlogged: [
-                    {
-                        name: 'Register',
-                        path: 'register'
-                    },
-                    {
-                        name: 'Login',
-                        path: 'login'
-                    }
-                ],
-
-                // Роуты для авторизованных пользователей
-                user: [
-                    {
-                        name: 'Dashboard',
-                        path: 'dashboard'
-                    }
-                ],
-                // Роуты для авторизованных пользователей с ролью ADMIN
-                admin: [
-                    {
-                        name: 'Dashboard',
-                        path: 'admin'
-                    }
-                ]
-            }
         }
     },
     mounted() {
