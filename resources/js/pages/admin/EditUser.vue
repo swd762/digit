@@ -25,7 +25,7 @@
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="updateUser">Записать</Button>
-                <Button @click="getUserData" style="margin-left: 8px">Прочитать данные</Button>
+                <Button @click="getUserData(userId)" style="margin-left: 8px">Прочитать данные</Button>
             </FormItem>
         </Form>
     </div>
@@ -48,8 +48,8 @@ export default {
                 time: '',
                 desc: ''
             },
-            user_data: []
-
+            user_data: [],
+            userId: null
         }
     },
     mounted() {
@@ -60,7 +60,10 @@ export default {
                 name: 'admin'
             })
         } else {
-            this.getUserData(this.id)
+            this.userId = this.id
+            this.getUserData(this.userId)
+
+            //console.log(this.ids)
         }
     },
     methods: {
@@ -91,7 +94,6 @@ export default {
         deleteUser(id) {
             // TODO
         }
-
     }
 
 }

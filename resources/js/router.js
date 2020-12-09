@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/user/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
+import AdminCreateUser from './pages/admin/CreateUser'
 
 //Routes
 const routes = [
@@ -60,6 +61,7 @@ const routes = [
         },
 
     },
+    // страница редактирования пользователя
     {
         path: '/edit_user',
         name: 'admin.edit_user',
@@ -71,7 +73,19 @@ const routes = [
                 redirect: {name:'login'}
             }
         },
-
+    },
+    // страница создания пользователя
+    {
+        path: '/create_user',
+        name: 'admin.create_user',
+        component: AdminCreateUser,
+        props: true,
+        meta: {
+            auth: {
+                roles: 'admin',
+                redirect: {name:'login'}
+            }
+        },
     }
 ]
 
