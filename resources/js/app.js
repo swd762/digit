@@ -37,8 +37,8 @@ Vue.use(VueAuth, auth)
 Vue.component('app', App)
 
 const app = new Vue({
-    el: '#app',
+    // el: '#app',
     router: router,
-    render: h=>h(App)
-});
+    // render: h=>h(App)
+}).$mount('#app');
 

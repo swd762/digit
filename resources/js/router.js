@@ -11,6 +11,8 @@ import Dashboard from './pages/user/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
+import AdminLayout from './pages/admin/Layout'
+import AdminEdit from './pages/admin/Edit'
 
 //Routes
 const routes = [
@@ -27,7 +29,7 @@ const routes = [
         name: 'register',
         component: Register,
         meta: {
-            auth:false
+            auth: false
         }
     },
     {
@@ -44,36 +46,49 @@ const routes = [
         name: 'dashboard',
         component: Dashboard,
         meta: {
-            auth:true,
+            auth: true,
         }
     },
+    // ************************************************
     // Страницы администратора
     {
-        path:'/admin',
-        name:'admin',
-        component: AdminDashboard,
+        path: '/admin',
+        name: 'admin',
+        component: AdminLayout,
         meta: {
             auth: {
                 roles: 'admin',
-                redirect: {name:'login'},
-                forbiddenRedirect:'dashboard'
+                redirect: {name: 'login'},
+                forbiddenRedirect: 'dashboard'
             }
         },
-
+        children: [
+            // {
+            //     path: '',
+            //     // name: 'admin.dashboard',
+            //     component: AdminDashboard
+            // },
+            {
+                path: ':id/edit',
+                name: 'admin.edit',
+                component: AdminEdit
+            }
+        ]
+    // *********************************************
     },
     // страница редактирования пользователя
-    {
-        path: '/edit_user',
-        name: 'admin.edit_user',
-        component: AdminEditUser,
-        props: true,
-        meta: {
-            auth: {
-                roles: 'admin',
-                redirect: {name:'login'}
-            }
-        },
-    },
+    // {
+    //     path: '/edit_user',
+    //     name: 'admin.edit_user',
+    //     component: AdminEditUser,
+    //     props: true,
+    //     meta: {
+    //         auth: {
+    //             roles: 'admin',
+    //             redirect: {name: 'login'}
+    //         }
+    //     },
+    // },
     // страница создания пользователя
     {
         path: '/create_user',
@@ -83,7 +98,7 @@ const routes = [
         meta: {
             auth: {
                 roles: 'admin',
-                redirect: {name:'login'}
+                redirect: {name: 'login'}
             }
         },
     }

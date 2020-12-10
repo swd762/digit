@@ -4,7 +4,7 @@
 
         <Form ref="formValidate" :model="formValidate" :label-width="80">
             <FormItem label="Логин" prop="name">
-                <Input v-model="user_data.name" placeholder="Введите логин" disabled></Input>
+                <Input v-model="user_data.name" placeholder="Введите логин" ></Input>
             </FormItem>
             <FormItem label="E-mail" prop="email">
                 <Input v-model="user_data.email" placeholder="Ввведите email"></Input>

@@ -24,6 +24,7 @@
             </Content>
             <Footer class="layout-footer-center">2020 &copy; Цифра.ПРО</Footer>
         </Layout>
+
     </div>
 </template>
 <style>
