@@ -11,7 +11,7 @@ import Dashboard from './pages/user/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
-import AdminLayout from './pages/admin/Layout'
+import AdminLayout from './pages/admin/AdminLayout'
 import AdminEdit from './pages/admin/Edit'
 
 //Routes
@@ -49,11 +49,10 @@ const routes = [
             auth: true,
         }
     },
-    // ************************************************
     // Страницы администратора
     {
         path: '/admin',
-        name: 'admin',
+        //name: 'admin',
         component: AdminLayout,
         meta: {
             auth: {
@@ -63,19 +62,30 @@ const routes = [
             }
         },
         children: [
-            // {
-            //     path: '',
-            //     // name: 'admin.dashboard',
-            //     component: AdminDashboard
-            // },
             {
-                path: ':id/edit',
+                path: '',
+                //name: 'home',
+                component: Home
+            },
+            {
+                path: 'dashboard',
+                name: 'admin.dashboard',
+                component: AdminDashboard
+
+            },
+            {
+                path: ':userId/edit',
                 name: 'admin.edit',
-                component: AdminEdit
+                component: AdminEditUser
+            },
+            {
+                path: 'create',
+                name: 'admin.create',
+                component: AdminCreateUser
             }
         ]
-    // *********************************************
     },
+
     // страница редактирования пользователя
     // {
     //     path: '/edit_user',

@@ -17,7 +17,8 @@ class AuthController extends Controller
     {
         $val = Validator::make($request->all(), [
             'name' => 'required|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+            'first_name' => 'required'
         ]);
 
         if ($val->fails()) {
@@ -30,6 +31,10 @@ class AuthController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
+        $user->first_name = $request->first_name;
+        $user->last_name = $request->last_name;
+        $user->middle_name = $request->middle_name;
+        $user->email = $request->email;
 //        $user->first
         $user->save();
         $user->role()->create(['user_id'=>$user->id,'role_name'=>'user']);

@@ -23,14 +23,17 @@
                 <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)">
                     Редактировать
                 </Button>
-                <!--                <Button type="error" size="small" @click="remove(index)">Delete</Button>-->
+                <Button type="error" size="small" @click="delUser(row)">
+                    Удалить
+                </Button>
             </template>
         </Table>
         <div class="buttons-cont">
             <Button type="primary" @click="$router.push({
                 name: 'admin.create_user'
-            })">Создать нового пользователя</Button>
-            <Button type="error" @click="remove(index)">Удалить пользователя</Button>
+            })">
+                Создать нового пользователя
+            </Button>
         </div>
     </div>
 </template>
@@ -47,26 +50,26 @@ export default {
                 {
                     title: 'ID',
                     key: 'id',
-                    width: 50,
+                    width: 100,
                     align: 'center'
                 },
                 {
-                    title: 'Login',
+                    title: 'Логин',
                     slot: 'login',
                     key: 'name',
                     width: 150,
                     align: 'center'
                 },
                 {
-                    title: 'E-mail',
-                    key: 'email',
+                    title: 'Роль',
+                    key: 'role',
                     width: 200,
                     align: 'center'
                 },
                 {
                     title: ' ',
                     slot: 'action',
-                    width: 150,
+                    width: 250,
                     align: 'center'
                 }
             ],
@@ -96,13 +99,31 @@ export default {
             let id = row.id
             // console.log(id)
             this.$router.push({
-                name: 'admin.edit_user',
-                params: {id: id}
+                name: 'admin.edit',
+                params: {userId: id}
             })
         },
         // метод удаления полльзвателя
         delUser(row) {
-            let id = row.id
+            let user = row.id
+            this.$Modal.confirm({
+                title: 'Подтверждени удаления пользователя',
+                content: '<p>Вы уверены</p>',
+                okText: 'Да',
+                cancelText: 'Нет',
+                onOk: () => {
+                    this.$http({
+                        url: 'delete_user/' + user,
+                        method: 'post'
+                    }).then(() => {
+                        this.getUsers();
+                    })
+                    this.$Message.info('Clicked ok' + id);
+                },
+                onCancel: () => {
+                    // this.$Message.info('Clicked cancel');
+                }
+            });
         }
     }
 }

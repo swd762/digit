@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     // Маршруты для чтения и редактирования пользователей в бд
     Route::get('users', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
     Route::post('update_user', 'Dashboard\AdminController@updateUser')->middleware('isAdmin');
+    Route::post('delete_user/{user}', 'Dashboard\AdminController@deleteUser')->middleware('isAdmin');
 });
 
 Route::post('data', 'DataController@import');

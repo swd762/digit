@@ -3,8 +3,7 @@
     <div class="card">
         <h2>Панель Администратора</h2>
         <div class="table">
-<!--            <usersList></usersList>-->
-<!--            <router-view></router-view>-->
+            <usersList></usersList>
         </div>
     </div>
 </template>

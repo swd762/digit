@@ -2,7 +2,7 @@
 <template>
     <Menu mode="horizontal" theme="primary">
         <div class="layout-logo">
-            <img src="imgs/logo.png" alt="digit logo">
+            <img src="/imgs/logo.png" alt="digit logo">
             <!-- лого Цифра про -->
         </div>
         <div class="layout-nav">
@@ -19,7 +19,7 @@
                 Регистрация
             </MenuItem>
             <MenuItem v-if="$auth.check('admin')" name="admin.dashboard"
-                      :to="{ name: 'admin' }">
+                      :to="{ name: 'admin.dashboard' }">
                 <Icon type="ios-desktop-outline"/>
                 Панель
             </MenuItem>

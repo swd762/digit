@@ -55,12 +55,14 @@ export default {
     mounted() {
         // когда страница загрузилась проверяем прилител ли параметр id, если нет возвращаемся в панель
         // если прилетел то читаем юзера для редактирования
-        if (this.id == null) {
+        this.userId = this.$route.params.userId
+        //console.log(this.$route.params.userId)
+        if (this.userId == null) {
             this.$router.push({
                 name: 'admin'
             })
         } else {
-            this.userId = this.id
+            // this.userId = this.id
             this.getUserData(this.userId)
 
             //console.log(this.ids)
@@ -76,6 +78,10 @@ export default {
             ).then((res) => {
                 // получаем от сервера массив и записываем его в наш user_data
                 this.user_data = res.data.user
+            }).catch(() => {
+                this.$router.push({
+                    name: 'admin'
+                })
             })
 
         },
