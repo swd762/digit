@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
 |
 */
 
+// Users template
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->unique()->firstName,
@@ -28,9 +29,10 @@ $factory->define(User::class, function (Faker $faker) {
 
     ];
 });
-$factory->define(App\Models\Role::class, function (Faker $faker){
+// Roles template
+$factory->define(App\Models\Role::class, function (Faker $faker) {
     return [
-        'role_name'=>'user'
+        'role_name' => 'user'
     ];
 });
 
