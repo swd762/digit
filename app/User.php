@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
-
 class User extends Authenticatable implements JWTSubject
 {
     // Модель для работы с таблицей 'users', также для аутентификаци
 
     use Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -44,16 +44,20 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     // метод для работы с JWT токеном
-    public function getJWTIdentifier() {
+    public function getJWTIdentifier()
+    {
         return $this->getKey();
     }
+
     // метод для работы с JWT токеном
-    public function getJWTCustomClaims() {
-            return [];
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 
     // свзяь один к одному с таблицей 'roles'
-    public function Role() {
-        return $this->hasOne('App\Models\Role');
+    public function roles()
+    {
+        return $this->belongsToMany(Models\Role::class);
     }
 }

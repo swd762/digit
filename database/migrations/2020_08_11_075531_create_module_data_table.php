@@ -13,13 +13,13 @@ class CreateModuleDataTable extends Migration
      */
     public function up()
     {
-        Schema::create('module_data', function (Blueprint $table) {
-            $table->id();
-            $table->string('module_key');
-            $table->foreign('module_key')->references('module_key')->on('modules');
-            $table->text('data');
-            $table->timestamps();
-        });
+//        Schema::create('module_data', function (Blueprint $table) {
+//            //$table->id();
+//            $table->BigInteger('module_key');
+//            $table->foreign('module_key')->references('module_key')->on('modules');
+//            $table->text('data');
+//            $table->timestamps();
+//        });
     }
 
     /**

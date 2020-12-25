@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
@@ -28,6 +29,7 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $userRole = Role::where('name', 'user')->first();
         $user = new User;
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
@@ -35,9 +37,8 @@ class AuthController extends Controller
         $user->last_name = $request->last_name;
         $user->middle_name = $request->middle_name;
         $user->email = $request->email;
-//        $user->first
         $user->save();
-        $user->role()->create(['user_id'=>$user->id,'role_name'=>'user']);
+        $user->roles()->attach($userRole);
 
         return response()->json([
             'status' => 'success'
@@ -58,11 +59,11 @@ class AuthController extends Controller
             'error' => 'error_login',
         ], 401);
     }
+
     // метод выхода пользователя (возвращает статус в json)
     public function logout()
     {
         $this->guard()->logout();
-
         return response()->json([
             'status' => 'success',
             'msg' => 'Logged out Successfully'
@@ -73,14 +74,14 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
-        $role = $user->role()->first()->role_name;
-        $user->role = $role;
-
+        $role = $user->roles->first();
+        $user->role = $role->name;
         return response()->json([
             'status' => 'success',
             'data' => $user
         ]);
     }
+
     // метод проверки "свежести" пользователя и токена
     public function refresh()
     {

@@ -115,10 +115,12 @@ export default {
                     this.$http({
                         url: 'delete_user/' + user,
                         method: 'post'
-                    }).then(() => {
+                    }).then(res => {
                         this.getUsers();
+                    }).catch(e =>{
+                        console.log(e);
                     })
-                    this.$Message.info('Clicked ok' + id);
+                   // this.$Message.info('Пользователь удален' + user);
                 },
                 onCancel: () => {
                     // this.$Message.info('Clicked cancel');

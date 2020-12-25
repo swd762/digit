@@ -56,10 +56,10 @@ export default {
         // когда страница загрузилась проверяем прилител ли параметр id, если нет возвращаемся в панель
         // если прилетел то читаем юзера для редактирования
         this.userId = this.$route.params.userId
-        //console.log(this.$route.params.userId)
+        console.log(this.$route.params.userId)
         if (this.userId == null) {
             this.$router.push({
-                name: 'admin'
+                name: 'admin.dashboard'
             })
         } else {
             // this.userId = this.id
@@ -73,14 +73,14 @@ export default {
         getUserData(id) {
             // читаем выбранного пользователя get запросом с параметром id
             this.$http.get(
-                'users',
-                {params: id}
+                'users/' + id
+                //{params: id}
             ).then((res) => {
                 // получаем от сервера массив и записываем его в наш user_data
                 this.user_data = res.data.user
             }).catch(() => {
                 this.$router.push({
-                    name: 'admin'
+                    name: 'admin.dashboard'
                 })
             })
 
@@ -89,12 +89,12 @@ export default {
         updateUser() {
             // отправляем массив с данными пользователя на сервер для последующей записи в БД
             this.$http({
-                url: `update_user`,
+                url: `update_user/` + this.userId,
                 method: 'POST',
                 data: this.user_data
             }).then((res) => {
                 // получаем ответ и обновлем данные формы для данного пользователя
-                this.getUserData(this.id)
+                this.getUserData(this.userId)
             })
         },
         deleteUser(id) {

@@ -17,36 +17,44 @@ class AdminController extends Controller
 
 
     // метод получения списка пользователей через api в json, либо конкретного пользователя, если прилетает параметр
+    public function getUser(User $user, Request $request)
+    {
+        $role = $user->roles->first()->name;
+        $user->role = $role;
+        return response()->json([
+            'status' => 'success',
+            'user' => $user->toArray()
+        ], 200);
+    }
+
+
     public function usersList(Request $request)
     {
-
-        $id = $request->all();
-
-        if (empty($id)) {
+        if (!($request->user)) {
             $users = User::get(['id', 'name', 'first_name', 'last_name', 'email', 'middle_name']);
-
             foreach ($users as $user) {
-                $role = $user->role()->first()->role_name;
+                $role = $user->roles->first()->name;
                 $user->role = $role;
-
             }
             return response()->json([
                 'status' => 'success',
                 'users' => $users->toArray(),
+                //'111' => $request->user
             ]);
         } else {
-            $user = User::find($id)->first();
-            $role = $user->role()->first()->role_name;
+            $user = User::find($request->user);
+            $role = $user->roles->first()->name;
             $user->role = $role;
             return response()->json([
                 'status' => 'success',
-                'user' => $user->toArray()
-            ], 200);
+                'user' => $user->toArray(),
+                '111' => $request->user
+            ]);
         }
     }
 
     // метод обновления информации пользователя при редактировании
-    public function updateUser(Request $request)
+    public function updateUser(User $user, Request $request)
     {
         $val = Validator::make($request->all(), [
             // в данный момент запрещено изменять login из панели администратора
@@ -60,31 +68,34 @@ class AdminController extends Controller
             ], 422);
         }
 
-        $user = User::find($request->id);
+        //$user = User::find($request->id);
         $user->email = $request->email;
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->middle_name = $request->middle_name;
         $user->save();
-        $user->role()->update(['user_id' => $request->id, 'role_name' => $request->role]);
+        $roleName = is_null($request->role) ? 'user' : $request->role;
+        $role = Role::where('name', $roleName)->first();
+        $user->roles()->detach();
+        $user->roles()->attach($role);
+        $user->role = $roleName;
 
         return response()->json([
             'status' => 'success',
-            'user' => $user
+            'user' => $user,
         ], 200);
     }
 
     // метод удаления пользователя
     public function deleteUser(User $user, Request $request)
     {
-        //$user = User::find($request->id);
-        if ($user->name == 'admin') {
+        if ($user->name == 'admin' || $user->name == 'saul') {
             return response()->json([
                 'status' => 'error',
                 'error' => 'you can\'t delete admin',
             ], 422);
         }
-        $user->role()->delete();
+        $user->roles()->detach();
         $user->delete();
 
         return response()->json([

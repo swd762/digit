@@ -29,10 +29,5 @@ $factory->define(User::class, function (Faker $faker) {
 
     ];
 });
-// Roles template
-$factory->define(App\Models\Role::class, function (Faker $faker) {
-    return [
-        'role_name' => 'user'
-    ];
-});
+
 
