@@ -7,12 +7,13 @@ import VueRouter from 'vue-router'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Dashboard from './pages/user/Dashboard'
+import UserDashboard from './pages/user/Dashboard'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminEdit from './pages/admin/Edit'
+import UserLayout from "./pages/user/UserLayout";
 
 //Routes
 const routes = [
@@ -42,12 +43,25 @@ const routes = [
     },
     // Страницы пользователей
     {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
-        meta: {
-            auth: true,
-        }
+        // path: '/dashboard',
+        // name: 'dashboard',
+        // component: Dashboard,
+        // meta: {
+        //     auth: true,
+        // }
+        path: '/user',
+        component: UserLayout,
+        meta : {
+            auth: true
+        },
+        children: [
+            {
+                path: 'dashboard',
+                name: 'user.dashboard',
+                component: UserDashboard
+
+            }
+        ]
     },
     // Страницы администратора
     {
@@ -58,7 +72,7 @@ const routes = [
             auth: {
                 roles: 'admin',
                 redirect: {name: 'login'},
-                forbiddenRedirect: 'dashboard'
+                forbiddenRedirect: 'admin.dashboard'
             }
         },
         children: [

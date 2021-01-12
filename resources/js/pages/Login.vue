@@ -58,7 +58,7 @@ export default {
             }).then(()=>{
                 // после успешной аутентификации проводим авторизацию и в зависимости от роли кидаем каждого в свою панель
                 const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 'admin' ?
-                    'admin' : 'dashboard'
+                    'admin.dashboard' : 'user.dashboard'
                 this.$router.push({name: redirectTo})
             }).catch(()=>{
                 // здесь ловим ошибки обмена с сервером

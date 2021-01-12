@@ -24,7 +24,7 @@
                 Панель
             </MenuItem>
             <MenuItem v-if="$auth.check('user')" name="user.dashboard"
-                      :to="{ name: 'dashboard' }">
+                      :to="{ name: 'user.dashboard' }">
                 <Icon type="ios-desktop-outline"/>
                 Панель
             </MenuItem>
