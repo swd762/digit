@@ -28,6 +28,9 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::group(['middleware' => 'auth:api'], function(){
+    Route::get('patients/{patient?}', 'Dashboard\DashboardController@patientsList');
+
+
     // Маршруты для чтения и редактирования пользователей в бд
     Route::get('users/{user?}', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
     Route::post('update_user/{user}', 'Dashboard\AdminController@updateUser')->middleware('isAdmin');

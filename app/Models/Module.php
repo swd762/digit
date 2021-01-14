@@ -11,4 +11,6 @@ class Module extends Model
     public function ModuleData() {
         $this->hasMany('App\Models\ModuleData');
     }
+
+
 }
