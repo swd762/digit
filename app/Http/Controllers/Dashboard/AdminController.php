@@ -38,7 +38,6 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 'success',
                 'users' => $users->toArray(),
-                //'111' => $request->user
             ]);
         } else {
             $user = User::find($request->user);
@@ -47,7 +46,6 @@ class AdminController extends Controller
             return response()->json([
                 'status' => 'success',
                 'user' => $user->toArray(),
-                '111' => $request->user
             ]);
         }
     }

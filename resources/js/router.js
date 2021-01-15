@@ -14,6 +14,7 @@ import AdminCreateUser from './pages/admin/CreateUser'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminEdit from './pages/admin/Edit'
 import UserLayout from "./pages/user/UserLayout";
+import PatientCard from "./pages/user/PatientCard";
 
 //Routes
 const routes = [
@@ -43,15 +44,9 @@ const routes = [
     },
     // Страницы пользователей
     {
-        // path: '/dashboard',
-        // name: 'dashboard',
-        // component: Dashboard,
-        // meta: {
-        //     auth: true,
-        // }
         path: '/user',
         component: UserLayout,
-        meta : {
+        meta: {
             auth: true
         },
         children: [
@@ -60,6 +55,11 @@ const routes = [
                 name: 'user.dashboard',
                 component: UserDashboard
 
+            },
+            {
+                path: ':patientId/card',
+                name: 'user.card',
+                component: PatientCard
             }
         ]
     },
@@ -78,7 +78,6 @@ const routes = [
         children: [
             {
                 path: '',
-                //name: 'home',
                 component: Home
             },
             {

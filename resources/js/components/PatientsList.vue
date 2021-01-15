@@ -106,8 +106,8 @@ export default {
             let id = row.id
             // console.log(id)
             this.$router.push({
-                name: 'admin.edit',
-                params: {userId: id}
+                name: 'user.card',
+                params: {patientId: id}
             })
         }
     }
