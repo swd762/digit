@@ -23,7 +23,7 @@
 
         <div v-for="(diagnos, index) in patientData.diagnoses" :key="index">
           {{ diagnos.title }}
-          <div>
+          <div v-if="diagnos.pivot.product">
             <p>
               Изделие: {{ diagnos.pivot.product.name }}<br />
               Дата выдачи: {{ diagnos.pivot.issue_date }}
