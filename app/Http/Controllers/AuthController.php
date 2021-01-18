@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends Controller
 {
@@ -85,15 +85,17 @@ class AuthController extends Controller
     // метод проверки "свежести" пользователя и токена
     public function refresh()
     {
-        if ($token = $this->guard()->refresh()) {
-            return response()
-                ->json(['status' => 'success'], 200)
-                ->header('Authorization', $token);
+        try {
+            if ($token = $this->guard()->refresh()) {
+                return response()
+                    ->json(['status' => 'success'], 200)
+                    ->header('Authorization', $token);
+            }
+        } catch (TokenExpiredException $e) {
+            return response()->json([
+                'error' => 'refresh_token_error'
+            ], 401);
         }
-
-        return response()->json([
-            'error' => 'refresh_token_error'
-        ], 401);
     }
 
 
