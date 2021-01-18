@@ -11,4 +11,9 @@ class Product extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, 'products_modules');
+    }
 }

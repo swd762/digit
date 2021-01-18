@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends Controller
@@ -92,6 +93,10 @@ class AuthController extends Controller
                     ->header('Authorization', $token);
             }
         } catch (TokenExpiredException $e) {
+            return response()->json([
+                'error' => 'refresh_token_error'
+            ], 401);
+        } catch (TokenBlacklistedException $e) {
             return response()->json([
                 'error' => 'refresh_token_error'
             ], 401);

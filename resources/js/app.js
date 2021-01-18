@@ -14,6 +14,7 @@ import auth from './auth'
 
 // Компонент viewUI для компонентов интерфейса
 import ViewUI from 'view-design';
+import locale from 'view-design/dist/locale/ru-RU';
 import 'view-design/dist/styles/iview.css';
 
 
@@ -25,7 +26,7 @@ Vue.router = router
 Vue.use(VueRouter)
 
 // Устанавливаем ViewUI
-Vue.use(ViewUI)
+Vue.use(ViewUI, { locale })
 
 // Устанавливаем Vue authentication
 Vue.use(VueAxios, axios)

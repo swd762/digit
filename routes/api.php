@@ -21,14 +21,27 @@ Route::prefix('auth')->group(function () {
     Route::get('refresh', 'AuthController@refresh');
 
     // маршруты для информации для авторизованых пользователей
-    Route::group(['middleware' => 'auth:api'], function(){
+    Route::group(['middleware' => 'auth:api'], function () {
         Route::get('user', 'AuthController@user');
         Route::post('logout', 'AuthController@logout');
     });
 });
 
-Route::group(['middleware' => 'auth:api'], function(){
-    Route::get('patients/{patient?}', 'Dashboard\DashboardController@patientsList');
+Route::group(['middleware' => 'auth:api'], function () {
+
+    Route::prefix('patients')->namespace('Patients')->group(function () {
+        Route::get('/', 'PatientsController@patientsList');
+
+        Route::group(['prefix' => '{patient}', 'where' => ['patient' => '[0-9]+']], function () {
+            Route::get('/', 'PatientsController@patientInfo');
+
+            Route::post('/attach_diagnos', 'PatientsController@attachDiagnos');
+        });
+    });
+
+    Route::prefix('diagnoses')->namespace('Diagnoses')->group(function () {
+        Route::get('/', 'DiagnosesController@index');
+    });
 
 
     // Маршруты для чтения и редактирования пользователей в бд
@@ -38,5 +51,3 @@ Route::group(['middleware' => 'auth:api'], function(){
 });
 
 Route::post('data', 'DataController@import');
-
-

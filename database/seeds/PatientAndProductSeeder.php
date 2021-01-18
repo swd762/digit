@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Diagnos;
 use App\Models\Patient;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class PatientAndProductSeeder extends Seeder
@@ -39,32 +41,53 @@ class PatientAndProductSeeder extends Seeder
         $productTen->date = '30.02.2020';
         $productTen->save();
 
+        $diagnos1 = Diagnos::create([
+            'title' => 'Диагноз 1',
+            'code' => 113205
+        ]);
+
+        Diagnos::create([
+            'title' => 'Диагноз 2',
+            'code' => 113206
+        ]);
+
+        Diagnos::create([
+            'title' => 'Диагноз 4',
+            'code' => 113208
+        ]);
+
+        Diagnos::create([
+            'title' => 'Диагноз 3',
+            'code' => 113207
+        ]);
 
         // create Patients
-        $patientFirst = new Patient();
-        $patientFirst->name = 'Иванов Иван Иванович';
-        $patientFirst->birth_date = '01.02.1950';
-        $patientFirst->save();
-        $patientFirst->products()->attach($productTwo);
-        $patientFirst->products()->attach($productOne);
-        $patientFirst->products()->attach($productThree);
+        $patientFirst = Patient::create([
+            'name' => 'Иванов Иван Иванович',
+            'birth_date' => '01.02.1950'
+        ]);
+
+        $patientFirst->diagnoses()->attach($diagnos1, [
+            'comment' => "Комментарий врача",
+            'issue_date' => Carbon::now()->toDateString(),
+            'product_id' => $productOne->id
+        ]);
+
+        // $patientFirst->products()->attach($productTwo);
+        // $patientFirst->products()->attach($productOne);
+        // $patientFirst->products()->attach($productThree);
 
         $patientSecond = new Patient();
         $patientSecond->name = 'Алексеев Иван Иванович';
         $patientSecond->birth_date = '01.02.1960';
         $patientSecond->save();
-        $patientSecond->products()->attach($productTen);
+        // $patientSecond->products()->attach($productTen);
 
 
         $patientThird = new Patient();
         $patientThird->name = 'Больнов Алексей Иванович';
         $patientThird->birth_date = '01.02.1963';
         $patientThird->save();
-        $patientThird->products()->attach($productFive);
-
-
-
+        // $patientThird->products()->attach($productFive);
     }
 }
-
-
