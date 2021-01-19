@@ -23,9 +23,12 @@
 
         <div v-for="(diagnos, index) in patientData.diagnoses" :key="index">
           {{ diagnos.title }}
+          <Button type="error" @click="removeDiagnos(diagnos.id)"
+            >Удалить</Button
+          >
           <div v-if="diagnos.pivot.product">
             <p>
-              Изделие: {{ diagnos.pivot.product.name }}<br />
+              Выданное изделие: {{ diagnos.pivot.product.name }}<br />
               Дата выдачи: {{ diagnos.pivot.issue_date }}
             </p>
             <br />
@@ -210,6 +213,27 @@ export default {
         .post("patients/" + self.patientData.id + "/attach_diagnos", {
           diagnosId: self.selectedDiagnos,
           diagnosComment: self.selectedDiagnosComment,
+        })
+        .then((res) => {
+          //todo show message
+          this.isLoading = false;
+          this.getPatientData(self.patientData.id);
+        })
+        .catch((err) => {
+          this.has_error = true;
+          this.isLoading = false;
+        });
+    },
+
+    removeDiagnos(diagnosId) {
+      let self = this;
+      this.isLoading = true;
+      // Добавляем выбранный диагноз пациенту
+      this.$http
+        .delete("patients/" + self.patientData.id + "/detach_diagnos", {
+          params: {
+            diagnosId: diagnosId,
+          },
         })
         .then((res) => {
           //todo show message

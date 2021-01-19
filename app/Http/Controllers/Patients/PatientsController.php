@@ -50,4 +50,25 @@ class PatientsController extends Controller
 
         return response()->json(['status' => 'success', 'msg' => 'Диагноз добавлен']);
     }
+
+
+    /**
+     * Удаляет диагноз и сопутствующее изделие у пациента.
+     * Фактически запись не удаляется, а переводится в неактивный режим
+     *
+     * @param Patient $patient
+     * @param Request $request
+     * @var int $diagnosId - id диагноза для удаления
+     *
+     * @return json
+     */
+    public function detachDiagnos(Patient $patient, Request $request)
+    {
+        $patient->diagnoses()->updateExistingPivot($request->diagnosId, [
+            'active' => 0,
+            'detach_date' => Carbon::now()->toDateString()
+        ]);
+
+        return response()->json(['status' => 'success', 'msg' => 'Диагноз удален']);
+    }
 }

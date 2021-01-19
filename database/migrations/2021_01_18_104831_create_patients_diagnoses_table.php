@@ -20,6 +20,7 @@ class CreatePatientsDiagnosesTable extends Migration
             $table->unsignedBigInteger('product_id')->nullable()->default(null);
             $table->unsignedTinyInteger('active')->default(1)->comment('1 - для текущих активных диагнозов, 0 - для неактивных диагнозов. Для истории.');
             $table->date('issue_date');
+            $table->date('detach_date')->nullable()->default(null)->comment('Дата отключения диагноза');
             $table->text('comment')->nullable()->default(null)->comment('Комментарий врача к поставленному диагнозу');
         });
     }

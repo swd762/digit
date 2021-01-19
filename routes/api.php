@@ -35,7 +35,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::group(['prefix' => '{patient}', 'where' => ['patient' => '[0-9]+']], function () {
             Route::get('/', 'PatientsController@patientInfo');
 
-            Route::post('/attach_diagnos', 'PatientsController@attachDiagnos');
+            Route::post('attach_diagnos', 'PatientsController@attachDiagnos');
+            Route::delete('detach_diagnos', 'PatientsController@detachDiagnos');
         });
     });
 
