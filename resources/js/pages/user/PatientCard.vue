@@ -4,7 +4,9 @@
       <Spin></Spin>
     </template>
     <template v-else>
-      <Button type="success" @click="selectDiagnos">Добавить диагноз</Button>
+      <Button type="success" @click="showDiagnosSelectingWindow"
+        >Добавить диагноз</Button
+      >
 
       <Card :dis-hover="true" style="margin-top: 10px">
         <p slot="title">Данные пациента</p>
@@ -23,9 +25,13 @@
 
         <div v-for="(diagnos, index) in patientData.diagnoses" :key="index">
           {{ diagnos.title }}
-          <Button type="error" @click="removeDiagnos(diagnos.id)"
-            >Удалить</Button
-          >
+          <Button
+            size="small"
+            shape="circle"
+            icon="md-close"
+            type="error"
+            @click="removeDiagnos(diagnos.id)"
+          />
           <div v-if="diagnos.pivot.product">
             <p>
               Выданное изделие: {{ diagnos.pivot.product.name }}<br />
@@ -43,69 +49,73 @@
             </ul>
             <br />
           </div>
+          <div v-else>
+            Изделие по данному диагнозу не выдавалось
+            <Button
+              type="success"
+              size="small"
+              @click="
+                selectedDiagnos = diagnos.id;
+                productSelectingMode = true;
+              "
+              >Выдать</Button
+            >
+          </div>
 
           <Divider />
         </div>
       </Card>
     </template>
 
-    <!-- <div class="patient-card-row" v-for="product in patients_data.products">
-      <h4>Название изделия:</h4>
-      <p>{{ product.name }}</p>
-    </div>
-    <div class="patient-card-row">
-      <h4>ID модуля:</h4>
-      <p>0000000000000000000001</p>
-    </div>
-    <div class="patient-card-row">
-      <h4>Дата установки:</h4>
-      <p>01.01.1999</p>
-    </div> -->
+    <diagnos-selecting
+      :patient-id="patientData.id"
+      :isShowing="diagnosSelectingMode"
+      @finished="processResponse"
+    />
+
+    <Modal
+      v-model="productSelectingMode"
+      title="Выдача изделия"
+      @on-ok="attachProduct"
+    >
+      <Form :disabled="isLoading">
+        <FormItem label="Выберите изделие" prop="device">
+          <Select :filterable="true" v-model="selectedProduct">
+            <Option
+              v-for="(product, index) in products"
+              :key="index"
+              :value="product.id"
+              >{{ product.name }}</Option
+            >
+          </Select>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 
 <script>
+import DiagnosSelecting from "../../components/DiagnosSelecting.vue";
+
 export default {
   name: "PatientCard",
+  components: {
+    DiagnosSelecting,
+  },
   data() {
     return {
       isLoading: false,
+      diagnosSelectingMode: false,
+      productSelectingMode: false,
+
       patientData: {},
 
       diagnoses: [],
       selectedDiagnos: null,
       selectedDiagnosComment: null,
 
-      products: [
-        {
-          id: 1,
-          title: "Изделие 1",
-          modules: [
-            {
-              id: 1,
-              title: "Модуль 1",
-            },
-            {
-              id: 2,
-              title: "Модуль 2",
-            },
-          ],
-        },
-        {
-          id: 2,
-          title: "Изделие 2",
-          modules: [
-            {
-              id: 1,
-              title: "Модуль 1",
-            },
-            {
-              id: 2,
-              title: "Модуль 2",
-            },
-          ],
-        },
-      ],
+      products: [],
+      selectedProduct: null,
     };
   },
   mounted() {
@@ -118,7 +128,7 @@ export default {
       });
     } else {
       this.getPatientData(this.patientId);
-      this.getDiagnoses();
+      this.getProducts();
     }
   },
   methods: {
@@ -140,84 +150,53 @@ export default {
         });
     },
 
-    //Получаем список диагнозов на случай назначения
-    getDiagnoses() {
+    getProducts() {
+      this.isLoading = true;
+      // Получаем список изделий
       this.$http({
-        url: "diagnoses",
+        url: "products",
         method: "GET",
       })
         .then((res) => {
-          this.diagnoses = res.data;
+          this.products = res.data;
+          this.isLoading = false;
         })
         .catch((err) => {
           this.has_error = true;
+          this.isLoading = false;
         });
     },
+
     // Отображает списко диагнозов для выбора
-    selectDiagnos() {
-      let self = this;
-      this.$Modal.confirm({
-        title: "Добавление диагноза",
-        onOk: () => {
-          self.attachDiagnos();
-        },
-        onCancel: () => {
-          self.clearSelectedDiagnos();
-        },
-        render: (h) => {
-          return h("div", {}, [
-            h(
-              "Select",
-              {
-                props: {
-                  size: "small",
-                  filterable: true,
-                },
-                on: {
-                  "on-change": (value) => {
-                    self.selectedDiagnos = value;
-                  },
-                },
-              },
-              self.diagnoses.map((item) => {
-                return h("Option", {
-                  props: {
-                    value: item.id,
-                    label: item.title,
-                  },
-                });
-              })
-            ),
-            h("p", {}, "Комментарий"),
-            h("Input", {
-              props: {
-                type: "textarea",
-                // autosize: "{minRows: 2,maxRows: 5}",
-              },
-              on: {
-                input: (value) => {
-                  self.selectedDiagnosComment = value;
-                },
-              },
-            }),
-          ]);
-        },
-      });
+    showDiagnosSelectingWindow() {
+      this.diagnosSelectingMode = true;
     },
 
-    attachDiagnos() {
-      let self = this;
-      this.isLoading = true;
-      // Добавляем выбранный диагноз пациенту
+    // Обработка ответа от компонента добавления диагноза
+    processResponse(response) {
+      this.diagnosSelectingMode = false;
+      if (response) {
+        this.getPatientData(this.patientData.id);
+      }
+    },
+
+    // Прикрепляет продукт к диагнозу пациента
+    attachProduct() {
       this.$http
-        .post("patients/" + self.patientData.id + "/attach_diagnos", {
-          diagnosId: self.selectedDiagnos,
-          diagnosComment: self.selectedDiagnosComment,
-        })
+        .post(
+          "patients/" +
+            this.patientData.id +
+            "/diagnos/" +
+            this.selectedDiagnos +
+            "/attach_product",
+          {
+            productId: this.selectedProduct,
+          }
+        )
         .then((res) => {
           //todo show message
           this.isLoading = false;
-          this.getPatientData(self.patientData.id);
+          this.getPatientData(this.patientData.id);
         })
         .catch((err) => {
           this.has_error = true;
@@ -244,11 +223,6 @@ export default {
           this.has_error = true;
           this.isLoading = false;
         });
-    },
-
-    clearSelectedDiagnos() {
-      this.selectedDiagnos = null;
-      this.selectedDiagnosComment = null;
     },
   },
 };

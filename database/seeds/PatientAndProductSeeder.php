@@ -2,7 +2,7 @@
 
 use App\Models\Diagnos;
 use App\Models\Patient;
-use App\Models\Product;
+use App\Models\Products\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -18,27 +18,22 @@ class PatientAndProductSeeder extends Seeder
         // create products for test
         $productOne = new Product();
         $productOne->name = 'изделие 1';
-        $productOne->date = '20.01.2020';
         $productOne->save();
 
         $productTwo = new Product();
         $productTwo->name = 'изделие 2';
-        $productTwo->date = '21.03.2020';
         $productTwo->save();
 
         $productThree = new Product();
         $productThree->name = 'изделие 3';
-        $productThree->date = '23.01.2020';
         $productThree->save();
 
         $productFive = new Product();
         $productFive->name = 'изделие 8';
-        $productFive->date = '25.01.2020';
         $productFive->save();
 
         $productTen = new Product();
         $productTen->name = 'изделие 10';
-        $productTen->date = '30.02.2020';
         $productTen->save();
 
         $diagnos1 = Diagnos::create([

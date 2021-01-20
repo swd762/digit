@@ -43,6 +43,9 @@ class PatientsController extends Controller
      */
     public function attachDiagnos(Patient $patient, Request $request)
     {
+        /**
+         * У одного пациента не может быть 2-х одинаковых диагнозов. Надо добавить проверку.
+         */
         $patient->diagnoses()->attach($request->diagnosId, [
             'comment' => $request->diagnosComment,
             'issue_date' => Carbon::now()->toDateString()
@@ -70,5 +73,30 @@ class PatientsController extends Controller
         ]);
 
         return response()->json(['status' => 'success', 'msg' => 'Диагноз удален']);
+    }
+
+    /**
+     * Прикрепляет изделие к диагнозу пациента
+     *
+     * @param Patient $patient
+     * @param Int $diagnosId
+     * @param Request $request
+     * @var Int productId - id изделия для прикрепления
+     *
+     * @return json
+     */
+    public function attachProduct(Patient $patient, $diagnosId, Request $request)
+    {
+        /**
+         * Изделие можно прикрепить как в момент выбора диагноза, так и после.
+         * Если после и прикрепляется в этот же день (Предположим, что врач в течение приема может сначала задать диагноз, а потом прикрепить изделие),
+         * то запись о диагнозе оставляем прежнюю.
+         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
+         */
+        $patient->diagnoses()->updateExistingPivot($diagnosId, [
+            'product_id' => $request->productId
+        ]);
+
+        return response()->json(['status' => 'success', 'msg' => 'Изделие прикреплено']);
     }
 }
