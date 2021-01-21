@@ -62,6 +62,9 @@ export default {
       this.$http({
         url: "diagnoses",
         method: "GET",
+        params: {
+          patientId: this.patientId,
+        },
       })
         .then((res) => {
           this.diagnoses = res.data;

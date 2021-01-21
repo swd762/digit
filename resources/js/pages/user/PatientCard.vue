@@ -33,21 +33,30 @@
             @click="removeDiagnos(diagnos.id)"
           />
           <div v-if="diagnos.pivot.product">
-            <p>
-              Выданное изделие: {{ diagnos.pivot.product.name }}<br />
-              Дата выдачи: {{ diagnos.pivot.issue_date }}
+            <p style="margin-top: 10px">
+              Выданное изделие: <strong>{{ diagnos.pivot.product.name }}</strong
+              ><br />
+              Дата выдачи: <strong>{{ diagnos.pivot.issue_date }}</strong>
             </p>
-            <br />
-            <p>Прикрепленные модули:</p>
-            <ul>
-              <li
-                v-for="(module, index) in diagnos.pivot.product.modules"
-                :key="index"
-              >
-                {{ module.name }}
-              </li>
-            </ul>
-            <br />
+            <template
+              v-if="
+                diagnos.pivot.product.modules &&
+                diagnos.pivot.product.modules.length
+              "
+            >
+              <br />
+              <p>Прикрепленные модули:</p>
+              <ul>
+                <li
+                  v-for="(module, index) in diagnos.pivot.product.modules"
+                  :key="index"
+                >
+                  {{ module.name }}
+                </li>
+              </ul>
+              <br />
+            </template>
+            <p v-else>Прикрепленные модули отсутствуют</p>
           </div>
           <div v-else>
             Изделие по данному диагнозу не выдавалось
@@ -68,7 +77,8 @@
     </template>
 
     <diagnos-selecting
-      :patient-id="patientData.id"
+      v-if="diagnosSelectingMode"
+      :patient-id="patientId"
       :isShowing="diagnosSelectingMode"
       @finished="processResponse"
     />
@@ -108,6 +118,7 @@ export default {
       diagnosSelectingMode: false,
       productSelectingMode: false,
 
+      patientId: this.$route.params.patientId,
       patientData: {},
 
       diagnoses: [],

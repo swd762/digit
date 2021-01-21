@@ -22,11 +22,18 @@ class PatientsController extends Controller
         );
     }
 
+    /**
+     * Возвращает данные о конкретном пациенте с назначенными диагнозами и изделиями
+     *
+     * @param Patient $patient
+     *
+     * @return json
+     */
     public function patientInfo(Patient $patient)
     {
         $patient->load(['diagnoses' => function ($q) {
             $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date']);
-        }, 'diagnoses.pivot.product.modules']);
+        }, 'diagnoses.pivot.product']);
 
         return response()->json($patient);
     }
@@ -44,7 +51,7 @@ class PatientsController extends Controller
     public function attachDiagnos(Patient $patient, Request $request)
     {
         /**
-         * У одного пациента не может быть 2-х одинаковых диагнозов. Надо добавить проверку.
+         * todo У одного пациента не может быть 2-х одинаковых диагнозов. Надо добавить проверку.
          */
         $patient->diagnoses()->attach($request->diagnosId, [
             'comment' => $request->diagnosComment,
@@ -67,7 +74,7 @@ class PatientsController extends Controller
      */
     public function detachDiagnos(Patient $patient, Request $request)
     {
-        $patient->diagnoses()->updateExistingPivot($request->diagnosId, [
+        $patient->diagnoses()->wherePivot('active', 1)->updateExistingPivot($request->diagnosId, [
             'active' => 0,
             'detach_date' => Carbon::now()->toDateString()
         ]);
@@ -93,7 +100,7 @@ class PatientsController extends Controller
          * то запись о диагнозе оставляем прежнюю.
          * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
          */
-        $patient->diagnoses()->updateExistingPivot($diagnosId, [
+        $patient->diagnoses()->wherePivot('active', 1)->updateExistingPivot($diagnosId, [
             'product_id' => $request->productId
         ]);
 
