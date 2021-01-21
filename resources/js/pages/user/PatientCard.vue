@@ -4,6 +4,7 @@
       <Spin></Spin>
     </template>
     <template v-else>
+      <Button type="primary" @click="returnBack">Назад</Button>
       <Button type="success" @click="showDiagnosSelectingWindow"
         >Добавить диагноз</Button
       >
@@ -234,6 +235,10 @@ export default {
           this.has_error = true;
           this.isLoading = false;
         });
+    },
+
+    returnBack() {
+      this.$router.go(-1);
     },
   },
 };
