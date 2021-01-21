@@ -14,9 +14,17 @@ class PatientsController extends Controller
         return response(Test::all()->jsonSerialize(), 200);
     }
 
+    /**
+     * Возвращает список пациентов
+     *
+     * @return json
+     */
     public function patientsList()
     {
-        $patients = Patient::get();
+        $patients = Patient::with(['diagnoses' => function ($q) {
+            $q->wherePivot('active', 1);
+        }, 'diagnoses.pivot.product'])->get();
+
         return response()->json(
             $patients
         );
