@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::group(['prefix' => 'diagnos'], function () {
                 Route::group(['prefix' => '{diagnos}', 'where' => ['diagnos' => '[0-9]+']], function () {
                     Route::post('attach_product', 'PatientsController@attachProduct');
+                    Route::post('detach_product', 'PatientsController@detachProduct');
                 });
             });
         });
