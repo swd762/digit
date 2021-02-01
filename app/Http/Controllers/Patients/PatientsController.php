@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Patients;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\Reception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -42,6 +43,11 @@ class PatientsController extends Controller
         $patient->load(['diagnoses' => function ($q) {
             $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date']);
         }, 'diagnoses.pivot.product']);
+
+        $patient->load(['receptions' => function ($query) {
+            $query->select(['id', 'patient_id', 'receipt_description', 'receipt_date']);
+        }
+        ]);
 
         return response()->json($patient);
     }
@@ -169,4 +175,54 @@ class PatientsController extends Controller
             'msg' => 'Изделие откреплено'
         ]);
     }
+
+    /**
+     * Добавляем осмотр или обновляем существующий
+     *
+     *
+     * @param Patient $patient
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attachReception(Patient $patient, Request $request)
+    {
+        if ($request->id == null) {
+            $reception = new Reception([
+                'receipt_description' => $request->comment,
+                'receipt_date' => $request->date
+            ]);
+            $patient->receptions()->save($reception);
+        } else {
+
+            $reception = $patient->receptions()->find($request->id);
+            $reception->receipt_description = $request->comment;
+            $reception->receipt_date = Carbon::now()->toDateString();
+            $reception->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'осмотр добавлен или обновлен'
+        ]);
+    }
+
+    /**
+     * Удалем осмотр из списка
+     *
+     * @param Patient $patient
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function removeReception(Patient $patient, Request $request)
+    {
+        $reception = $patient->receptions()->find($request->id);
+        $reception->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'осмотр удален'
+        ]);
+    }
+
 }

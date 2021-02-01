@@ -38,6 +38,9 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::post('attach_diagnos', 'PatientsController@attachDiagnos');
             Route::delete('detach_diagnos', 'PatientsController@detachDiagnos');
 
+            Route::post('attach_reception', 'PatientsController@attachReception');
+            Route::post('remove_reception', 'PatientsController@removeReception');
+
             Route::group(['prefix' => 'diagnos'], function () {
                 Route::group(['prefix' => '{diagnos}', 'where' => ['diagnos' => '[0-9]+']], function () {
                     Route::post('attach_product', 'PatientsController@attachProduct');
