@@ -4,20 +4,21 @@ namespace App\Http\Controllers\Patients;
 
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
+use App\Models\Reception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PatientsController extends Controller
 {
-    public function index()
-    {
-        return response(Test::all()->jsonSerialize(), 200);
-    }
+//    public function index()
+//    {
+//        return response(Test::all()->jsonSerialize(), 200);
+//    }
 
     /**
      * Возвращает список пациентов
      *
-     * @return json
+     * @return
      */
     public function patientsList()
     {
@@ -35,13 +36,18 @@ class PatientsController extends Controller
      *
      * @param Patient $patient
      *
-     * @return json
+     * @return
      */
     public function patientInfo(Patient $patient)
     {
         $patient->load(['diagnoses' => function ($q) {
             $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date']);
         }, 'diagnoses.pivot.product']);
+
+        $patient->load(['receptions' => function ($query) {
+            $query->select(['id', 'patient_id', 'receipt_description', 'receipt_date']);
+        }
+        ]);
 
         return response()->json($patient);
     }
@@ -51,10 +57,10 @@ class PatientsController extends Controller
      *
      * @param Patient $patient
      * @param Request $request
-     * @var int $diagnosId - id диагноза для прикрепления
+     * @return
      * @var string $diagnosComment - комментарий врача к поставленному диагнозу
      *
-     * @return json
+     * @var int $diagnosId - id диагноза для прикрепления
      */
     public function attachDiagnos(Patient $patient, Request $request)
     {
@@ -76,9 +82,9 @@ class PatientsController extends Controller
      *
      * @param Patient $patient
      * @param Request $request
+     * @return
      * @var int $diagnosId - id диагноза для удаления
      *
-     * @return json
      */
     public function detachDiagnos(Patient $patient, Request $request)
     {
@@ -96,9 +102,9 @@ class PatientsController extends Controller
      * @param Patient $patient
      * @param Int $diagnosId
      * @param Request $request
+     * @return
      * @var Int productId - id изделия для прикрепления
      *
-     * @return json
      */
     public function attachProduct(Patient $patient, $diagnosId, Request $request)
     {
@@ -108,10 +114,115 @@ class PatientsController extends Controller
          * то запись о диагнозе оставляем прежнюю.
          * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
          */
-        $patient->diagnoses()->wherePivot('active', 1)->updateExistingPivot($diagnosId, [
-            'product_id' => $request->productId
-        ]);
+        $patient
+            ->diagnoses()
+            ->wherePivot('active', 1)
+            ->updateExistingPivot($diagnosId, [
+                'product_id' => $request->productId,
+                'product_attach_date' => Carbon::now()->toDateString()
+            ]);
 
-        return response()->json(['status' => 'success', 'msg' => 'Изделие прикреплено']);
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Изделие прикреплено'
+        ]);
     }
+
+    /**
+     * Открепляет устройство от диагноза
+     *
+     * @param Patient $patient
+     * @param $diagnosId
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detachProduct(Patient $patient, $diagnosId, Request $request)
+    {
+        /**
+         * Изделие можно открепить как в момент выбора диагноза, так и после.
+         *
+         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
+         */
+        $oldDiag = $patient->diagnosesWithPivot()
+            ->wherePivot('diagnos_id', $diagnosId)
+            ->wherePivot('active', 1)
+            ->first();
+        if ($oldDiag->pivot->issue_date == Carbon::now()->toDateString()) {
+            $patient->diagnoses()
+                ->wherePivot('active', 1)
+                ->updateExistingPivot($diagnosId, [
+                    'product_attach_date' => null,
+                    'product_id' => null
+                ]);
+        } else {
+            $updatedDiag = $oldDiag->pivot;
+            $patient->diagnoses()
+                ->wherePivot('active', 1)
+                ->updateExistingPivot($diagnosId, [
+                    'active' => 0,
+                    'product_detach_date' => Carbon::now()->toDateString()
+                ]);
+            $patient->diagnoses()->attach($updatedDiag->diagnos_id, [
+                'comment' => $updatedDiag->comment,
+                'issue_date' => $updatedDiag->issue_date,
+                'product_attach_date' => null,
+                'product_detach_date' => null
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Изделие откреплено'
+        ]);
+    }
+
+    /**
+     * Добавляем осмотр или обновляем существующий
+     *
+     *
+     * @param Patient $patient
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attachReception(Patient $patient, Request $request)
+    {
+        if ($request->id == null) {
+            $reception = new Reception([
+                'receipt_description' => $request->comment,
+                'receipt_date' => $request->date
+            ]);
+            $patient->receptions()->save($reception);
+        } else {
+
+            $reception = $patient->receptions()->find($request->id);
+            $reception->receipt_description = $request->comment;
+            $reception->receipt_date = Carbon::now()->toDateString();
+            $reception->save();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'осмотр добавлен или обновлен'
+        ]);
+    }
+
+    /**
+     * Удалем осмотр из списка
+     *
+     * @param Patient $patient
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function removeReception(Patient $patient, Request $request)
+    {
+        $reception = $patient->receptions()->find($request->id);
+        $reception->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'осмотр удален'
+        ]);
+    }
+
 }

@@ -21,4 +21,16 @@ class Patient extends Model
             ->using(PatientDiagnosPivot::class)
             ->withPivot('product_id');
     }
+
+    public function diagnosesWithPivot()
+    {
+        return $this->belongsToMany(Diagnos::class, 'patients_diagnoses', 'patient_id', 'diagnos_id')
+            ->using(PatientDiagnosPivot::class)
+            ->withPivot('product_id', 'issue_date', 'detach_date', 'comment' );
+    }
+
+    public function receptions()
+    {
+        return $this->hasMany(Reception::class);
+    }
 }
