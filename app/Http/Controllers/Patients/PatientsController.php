@@ -225,4 +225,12 @@ class PatientsController extends Controller
         ]);
     }
 
+    public function getModuleDownloadStatus()
+    {
+        return response()->json([
+           'status'=>'success',
+           'date'=>Carbon::now()->toDateString()
+        ]);
+    }
+
 }

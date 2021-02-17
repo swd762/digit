@@ -44,7 +44,7 @@
                     <div v-if="diagnos.pivot.product">
                         <div style="margin-top: 10px">
                             <p style="display: inline-block">Выданное изделие: <strong>{{
-                                    diagnos.pivot.product.name
+                                diagnos.pivot.product.name
                                 }}</strong>
                             </p>
                             <Button
@@ -174,7 +174,8 @@
                         :autosize="{ minRows: 3, maxRows: 10 }"
                     />
                 </FormItem>
-                <Button type="success" @click="">
+                <Alert type="success" show-icon v-if="isModuleRead">{{moduleStatusMessage}}</Alert>
+                <Button type="success" @click="getModuleStatus">
                     Прочитать данные с модуля
                 </Button>
             </Form>
@@ -193,6 +194,7 @@ export default {
     data() {
         return {
             isLoading: false,
+            isModuleRead: false,
             diagnosSelectingMode: false,
             productSelectingMode: false,
             receptionSelectingMode: false,
@@ -204,13 +206,14 @@ export default {
             selectedDiagnos: null,
             selectedDiagnosComment: null,
             receptionData: {
-                id:null,
+                id: null,
                 comment: null,
                 date: null,
             },
             receptions: [],
             products: [],
             selectedProduct: null,
+            moduleStatusMessage:null
         };
     },
     mounted() {
@@ -244,11 +247,31 @@ export default {
                     this.isLoading = false;
                 });
         },
+        disableModuleStatusMessage() {
+
+        },
+        getModuleStatus() {
+            this.isModuleRead = true;
+            this.$http
+                .post(
+                    "patients/" +
+                    this.patientData.id +
+                    "/get_module_status"
+                )
+                .then((res) => {
+                    this.moduleStatusMessage = "данные загружены успешно " + res.data['date'];
+                })
+                .catch((err) => {
+                    this.has_error = true;
+                    this.isLoading = false;
+                });
+
+        },
 
         getProducts() {
             this.isLoading = true;
             // Получаем список изделий
-            this.$http({
+            this.$http.post({
                 url: "products",
                 method: "GET",
             })
@@ -341,10 +364,10 @@ export default {
         },
         // добавляем осмотр врача пациенту, либо обновляем уже существующий
         attachReception() {
-            this.$http.post("patients/" + this.patientData.id + "/attach_reception",{
+            this.$http.post("patients/" + this.patientData.id + "/attach_reception", {
                 comment: this.receptionData.comment,
-                date:this.receptionData.date,
-                id:this.receptionData.id
+                date: this.receptionData.date,
+                id: this.receptionData.id
             })
                 .then((res) => {
                     //todo show message
@@ -356,6 +379,7 @@ export default {
                     this.has_error = true;
                     this.isLoading = false;
                 })
+            this.isModuleRead = false;
         },
         // открываем модальное окно с для просмотра или редактирования приема
         openReception(receiptId = -1) {
@@ -375,8 +399,8 @@ export default {
         removeReception(receiptId) {
             this.receptions = this.patientData.receptions
             console.log(this.receptions[receiptId].id)
-            this.$http.post("patients/" + this.patientData.id + "/remove_reception",{
-                id:this.receptions[receiptId].id
+            this.$http.post("patients/" + this.patientData.id + "/remove_reception", {
+                id: this.receptions[receiptId].id
             })
                 .then((res) => {
                     //todo show message
@@ -394,6 +418,7 @@ export default {
             this.receptionData.comment = null
             this.receptionData.date = null
             this.receptionData.id = null
+            this.isModuleRead = false;
         },
 
         returnBack() {
