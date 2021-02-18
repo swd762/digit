@@ -33,12 +33,20 @@ with connection:
     # result = cursor.fetchone()
     # print(result)
 
+    # with connection.cursor() as cursor:
+    #     cursor.execute("SELECT VERSION()")
+
+    #     result = cursor.fetchone()
+
+    #     print("Database version: {}".format(result))
+
     with connection.cursor() as cursor:
-        cursor.execute("SELECT VERSION()")
+        sql = "SELECT * FROM `modules` WHERE `created_at` between %s and %s"
+        cursor.execute(sql, (dates['dateFrom'], dates['dateTo']))
 
-        result = cursor.fetchone()
+        result = cursor.fetchall()
 
-        print("Database version: {}".format(result))
+        print(result)
 
 # import psycopg2
 # from sqlalchemy import create_engine
