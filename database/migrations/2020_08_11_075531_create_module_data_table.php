@@ -13,13 +13,16 @@ class CreateModuleDataTable extends Migration
      */
     public function up()
     {
-//        Schema::create('module_data', function (Blueprint $table) {
-//            //$table->id();
-//            $table->BigInteger('module_key');
-//            $table->foreign('module_key')->references('module_key')->on('modules');
-//            $table->text('data');
-//            $table->timestamps();
-//        });
+        Schema::create('module_data', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+//            $table->foreign('pivot_key')->references('id')->on('modules');
+            $table->unsignedBigInteger('module_id');
+            $table->decimal('temperature', 5, 1);
+            $table->integer('bend');
+            $table->boolean('is_real')->nullable()->default(null);
+            $table->timestamps();
+        });
     }
 
     /**
