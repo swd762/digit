@@ -70,7 +70,7 @@
                             <p>Прикрепленные модули:</p>
                             <ul>
                                 <li
-                                    v-for="(module, index) in diagnos.pivot.product.modules"
+                                    v-for="(module, index) in diagnos.pivot.modules"
                                     :key="index"
                                 >
                                     {{ module.name }}
@@ -154,6 +154,17 @@
                         >
                     </Select>
                 </FormItem>
+                <FormItem label="Выберите модуль" prop="device">
+                    <Select v-model="selectedModule" :filterable="true">
+                        <Option
+                            v-for="(module, index) in modules"
+                            :key="index"
+                            :value="module.id"
+                        >{{ module.name }}
+                        </Option
+                        >
+                    </Select>
+                </FormItem>
             </Form>
         </Modal>
 
@@ -211,7 +222,9 @@ export default {
             },
             receptions: [],
             products: [],
+            modules:[],
             selectedProduct: null,
+            selectedModule:null,
             moduleStatusMessage: null
         };
     },
@@ -226,6 +239,7 @@ export default {
         } else {
             this.getPatientData(this.patientId);
             this.getProducts();
+            this.getModules();
         }
     },
     methods: {
@@ -263,7 +277,9 @@ export default {
                 });
 
         },
-
+        /**
+         * Получаем список изделий
+         */
         getProducts() {
             this.isLoading = true;
             // Получаем список изделий
@@ -272,6 +288,22 @@ export default {
                     this.products = res.data;
                     this.isLoading = false;
 
+                })
+                .catch((err) => {
+                    this.has_error = true;
+                    this.isLoading = false;
+                    console.log(err)
+                });
+        },
+        /**
+         * Получаем список модулей
+         */
+        getModules() {
+            this.isLoading = true;
+            this.$http.get("modules")
+                .then((res) => {
+                    this.modules = res.data;
+                    this.isLoading = false;
                 })
                 .catch((err) => {
                     this.has_error = true;
@@ -293,7 +325,10 @@ export default {
             }
         },
 
-        // Прикрепляет продукт к диагнозу пациента
+        /**
+         * Прикрепляет продукт к диагнозу
+         * Прикрепляет также модуль к продукту
+         */
         attachProduct() {
             this.$http
                 .post(
@@ -304,6 +339,7 @@ export default {
                     "/attach_product",
                     {
                         productId: this.selectedProduct,
+                        moduleId:this.selectedModule
                     }
                 )
                 .then((res) => {

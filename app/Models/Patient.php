@@ -33,4 +33,9 @@ class Patient extends Model
     {
         return $this->hasMany(Reception::class);
     }
+
+    public function moduleData()
+    {
+        return $this->hasMany(ModuleData::class);
+    }
 }

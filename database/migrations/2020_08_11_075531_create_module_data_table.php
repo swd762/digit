@@ -20,7 +20,7 @@ class CreateModuleDataTable extends Migration
             $table->unsignedBigInteger('module_id');
             $table->decimal('temperature', 5, 1);
             $table->integer('bend');
-            $table->boolean('is_real')->nullable()->default(null);
+            $table->integer('is_real')->nullable()->default(null);
             $table->timestamps();
         });
     }

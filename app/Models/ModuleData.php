@@ -8,10 +8,20 @@ class ModuleData extends Model
 {
     // модель для таблицы 'module_data'
     protected $fillable = [
-        'module_key',
-        'data'
+        'user_id',
+        'module_id',
+        'temperature',
+        'bend',
+        'is_real'
     ];
-    public function Module() {
-        $this->belongsTo('App\Models\Module');
+
+    public function patients()
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function modules()
+    {
+        return $this->belongsTo(Module::class);
     }
 }

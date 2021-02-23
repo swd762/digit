@@ -8,9 +8,7 @@ class Module extends Model
 {
     // модель для таблицы 'modules'
 
-    public function ModuleData() {
-        $this->hasMany('App\Models\ModuleData');
+    public function moduleData() {
+        $this->hasMany(ModuleData::class);
     }
-
-
 }

@@ -41,8 +41,9 @@ class PatientsController extends Controller
     public function patientInfo(Patient $patient)
     {
         $patient->load(['diagnoses' => function ($q) {
-            $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date']);
+            $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date','module_id']);
         }, 'diagnoses.pivot.product']);
+
 
         $patient->load(['receptions' => function ($query) {
             $query->select(['id', 'patient_id', 'receipt_description', 'receipt_date']);
@@ -119,8 +120,11 @@ class PatientsController extends Controller
             ->wherePivot('active', 1)
             ->updateExistingPivot($diagnosId, [
                 'product_id' => $request->productId,
+                'module_id' => $request->moduleId,
                 'product_attach_date' => Carbon::now()->toDateString()
             ]);
+
+
 
         return response()->json([
             'status' => 'success',

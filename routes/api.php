@@ -60,6 +60,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/', 'ProductsController@index');
     });
 
+    Route::prefix('modules')->namespace('Products')->group(function () {
+        Route::get('/', 'ProductsController@getModules');
+    });
+
 
     // Маршруты для чтения и редактирования пользователей в бд
     Route::get('users/{user?}', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
