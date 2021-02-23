@@ -44,7 +44,7 @@
                     <div v-if="diagnos.pivot.product">
                         <div style="margin-top: 10px">
                             <p style="display: inline-block">Выданное изделие: <strong>{{
-                                diagnos.pivot.product.name
+                                    diagnos.pivot.product.name
                                 }}</strong>
                             </p>
                             <Button
@@ -90,8 +90,7 @@
                 productSelectingMode = true;
               "
                         >Выдать
-                        </Button
-                        >
+                        </Button>
                     </div>
 
                     <Divider/>
@@ -174,7 +173,7 @@
                         :autosize="{ minRows: 3, maxRows: 10 }"
                     />
                 </FormItem>
-                <Alert type="success" show-icon v-if="isModuleRead">{{moduleStatusMessage}}</Alert>
+                <Alert type="success" show-icon v-if="isModuleRead">{{ moduleStatusMessage }}</Alert>
                 <Button type="success" @click="getModuleStatus">
                     Прочитать данные с модуля
                 </Button>
@@ -213,7 +212,7 @@ export default {
             receptions: [],
             products: [],
             selectedProduct: null,
-            moduleStatusMessage:null
+            moduleStatusMessage: null
         };
     },
     mounted() {
@@ -247,9 +246,6 @@ export default {
                     this.isLoading = false;
                 });
         },
-        disableModuleStatusMessage() {
-
-        },
         getModuleStatus() {
             this.isModuleRead = true;
             this.$http
@@ -271,17 +267,16 @@ export default {
         getProducts() {
             this.isLoading = true;
             // Получаем список изделий
-            this.$http.post({
-                url: "products",
-                method: "GET",
-            })
+            this.$http.get("products")
                 .then((res) => {
                     this.products = res.data;
                     this.isLoading = false;
+
                 })
                 .catch((err) => {
                     this.has_error = true;
                     this.isLoading = false;
+                    console.log(err)
                 });
         },
 
