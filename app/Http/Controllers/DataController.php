@@ -10,18 +10,10 @@ class DataController extends Controller
 {
     // модуль для импорта данных с модуля и запись в таблицу
 
-    public function import(Request $request) {
-
-        $module = new Module;
-        $module->module_name = '1';
-        $module->module_key = '1';
-        $module->save();
-        $moduleData = new ModuleData;
-        $moduleData->module_key = $module->key;
-        $moduleData->data = $request->all();
-        $moduleData->save();
+    public function import(Request $request)
+    {
         return response()->json([
-            'status'=>'success',
+            'status' => 'success',
         ], 200);
     }
 }
