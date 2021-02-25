@@ -32,4 +32,9 @@ class PatientDiagnosPivot extends Pivot
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function module()
+    {
+        return $this->belongsTo(Module::class, 'module_id', 'id');
+    }
 }

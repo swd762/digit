@@ -10,11 +10,6 @@ use Illuminate\Http\Request;
 
 class PatientsController extends Controller
 {
-//    public function index()
-//    {
-//        return response(Test::all()->jsonSerialize(), 200);
-//    }
-
     /**
      * Возвращает список пациентов
      *
@@ -32,7 +27,7 @@ class PatientsController extends Controller
     }
 
     /**
-     * Возвращает данные о конкретном пациенте с назначенными диагнозами и изделиями
+     * Возвращает данные о конкретном пациенте с назначенными диагнозами, изделиями и модулями
      *
      * @param Patient $patient
      *
@@ -41,8 +36,8 @@ class PatientsController extends Controller
     public function patientInfo(Patient $patient)
     {
         $patient->load(['diagnoses' => function ($q) {
-            $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date','module_id']);
-        }, 'diagnoses.pivot.product']);
+            $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date', 'module_id']);
+        }, 'diagnoses.pivot.product', 'diagnoses.pivot.module']);
 
 
         $patient->load(['receptions' => function ($query) {
@@ -123,8 +118,6 @@ class PatientsController extends Controller
                 'module_id' => $request->moduleId,
                 'product_attach_date' => Carbon::now()->toDateString()
             ]);
-
-
 
         return response()->json([
             'status' => 'success',
@@ -229,11 +222,17 @@ class PatientsController extends Controller
         ]);
     }
 
+
+    /**
+     * Возвращает информацию о получении данных с модуля, пока в тестовом режиме
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getModuleDownloadStatus()
     {
         return response()->json([
-           'status'=>'success',
-           'date'=>Carbon::now()->toDateString()
+            'status' => 'success',
+            'date' => Carbon::now()->toDateString()
         ]);
     }
 

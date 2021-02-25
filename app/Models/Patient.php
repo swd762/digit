@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use AjCastro\EagerLoadPivotRelations\EagerLoadPivotTrait;
+use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class Patient extends Model
