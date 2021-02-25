@@ -58,27 +58,14 @@
                                 Дата выдачи: <strong>{{ diagnos.pivot.issue_date }}</strong>
                             </p>
                         </div>
-
-
-                        <template
-                            v-if="
-                diagnos.pivot.product.modules &&
-                diagnos.pivot.product.modules.length
-              "
-                        >
-                            <br/>
-                            <p>Прикрепленные модули:</p>
-                            <ul>
-                                <li
-                                    v-for="(module, index) in diagnos.pivot.modules"
-                                    :key="index"
-                                >
-                                    {{ module.name }}
-                                </li>
-                            </ul>
-                            <br/>
-                        </template>
-                        <p v-else>Прикрепленные модули отсутствуют</p>
+                        <div style="margin-top: 10px">
+                            <p >Прикрепленный модуль:
+                                <strong>{{ diagnos.pivot.module.name }}</strong>
+                            </p>
+                            <p >ID модуля:
+                                <strong>{{ diagnos.pivot.module.module_id }}</strong>
+                            </p>
+                        </div>
                     </div>
                     <div v-else>
                         Изделие по данному диагнозу не выдавалось

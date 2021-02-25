@@ -2,7 +2,6 @@
 
 namespace App\Models\Products;
 
-use App\Models\Module;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -29,8 +28,4 @@ class Product extends Model
      */
     protected $fillable = ['name'];
 
-    public function modules()
-    {
-        return $this->hasOne(Module::class);
-    }
 }
