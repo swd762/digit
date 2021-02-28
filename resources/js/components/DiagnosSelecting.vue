@@ -1,3 +1,4 @@
+<!--компонент выбора диагноза-->
 <template>
   <Modal
     :value="isShowing"

@@ -1,3 +1,4 @@
+<!--компонент списка пациента-->
 <style scoped>
 .buttons-cont {
   margin: 15px;

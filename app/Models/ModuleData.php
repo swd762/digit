@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModuleData extends Model
 {
-    // модель для таблицы 'module_data'
+    /**
+     * модель для таблицы 'module_data' . С данными, полученными непосредственно с модуля
+     *
+     * @var string[]
+     */
     protected $fillable = [
         'user_id',
         'module_id',
@@ -15,11 +19,13 @@ class ModuleData extends Model
         'is_real'
     ];
 
+    // связь с таблицей пациентов
     public function patients()
     {
         return $this->belongsTo(Patient::class);
     }
 
+    // связь с таблицей модулей
     public function modules()
     {
         return $this->belongsTo(Module::class);

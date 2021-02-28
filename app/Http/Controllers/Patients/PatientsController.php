@@ -222,7 +222,6 @@ class PatientsController extends Controller
         ]);
     }
 
-
     /**
      * Возвращает информацию о получении данных с модуля, пока в тестовом режиме
      *
@@ -235,5 +234,4 @@ class PatientsController extends Controller
             'date' => Carbon::now()->toDateString()
         ]);
     }
-
 }

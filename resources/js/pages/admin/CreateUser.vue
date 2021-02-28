@@ -32,7 +32,6 @@
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="createUser">Создать</Button>
-<!--                <Button @click="getUserData" style="margin-left: 8px">Прочитать данные</Button>-->
             </FormItem>
         </Form>
     </div>

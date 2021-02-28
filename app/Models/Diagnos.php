@@ -10,7 +10,7 @@ class Diagnos extends Model
     use EagerLoadPivotTrait;
 
     /**
-     * The table associated with the model.
+     * Модель к таблице с диагнозами
      *
      * @var string
      */

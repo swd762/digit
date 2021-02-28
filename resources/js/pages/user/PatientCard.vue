@@ -1,3 +1,4 @@
+<!--Шаблон страницы карточки пациента-->
 <template>
     <div style="">
         <template v-if="isLoading">
@@ -247,6 +248,7 @@ export default {
                     this.isLoading = false;
                 });
         },
+        // получаем статус модуля
         getModuleStatus() {
             this.isModuleRead = true;
             this.$http
@@ -439,6 +441,7 @@ export default {
             this.isModuleRead = false;
         },
 
+        // возвращаемся на страницу назад
         returnBack() {
             this.$router.go(-1);
         },

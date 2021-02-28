@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class PatientDiagnosPivot extends Pivot
 {
     /**
-     * The table associated with the model.
+     * Модель для pivot таблицы Пациента и диагнозов. В ней хранятся данные о диагнозах, прикрепленных изделиях,
+     * их модулях
      *
      * @var string
      */

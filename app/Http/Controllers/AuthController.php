@@ -12,9 +12,20 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends Controller
 {
-    // Контроллер аутентификации и регистрации пользователей
+    /**
+     *
+     * Контроллер аутентификации и регистрации пользователей
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
 
-    // метод регистрации нового пользователя
+    /**
+     * метод регистрации нового пользователя. Входные данные: логин, пароль, имя, фамилия, отчество, email
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $val = Validator::make($request->all(), [
@@ -47,7 +58,12 @@ class AuthController extends Controller
     }
 
 
-    // метод для аутентификации пользователя (проверяет "паспорт" -> возвращает статус в json и token в хэдере)
+    /**
+     * метод для аутентификации пользователя (проверяет "паспорт" -> возвращает статус в json и token в хэдере)
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $credentials = $request->only('name', 'password');
@@ -61,7 +77,12 @@ class AuthController extends Controller
         ], 401);
     }
 
-    // метод выхода пользователя (возвращает статус в json)
+    /**
+     *
+     * метод выхода пользователя (возвращает статус в json)
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
         $this->guard()->logout();
@@ -71,7 +92,12 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // метод чтения данных пользвателя для последующей авторизации
+    /**
+     * метод чтения данных пользвателя для последующей авторизации
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
@@ -83,7 +109,11 @@ class AuthController extends Controller
         ]);
     }
 
-    // метод проверки "свежести" пользователя и токена
+    /**
+     * метод проверки "свежести" пользователя и токена
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function refresh()
     {
         try {
@@ -103,8 +133,11 @@ class AuthController extends Controller
         }
     }
 
-
-    // метод посредник, чтобы не обращаться напрямую к фасаду Auth
+    /**
+     * метод посредник, чтобы не обращаться напрямую к фасаду Auth
+     *
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
+     */
     private function guard()
     {
         return Auth::guard();

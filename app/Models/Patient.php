@@ -10,7 +10,7 @@ class Patient extends Model
 {
     use EagerLoadPivotTrait;
     /**
-     * The attributes that are mass assignable.
+     * Модель для таблицы с данными пациентов
      *
      * @var array
      */

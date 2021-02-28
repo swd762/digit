@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     /**
+     *  Класс для работы с изделиями
+     */
+
+    /**
      * Поулчаем список изделий
      *
      * @param Request $request
@@ -18,11 +22,6 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-//        $query = Product::query();
-//        if ($request->patientId) {
-//            $patient = Patient::find($request->patientId);
-//            $attachedProductsIds = $patient->diagnoses()->wherePivot('active',1)->select()
-//        }
         return response(Product::get());
     }
 

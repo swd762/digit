@@ -13,6 +13,12 @@ class DashboardController extends Controller
         return response(Test::all()->jsonSerialize(), 200);
     }
 
+    /**
+     * список пациентов для кабинета
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
     public function patientsList()
     {
         $patients = Patient::get();
@@ -21,6 +27,12 @@ class DashboardController extends Controller
         );
     }
 
+    /**
+     * Информация о пациенте
+     *
+     * @param Patient $patient
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function patientInfo(Patient $patient)
     {
         $patient->load(['diagnoses' => function ($q) {

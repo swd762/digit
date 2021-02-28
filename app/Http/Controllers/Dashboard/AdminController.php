@@ -15,7 +15,13 @@ use Illuminate\Support\Facades\Validator;
  */
 class AdminController extends Controller
 {
-    // метод получения списка пользователей через api в json, либо конкретного пользователя, если прилетает параметр
+    /**
+     * метод получения списка пользователей через api в json, либо конкретного пользователя, если прилетает параметр
+     *
+     * @param User $user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getUser(User $user, Request $request)
     {
         $role = $user->roles->first()->name;
@@ -26,7 +32,13 @@ class AdminController extends Controller
         ], 200);
     }
 
-
+    /**
+     * метод для мполучения списка пользователей либо, если есть входные параметры возвращает информацию о найденном
+     * пользователе
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function usersList(Request $request)
     {
         if (!($request->user)) {
@@ -50,7 +62,13 @@ class AdminController extends Controller
         }
     }
 
-    // метод обновления информации пользователя при редактировании
+    /**
+     * метод обновления информации пользователя при редактировании
+     *
+     * @param User $user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateUser(User $user, Request $request)
     {
         $val = Validator::make($request->all(), [
@@ -82,7 +100,14 @@ class AdminController extends Controller
         ], 200);
     }
 
-    // метод удаления пользователя
+    /**
+     * метод удаления пользователя
+     *
+     * @param User $user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
     public function deleteUser(User $user, Request $request)
     {
         if ($user->name == 'admin' || $user->name == 'saul') {

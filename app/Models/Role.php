@@ -7,19 +7,20 @@ use App\User;
 
 class Role extends Model
 {
-    // модель для работы с таблицей 'roles'
+    /**
+     *
+     * модель для работы с таблицей 'roles'
+     *
+     *
+     * @var array
+     */
+
     protected $fillable = [
-        //'user_id'
     ];
 
-    // обратное отношение один к одному
+    // обратное отношение один ко мноогим
     public function users()
     {
         return $this->belongsToMany(User::class);
     }
-
-//    public function permissions()
-//    {
-//        return $this->belongsToMany('Permission');
-//    }
 }

@@ -8,8 +8,7 @@ class Product extends Model
 {
 
     /**
-     * The table associated with the model.
-     *
+     * Модель к таблице с изделиями
      * @var string
      */
     protected $table = 'products';
