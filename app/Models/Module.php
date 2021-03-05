@@ -11,7 +11,15 @@ class Module extends Model
      */
 
     // связь с таблицей 'module data'
-    public function moduleData() {
-        $this->hasMany(ModuleData::class);
+    public function moduleData()
+    {
+        return $this->hasMany(ModuleData::class);
+    }
+
+    public function currentPatient()
+    {
+        return $this->belongsToMany(Patient::class, 'patients_diagnoses', 'module_id', 'patient_id')
+            ->using(PatientDiagnosPivot::class)
+            ->wherePivot('active', 1);
     }
 }

@@ -15,13 +15,13 @@ class CreateModuleDataTable extends Migration
     {
         Schema::create('module_data', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-//            $table->foreign('pivot_key')->references('id')->on('modules');
+            $table->unsignedBigInteger('patient_id');
+            //            $table->foreign('pivot_key')->references('id')->on('modules');
             $table->unsignedBigInteger('module_id');
             $table->decimal('temperature', 5, 1);
             $table->integer('bend');
             $table->integer('is_real')->nullable()->default(null);
-            $table->timestamps();
+            $table->timestamp('created_at');
         });
     }
 

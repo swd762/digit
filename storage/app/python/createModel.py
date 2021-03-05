@@ -12,9 +12,9 @@ def create():
     # optimizer=keras.optimizers.RMSprop(),  # Optimizer
         optimizer='adam',  # Optimizer
         # Минимизируемая функция потерь
-        loss=keras.losses.SparseCategoricalCrossentropy(),
+        loss=keras.losses.BinaryCrossentropy(),
         # Список метрик для мониторинга
-        metrics=[keras.metrics.SparseCategoricalAccuracy()]
+        metrics=[keras.metrics.BinaryAccuracy()]
     )
 
     return model

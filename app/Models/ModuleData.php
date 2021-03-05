@@ -12,12 +12,20 @@ class ModuleData extends Model
      * @var string[]
      */
     protected $fillable = [
-        'user_id',
+        'patient_id',
         'module_id',
         'temperature',
         'bend',
-        'is_real'
+        'is_real',
+        'created_at'
     ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
     // связь с таблицей пациентов
     public function patients()
