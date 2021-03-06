@@ -3,6 +3,7 @@
 use App\Models\Role;
 use App\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -14,8 +15,8 @@ class UserSeeder extends Seeder
     public function run()
     {
         //
-        $userRole = Role::where('name','user')->first();
-        $adminRole = Role::where('name','admin')->first();
+        $userRole = Role::where('name', 'user')->first();
+        $adminRole = Role::where('name', 'admin')->first();
 
         // create admin user
         $adminUser = new User();
@@ -33,7 +34,16 @@ class UserSeeder extends Seeder
         $userUser->password = bcrypt('123456');
         $userUser->save();
         $userUser->roles()->attach($userRole);
+
+        for ($i = 0; $i < 10; $i++) {
+            $user = User::create([
+                'name' => "user$i",
+                'email' => "user$i@deo.com",
+                'first_name' => "Пользователь $i",
+                'password' => Hash::make('123456')
+            ]);
+
+            $user->roles()->attach($userRole);
+        }
     }
 }
-
-
