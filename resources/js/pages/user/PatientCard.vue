@@ -130,7 +130,6 @@
     </template>
 
     <diagnos-selecting
-      v-if="diagnosSelectingMode"
       :isShowing="diagnosSelectingMode"
       :patient-id="patientId"
       @finished="processResponse"
