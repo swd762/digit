@@ -18,7 +18,11 @@ Route::get('/', function () {
     return view('index');
 });
 
-// Route to handle page reload, except api routes
-Route::get('/{any?}/{any2?}', function (){
+Route::get('{path?}', function () {
     return view('index');
-})->where('any', '^(?!api\/)[\/\w\.-]*')->where('any2', '^(?!api\/)[\/\w\.-]*');
+});
+
+// Route to handle page reload, except api routes
+// Route::get('/{any?}/{any2?}', function (){
+//     return view('index');
+// })->where('any', '^(?!api\/)[\/\w\.-]*')->where('any2', '^(?!api\/)[\/\w\.-]*');
