@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 //     return view('index');
 // });
 
-Route::get('{path?}', function () {
+Route::get('{path}', function () {
     return view('index');
-});
+})->where('path', '(.*)');
 
 // Route to handle page reload, except api routes
 // Route::get('/{any?}/{any2?}', function (){
