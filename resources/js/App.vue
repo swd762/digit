@@ -1,44 +1,42 @@
 <!--Шаблон приложения Vue-->
 <template>
-  <div class="layout">
-    <Layout>
-      <!--Хэдер с меню-->
-      <Header>
-        <navigationMenu></navigationMenu>
-      </Header>
+  <Layout class="layout">
+    <!--Хэдер с меню-->
+    <Header>
+      <navigationMenu></navigationMenu>
+    </Header>
+    <!-- ****  -->
+    <Content :style="{ padding: '0 50px' }">
+      <!-- хлебные крошки с возможностью перехода по маршруту-->
+      <Breadcrumb :style="{ margin: '20px 0' }">
+        <BreadcrumbItem>
+          <router-link :to="{ name: 'home' }"> Home </router-link>
+        </BreadcrumbItem>
+        <BreadcrumbItem v-if="this.$route.name != 'home'">
+          {{ this.$route.name }}
+        </BreadcrumbItem>
+      </Breadcrumb>
       <!-- ****  -->
-      <Content :style="{ padding: '0 50px' }">
-        <!-- хлебные крошки с возможностью перехода по маршруту-->
-        <Breadcrumb :style="{ margin: '20px 0' }">
-          <BreadcrumbItem>
-            <router-link :to="{ name: 'home' }"> Home </router-link>
-          </BreadcrumbItem>
-          <BreadcrumbItem v-if="this.$route.name != 'home'">
-            {{ this.$route.name }}
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <!-- ****  -->
-        <router-view></router-view>
-      </Content>
-      <Footer class="layout-footer">
-        <div>
-          <a href="http://fasie.ru/" target="blank">
-            <img src="/imgs/logo-fasie.png" />
-          </a>
-        </div>
-        <div class="footer-copyright">
-          <p>
-            Разработка компании ведется при поддержке
-            <a href="http://fasie.ru/" target="blank"
-              >Фонда содействия развитию малых форм предприятий в
-              научно-технической сфере</a
-            >.
-          </p>
-          <p>2020-2021 &copy; Цифра.ПРО</p>
-        </div>
-      </Footer>
-    </Layout>
-  </div>
+      <router-view></router-view>
+    </Content>
+    <Footer class="layout-footer">
+      <div>
+        <a href="http://fasie.ru/" target="blank">
+          <img src="/imgs/logo-fasie.png" />
+        </a>
+      </div>
+      <div class="footer-copyright">
+        <p>
+          Разработка компании ведется при поддержке
+          <a href="http://fasie.ru/" target="blank"
+            >Фонда содействия развитию малых форм предприятий в
+            научно-технической сфере</a
+          >.
+        </p>
+        <p>2020-2021 &copy; Цифра.ПРО</p>
+      </div>
+    </Footer>
+  </Layout>
 </template>
 <style lang=scss>
 .layout {
@@ -46,7 +44,7 @@
   background: #f5f7f9;
   position: relative;
   border-radius: 4px;
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .layout-logo {
@@ -81,6 +79,10 @@
   color: #fff;
 }
 
+.ivu-layout-content {
+  flex-grow: 1;
+}
+
 .layout-footer {
   text-align: center;
   background: #818ba1 !important;
@@ -88,6 +90,8 @@
   padding: 15px 50px !important;
   display: flex;
   justify-content: space-between;
+  position: sticky;
+  bottom: 0;
 }
 .footer-copyright {
   text-align: right;
