@@ -31,7 +31,7 @@
         </Table>
         <div class="buttons-cont">
             <Button type="primary" @click="$router.push({
-                name: 'admin.create_user'
+                name: 'admin.create'
             })">
                 Создать нового пользователя
             </Button>

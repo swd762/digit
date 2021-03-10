@@ -3,14 +3,15 @@
     <div style="padding: 20px;display: flex;justify-content: center">
         <Card :bordered="false" style="width: 375px">
             <p slot="title" style="text-align:center">Авторизация</p>
-            <Form ref="loginForm" :model="loginForm"  inline class="login-form" autocomplete="off">
+            <Form ref="loginForm" :model="loginForm" :rules="ruleInline" inline class="login-form" autocomplete="off"
+            >
                 <FormItem prop="user">
                     <Input type="text" v-model="loginForm.user" placeholder="Логин">
                         <Icon type="ios-person-outline" slot="prepend"></Icon>
                     </Input>
                 </FormItem>
                 <FormItem prop="password">
-                    <Input type="password" v-model="loginForm.password" placeholder="Пароль">
+                    <Input type="password" v-model="loginForm.password" placeholder="Пароль" @on-enter="login()">
                         <Icon type="ios-lock-outline" slot="prepend"></Icon>
                     </Input>
                 </FormItem>
@@ -36,12 +37,23 @@ export default {
             loginForm: {
                 user: '',
                 password: ''
+            },
+            ruleInline: {
+                user: [
+                    {required: true, message: 'Пожалуйста, введите логин', trigger: 'blur'}
+                ],
+                password: [
+                    {required: true, message: 'Пожалуйста, введите пароль.', trigger: 'blur'},
+                    {type: 'string', min: 6, message: 'Длина пароля не меньше 6 символов', trigger: 'blur'}
+                ]
             }
         }
     },
     methods: {
         // метод отправки данных автоиризации и последующей маршрутизации
         login() {
+
+
             let app = this
             let redirect = this.$auth.redirect()
             this.$auth.login({
@@ -55,16 +67,21 @@ export default {
                 redirect: null,
                 // разрешить читать пользователя
                 fetchUser: true,
-            }).then(()=>{
+            }).then(() => {
                 // после успешной аутентификации проводим авторизацию и в зависимости от роли кидаем каждого в свою панель
                 const redirectTo = redirect ? redirect.from.name : this.$auth.user().role === 'admin' ?
                     'admin.dashboard' : 'user.dashboard'
+                this.$Message.success('Успешная авторизация');
                 this.$router.push({name: redirectTo})
-            }).catch(()=>{
-                // здесь ловим ошибки обмена с сервером
+
+            }).catch(e => {
+                // делаем валидацию формы логин пароль
+                this.$refs['loginForm'].validate(() => {
+                    this.$Message.error('Ошибка авторизации!');
+                })
             })
         }
-    //    ****
+        //    ****
     }
 }
 // TODO: сделать валидацию данных в форме на лету без запроса к серверу
