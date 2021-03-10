@@ -33,7 +33,7 @@
             научно-технической сфере</a
           >.
         </p>
-        <p>2020-2021 &copy; Цифра.ПРО</p>
+        <p>2020-2021 &copy; ООО "Цифра-Про"</p>
       </div>
     </Footer>
   </Layout>
@@ -47,18 +47,10 @@
   min-height: 100vh;
 }
 
-.layout-logo {
-  width: 200px;
-  height: 30px;
-  border-radius: 3px;
-  float: left;
-  position: relative;
-  top: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.system-title {
   color: #fff;
-  font-size: 31px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .layout-logo img {
@@ -67,6 +59,9 @@
 
 .ivu-layout-header {
   background: #2d8cf0 !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .layout-nav {
@@ -81,6 +76,10 @@
 
 .ivu-layout-content {
   flex-grow: 1;
+}
+
+.ivu-menu {
+  display: flex !important;
 }
 
 .layout-footer {
@@ -118,7 +117,7 @@ export default {
   },
   watch: {
     $route: function (newVal) {
-      console.log(newVal.meta);
+      //   console.log(newVal.meta);
     },
   },
 
