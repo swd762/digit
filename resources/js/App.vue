@@ -59,6 +59,9 @@
 
 .ivu-layout-header {
   background: #2d8cf0 !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .layout-nav {

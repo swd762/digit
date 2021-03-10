@@ -35,15 +35,15 @@ class PatientsController extends Controller
      */
     public function patientInfo(Patient $patient)
     {
-        $patient->load(['diagnoses' => function ($q) {
-            $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date', 'module_id']);
-        }, 'diagnoses.pivot.product', 'diagnoses.pivot.module']);
-
-
-        $patient->load(['receptions' => function ($query) {
-            $query->select(['id', 'patient_id', 'receipt_description', 'receipt_date']);
-        }
+        $patient->load([
+            'diagnoses' => function ($q) {
+                $q->wherePivot('active', 1)->withPivot(['comment', 'issue_date', 'module_id']);
+            }, 'diagnoses.pivot.product', 'diagnoses.pivot.module',
+            'receptions' => function ($query) {
+                $query->select(['id', 'patient_id', 'receipt_description', 'receipt_date']);
+            }
         ]);
+
 
         return response()->json($patient);
     }
