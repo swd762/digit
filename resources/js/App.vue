@@ -10,10 +10,10 @@
       <!-- хлебные крошки с возможностью перехода по маршруту-->
       <Breadcrumb :style="{ margin: '20px 0' }">
         <BreadcrumbItem>
-          <router-link :to="{ name: 'home' }"> Home </router-link>
+          <router-link :to="{ name: 'home' }"> Главная </router-link>
         </BreadcrumbItem>
         <BreadcrumbItem v-if="this.$route.name != 'home'">
-          {{ this.$route.name }}
+          {{ this.$route.meta.name }}
         </BreadcrumbItem>
       </Breadcrumb>
       <!-- ****  -->
@@ -92,6 +92,7 @@
   justify-content: space-between;
   position: sticky;
   bottom: 0;
+  z-index: 10;
 }
 .footer-copyright {
   text-align: right;
@@ -115,6 +116,12 @@ export default {
   data() {
     return {};
   },
+  watch: {
+    $route: function (newVal) {
+      console.log(newVal.meta);
+    },
+  },
+
   // объявление компонента меню
   components: {
     navigationMenu,

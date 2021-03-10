@@ -23,7 +23,8 @@ const routes = [
         name: 'home',
         component: Home,
         meta: {
-            auth: undefined
+            auth: undefined,
+            name: "Главная"
         }
     },
     {
@@ -31,7 +32,8 @@ const routes = [
         name: 'register',
         component: Register,
         meta: {
-            auth: false
+            auth: false,
+            name: "Регистрация"
         }
     },
     {
@@ -39,7 +41,8 @@ const routes = [
         name: 'login',
         component: Login,
         meta: {
-            auth: false
+            auth: false,
+            name: "Авторизация"
         }
     },
     // Страницы пользователей
@@ -53,13 +56,18 @@ const routes = [
             {
                 path: 'dashboard',
                 name: 'user.dashboard',
-                component: UserDashboard
-
+                component: UserDashboard,
+                meta: {
+                    name: "Панель врача"
+                }
             },
             {
                 path: ':patientId/card',
                 name: 'user.card',
-                component: PatientCard
+                component: PatientCard,
+                meta: {
+                    name: "Карточка пациента"
+                }
             }
         ]
     },
@@ -83,18 +91,27 @@ const routes = [
             {
                 path: 'dashboard',
                 name: 'admin.dashboard',
-                component: AdminDashboard
+                component: AdminDashboard,
+                meta: {
+                    name: "Панель администратора"
+                }
 
             },
             {
                 path: ':userId/edit',
                 name: 'admin.edit',
-                component: AdminEditUser
+                component: AdminEditUser,
+                meta: {
+                    name: "Редактирование пользователя"
+                }
             },
             {
                 path: 'create',
                 name: 'admin.create',
-                component: AdminCreateUser
+                component: AdminCreateUser,
+                meta: {
+                    name: "Создание пользователя"
+                }
             }
         ]
     },
@@ -113,18 +130,18 @@ const routes = [
     //     },
     // },
     // страница создания пользователя
-    {
-        path: '/create_user',
-        name: 'admin.create_user',
-        component: AdminCreateUser,
-        props: true,
-        meta: {
-            auth: {
-                roles: 'admin',
-                redirect: {name: 'login'}
-            }
-        },
-    }
+    // {
+    //     path: '/create_user',
+    //     name: 'admin.create_user',
+    //     component: AdminCreateUser,
+    //     props: true,
+    //     meta: {
+    //         auth: {
+    //             roles: 'admin',
+    //             redirect: {name: 'login'}
+    //         }
+    //     },
+    // }
 ]
 
 const router = new VueRouter({
