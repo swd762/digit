@@ -19,13 +19,13 @@
             <FormItem label="Дата рождения">
                 <Row>
                     <Col span="11">
-                        <DatePicker type="date" placeholder="Выберите дату" v-model="patient_data.date"></DatePicker>
+                        <DatePicker  type="date" @on-change="(val) => patient_data.date = val" placeholder="Выберите дату" v-model="patient_data.date"></DatePicker>
                     </Col>
                 </Row>
             </FormItem>
 
             <FormItem>
-                <Button type="primary" @click="createUser">Создать</Button>
+                <Button type="primary" @click="createPatient">Создать</Button>
             </FormItem>
         </Form>
     </div>
@@ -59,53 +59,14 @@ export default {
                         message: "Необходимо ввести отчество",
                         trigger: "blur",
                     },
-                ],
-                name: [
-                    {
-                        required: true,
-                        message: "Необходимо ввести логин",
-                        trigger: "blur",
-                    },
-                ],
-                password: [
-                    {
-                        required: true,
-                        message: "Необходимо ввести пароль",
-                        trigger: "blur",
-                    },
-                ],
-                password_confirmation: [
-                    {
-                        required: true,
-                        message: "Необходимо ввести пароль",
-                        trigger: "blur",
-                    },
-                    {
-                        validator(rule, value, callback) {
-                            return value === this.user_data.password;
-                        },
-                        message: "Пароли должны совпадать",
-                    },
-                ],
-                email: [
-                    {
-                        required: true,
-                        message: "Необходимо ввести email",
-                        trigger: "blur",
-                    },
-                ],
+                ]
             },
             errors: {},
             patient_data: {
                 first_name: "",
-                last_name: "",
-                name: "",
-                password: "",
-                password_confirmation: "",
-                email: "",
-
                 middle_name: "",
-                role: "user",
+                last_name: "",
+                date: ""
             },
         };
     },
@@ -113,32 +74,44 @@ export default {
     },
     methods: {
         // метод создания нового пользователя
-        createUser() {
+        createPatient() {
             this.errors = {};
-            this.$refs["formValidate"].validate((valid) => {
-                if (valid) {
-                    this.loading = true;
-                    this.$http({
-                        url: "auth/register",
-                        method: "POST",
-                        data: this.user_data,
-                    })
-                        .then((res) => {
-                            this.loading = false;
-                            this.$router.push({
-                                name: "admin.dashboard",
-                            });
-                        })
-                        .catch((err) => {
-                            if (err.response) {
-                                if (err.response.status == 422) {
-                                    this.errors = err.response.data.errors;
-                                }
-                            }
-                            this.loading = false;
-                        });
-                }
-            });
+            console.log(this.patient_data.date)
+
+            this.$http({
+                url:"patients/add",
+                method:"POST",
+                data:this.patient_data
+            }).then((res) =>{
+
+            }).catch((err)=>{
+                console.log(err)
+            })
+
+            // this.$refs["formValidate"].validate((valid) => {
+            //     if (valid) {
+            //         this.loading = true;
+            //         this.$http({
+            //             url: "auth/register",
+            //             method: "POST",
+            //             data: this.user_data,
+            //         })
+            //             .then((res) => {
+            //                 this.loading = false;
+            //                 this.$router.push({
+            //                     name: "admin.dashboard",
+            //                 });
+            //             })
+            //             .catch((err) => {
+            //                 if (err.response) {
+            //                     if (err.response.status == 422) {
+            //                         this.errors = err.response.data.errors;
+            //                     }
+            //                 }
+            //                 this.loading = false;
+            //             });
+            //     }
+            // });
         },
     },
 };

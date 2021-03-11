@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('patients')->namespace('Patients')->group(function () {
         Route::get('/', 'PatientsController@patientsList');
-
+        Route::post('add', 'PatientsController@patientAdd');
         Route::group(['prefix' => '{patient}', 'where' => ['patient' => '[0-9]+']], function () {
             Route::get('/', 'PatientsController@patientInfo');
 

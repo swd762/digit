@@ -2,11 +2,11 @@
 <template>
     <Menu mode="horizontal" theme="primary">
         <div class="system-title">
-            <!-- <img src="/imgs/logo.png" alt="digit logo"> -->
-            <span
-            >Информационная система сбора, обработки и анализа данных об
-        использовании протезно-ортопедических изделий</span
-            >
+<!--             <img src="/imgs/logo.png" alt="digit logo">-->
+<!--            <span-->
+<!--            >Информационная система сбора, обработки и анализа данных об-->
+<!--        использовании протезно-ортопедических изделий</span-->
+<!--            >-->
             <!-- лого Цифра про -->
         </div>
         <div class="layout-nav">

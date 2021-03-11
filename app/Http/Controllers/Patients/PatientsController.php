@@ -48,6 +48,13 @@ class PatientsController extends Controller
         return response()->json($patient);
     }
 
+    public function patientAdd(Request $request)
+    {
+//        $date = new Carbon($request->date);
+
+        return response()->json($request->date);
+    }
+
     /**
      * Добавляет диагноз пациенту
      *
