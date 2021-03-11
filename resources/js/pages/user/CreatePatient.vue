@@ -1,3 +1,4 @@
+<!--шаблон компонента- формы для добавления пациента-->
 <template>
     <div style="max-width: 400px">
         <Form
@@ -19,7 +20,8 @@
             <FormItem label="Дата рождения">
                 <Row>
                     <Col span="11">
-                        <DatePicker  type="date" @on-change="(val) => patient_data.date = val" placeholder="Выберите дату" v-model="patient_data.date"></DatePicker>
+                        <DatePicker type="date" @on-change="(val) => patient_data.date = val"
+                                    placeholder="Выберите дату"></DatePicker>
                     </Col>
                 </Row>
             </FormItem>
@@ -76,42 +78,32 @@ export default {
         // метод создания нового пользователя
         createPatient() {
             this.errors = {};
-            console.log(this.patient_data.date)
 
-            this.$http({
-                url:"patients/add",
-                method:"POST",
-                data:this.patient_data
-            }).then((res) =>{
 
-            }).catch((err)=>{
-                console.log(err)
-            })
+            this.$refs["formValidate"].validate((valid) => {
+                if (valid) {
+                    this.loading = true;
+                    this.$http({
+                        url: "patients/add",
+                        method: "POST",
+                        data: this.patient_data
+                    }).then((res) => {
+                        this.loading = false;
+                        this.$Message.success('Новый пациент успешно добавлен');
+                        this.$router.push({
+                            name: "user.dashboard",
+                        });
+                    }).catch((err) => {
+                        if (err.response) {
+                            if (err.response.status == 422) {
+                                this.errors = err.response.data.errors;
+                            }
+                        }
+                        this.loading = false;
+                    });
 
-            // this.$refs["formValidate"].validate((valid) => {
-            //     if (valid) {
-            //         this.loading = true;
-            //         this.$http({
-            //             url: "auth/register",
-            //             method: "POST",
-            //             data: this.user_data,
-            //         })
-            //             .then((res) => {
-            //                 this.loading = false;
-            //                 this.$router.push({
-            //                     name: "admin.dashboard",
-            //                 });
-            //             })
-            //             .catch((err) => {
-            //                 if (err.response) {
-            //                     if (err.response.status == 422) {
-            //                         this.errors = err.response.data.errors;
-            //                     }
-            //                 }
-            //                 this.loading = false;
-            //             });
-            //     }
-            // });
+                }
+            });
         },
     },
 };

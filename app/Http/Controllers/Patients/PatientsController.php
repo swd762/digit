@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\Reception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PatientsController extends Controller
 {
@@ -48,11 +49,42 @@ class PatientsController extends Controller
         return response()->json($patient);
     }
 
+    /**
+     * API добавление пациента
+     *
+     * входящие параметры Имя, фамилия, Отчество, дата рождения
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function patientAdd(Request $request)
     {
-//        $date = new Carbon($request->date);
+        $val = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'middle_name' => 'required'
+        ]);
 
-        return response()->json($request->date);
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'ошибка добавления пациента',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $date = Carbon::parse($request->date)->toDateString();
+        $first_name = $request->first_name;
+        $last_name = $request->last_name;
+        $middle_name = $request->middle_name;
+        $name = $last_name . " " . $first_name . " " . $middle_name;
+        $patient = new Patient();
+        $patient->name = $name;
+        $patient->birth_date = $date;
+        $patient->save();
+
+        return response()->json([
+            'message' => 'Пациент успешно добавлен'
+        ]);
     }
 
     /**

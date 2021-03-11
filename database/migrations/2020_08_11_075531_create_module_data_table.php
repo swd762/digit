@@ -16,7 +16,6 @@ class CreateModuleDataTable extends Migration
         Schema::create('module_data', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('patient_id');
-            //            $table->foreign('pivot_key')->references('id')->on('modules');
             $table->unsignedBigInteger('module_id');
             $table->decimal('temperature', 5, 1);
             $table->integer('bend');
