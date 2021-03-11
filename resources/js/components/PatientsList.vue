@@ -39,6 +39,18 @@
         </Button>
       </template>
     </Table>
+      <div class="buttons-cont">
+          <Button
+              type="primary"
+              @click="
+          $router.push({
+            name: 'user.create',
+          })
+        "
+          >
+              Добавить пациента
+          </Button>
+      </div>
   </div>
 </template>
 

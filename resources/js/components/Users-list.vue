@@ -21,7 +21,12 @@
                 <strong>{{ row.name }}</strong>
             </template>
             <template slot-scope="{ row, index }" slot="action">
-                <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)">
+                <Button
+                    type="primary"
+                    size="small"
+                    style="margin-right: 5px"
+                    @click="editUser(row)"
+                >
                     Редактировать
                 </Button>
                 <Button type="error" size="small" @click="delUser(row)">
@@ -30,9 +35,14 @@
             </template>
         </Table>
         <div class="buttons-cont">
-            <Button type="primary" @click="$router.push({
-                name: 'admin.create_user'
-            })">
+            <Button
+                type="primary"
+                @click="
+          $router.push({
+            name: 'admin.create',
+          })
+        "
+            >
                 Создать нового пользователя
             </Button>
         </div>
@@ -49,87 +59,91 @@ export default {
 
             table_columns: [
                 {
-                    title: 'ID',
-                    key: 'id',
+                    title: "ID",
+                    key: "id",
                     width: 100,
-                    align: 'center'
+                    align: "center",
                 },
                 {
-                    title: 'Логин',
-                    slot: 'login',
-                    key: 'name',
+                    title: "Логин",
+                    slot: "login",
+                    key: "name",
                     width: 150,
-                    align: 'center'
+                    align: "center",
                 },
                 {
-                    title: 'Роль',
-                    key: 'role',
+                    title: "Роль",
+                    key: "role",
                     width: 200,
-                    align: 'center'
+                    align: "center",
                 },
                 {
-                    title: ' ',
-                    slot: 'action',
+                    title: " ",
+                    slot: "action",
                     width: 250,
-                    align: 'center'
-                }
+                    align: "center",
+                },
             ],
             // данные пользователей, полученные с сервера
-            users_data: []
-        }
+            users_data: [],
+        };
     },
     mounted() {
         // запрос с сервера списка пользователй после загрузки страницы
-        this.getUsers()
+        this.getUsers();
     },
     methods: {
         // метод получения данных пользователей сервера через api
         getUsers() {
             this.$http({
                 url: `users`,
-                method: 'GET'
-            })
-                .then((res) => {
-                    this.users_data = res.data.users
-                }, () => {
-                    this.has_error = true
-                })
+                method: "GET",
+            }).then(
+                (res) => {
+                    this.users_data = res.data.users;
+                },
+                () => {
+                    this.has_error = true;
+                }
+            );
         },
         // метод роутера на страницу редактирования пользователя
         editUser(row) {
-            let id = row.id
+            let id = row.id;
             // console.log(id)
             this.$router.push({
-                name: 'admin.edit',
-                params: {userId: id}
-            })
+                name: "admin.edit",
+                params: { userId: id },
+            });
         },
         // метод удаления полльзвателя
         delUser(row) {
-            let user = row.id
+            let user = row.id;
             this.$Modal.confirm({
-                title: 'Подтверждени удаления пользователя',
-                content: '<p>Вы уверены</p>',
-                okText: 'Да',
-                cancelText: 'Нет',
+                title: "Подтверждени удаления пользователя",
+                content: "<p>Вы уверены</p>",
+                okText: "Да",
+                cancelText: "Нет",
                 onOk: () => {
                     this.$http({
-                        url: 'delete_user/' + user,
-                        method: 'post'
-                    }).then(res => {
-                        this.getUsers();
-                    }).catch(e =>{
-                        console.log(e);
+                        url: "delete_user/" + user,
+                        method: "post",
                     })
-                   // this.$Message.info('Пользователь удален' + user);
+                        .then((res) => {
+                            this.getUsers();
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                        });
+                    // this.$Message.info('Пользователь удален' + user);
                 },
                 onCancel: () => {
                     // this.$Message.info('Clicked cancel');
-                }
+                },
             });
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 

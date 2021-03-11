@@ -1,56 +1,29 @@
-<!--шаблон компонента- формы для создания пользователя-->
 <template>
     <div style="max-width: 400px">
         <Form
             ref="formValidate"
-            :model="user_data"
+            :model="patient_data"
             :rules="ruleValidate"
             label-position="top"
             :disabled="loading"
         >
-            <FormItem label="Логин" prop="name">
-                <Input v-model="user_data.name" placeholder="Введите логин" />
-            </FormItem>
-            <FormItem label="Пароль" prop="password">
-                <Input
-                    type="password"
-                    v-model="user_data.password"
-                    placeholder="Ввведите пароль"
-                />
-                <div
-                    style="line-height: 14px; color: #ed4014"
-                    v-for="(error, i) in errors.password"
-                    :key="i"
-                    v-show="errors.password"
-                >
-                    {{ error }}
-                </div>
-            </FormItem>
-            <FormItem label="Подтверждение пароля" prop="password_confirmation">
-                <Input
-                    type="password"
-                    v-model="user_data.password_confirmation"
-                    placeholder="Ввведите пароль"
-                />
-            </FormItem>
-            <FormItem label="E-mail" prop="email">
-                <Input v-model="user_data.email" placeholder="Ввведите email" />
-            </FormItem>
             <FormItem label="Имя" prop="first_name">
-                <Input v-model="user_data.first_name" placeholder="Введите имя" />
+                <Input v-model="patient_data.first_name" placeholder="Введите имя"/>
             </FormItem>
             <FormItem label="Фамилия" prop="last_name">
-                <Input v-model="user_data.last_name" placeholder="Введите фамилию" />
+                <Input v-model="patient_data.last_name" placeholder="Введите фамилию"/>
             </FormItem>
             <FormItem label="Отчество" prop="middle_name">
-                <Input v-model="user_data.middle_name" placeholder="Введите отчество" />
+                <Input v-model="patient_data.middle_name" placeholder="Введите отчество"/>
             </FormItem>
-            <FormItem label="Роль">
-                <Select v-model="user_data.role">
-                    <Option value="user">Врач</Option>
-                    <Option value="admin">Администратор</Option>
-                </Select>
+            <FormItem label="Дата рождения">
+                <Row>
+                    <Col span="11">
+                        <DatePicker type="date" placeholder="Выберите дату" v-model="patient_data.date"></DatePicker>
+                    </Col>
+                </Row>
             </FormItem>
+
             <FormItem>
                 <Button type="primary" @click="createUser">Создать</Button>
             </FormItem>
@@ -60,7 +33,7 @@
 
 <script>
 export default {
-    name: "CreateUser",
+    name: "CreatePatient",
     data() {
         return {
             loading: false,
@@ -123,7 +96,7 @@ export default {
                 ],
             },
             errors: {},
-            user_data: {
+            patient_data: {
                 first_name: "",
                 last_name: "",
                 name: "",
@@ -136,7 +109,8 @@ export default {
             },
         };
     },
-    mounted() {},
+    mounted() {
+    },
     methods: {
         // метод создания нового пользователя
         createUser() {
@@ -168,7 +142,9 @@ export default {
         },
     },
 };
+
 </script>
 
 <style scoped>
+
 </style>

@@ -15,6 +15,7 @@ import AdminLayout from './pages/admin/AdminLayout'
 import AdminEdit from './pages/admin/Edit'
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
+import CreatePatient from "./pages/user/CreatePatient";
 
 //Routes
 const routes = [
@@ -53,6 +54,7 @@ const routes = [
             auth: true
         },
         children: [
+
             {
                 path: 'dashboard',
                 name: 'user.dashboard',
@@ -67,6 +69,14 @@ const routes = [
                 component: PatientCard,
                 meta: {
                     name: "Карточка пациента"
+                }
+            },
+            {
+                path: 'create',
+                name: 'user.create',
+                component: CreatePatient,
+                meta: {
+                    name: "Добавление пациента"
                 }
             }
         ]
