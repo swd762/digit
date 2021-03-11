@@ -1,110 +1,167 @@
 <!--Шаблон страницы редактирования пользователя-->
 <template>
-    <div style="max-width: 400px">
-        <Form ref="formValidate" :model="formValidate" :label-width="80">
-            <FormItem label="Логин" prop="name">
-                <Input v-model="user_data.name" placeholder="Введите логин" disabled></Input>
-            </FormItem>
-            <FormItem label="E-mail" prop="email">
-                <Input v-model="user_data.email" placeholder="Ввведите email"></Input>
-            </FormItem>
-            <FormItem label="Имя" prop="first_name">
-                <Input v-model="user_data.first_name" placeholder="Введите имя"></Input>
-            </FormItem>
-            <FormItem label="Фамилия" prop="last_name">
-                <Input v-model="user_data.last_name" placeholder="Введите фамилию"></Input>
-            </FormItem>
-            <FormItem label="Отчество" prop="middle_name">
-                <Input v-model="user_data.middle_name" placeholder="Введите отчество"></Input>
-            </FormItem>
-            <FormItem label="Role">
-                <Select v-model="user_data.role">
-                    <Option value="user">user</Option>
-                    <Option value="admin">admin</Option>
-                </Select>
-            </FormItem>
-            <FormItem>
-                <Button type="primary" @click="updateUser">Записать</Button>
-                <Button @click="getUserData(userId)" style="margin-left: 8px">Прочитать данные</Button>
-            </FormItem>
-        </Form>
-    </div>
+  <div style="max-width: 400px">
+    <Form
+      ref="formValidate"
+      :model="user_data"
+      :rules="ruleValidate"
+      label-position="top"
+      :disabled="loading"
+    >
+      <FormItem label="Логин" prop="name">
+        <Input v-model="user_data.name" placeholder="Введите логин" disabled />
+      </FormItem>
+      <FormItem label="E-mail" prop="email">
+        <Input v-model="user_data.email" placeholder="Ввведите email" />
+      </FormItem>
+      <FormItem label="Имя" prop="first_name">
+        <Input v-model="user_data.first_name" placeholder="Введите имя" />
+      </FormItem>
+      <FormItem label="Фамилия" prop="last_name">
+        <Input v-model="user_data.last_name" placeholder="Введите фамилию" />
+      </FormItem>
+      <FormItem label="Отчество" prop="middle_name">
+        <Input v-model="user_data.middle_name" placeholder="Введите отчество" />
+      </FormItem>
+      <FormItem label="Роль">
+        <Select v-model="user_data.role">
+          <Option value="user">Врач</Option>
+          <Option value="admin">Администратор</Option>
+        </Select>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="updateUser">Сохранить</Button>
+      </FormItem>
+    </Form>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "EditUser",
-    props: ['id'],
-    data() {
-        return {
-            // данные для валидации формы
-            formValidate: {
-                name: '',
-                mail: '',
-                city: '',
-                gender: '',
-                interest: [],
-                date: '',
-                time: '',
-                desc: ''
-            },
-            user_data: [],
-            userId: null
-        }
-    },
-    mounted() {
-        // когда страница загрузилась проверяем прилител ли параметр id, если нет возвращаемся в панель
-        // если прилетел то читаем юзера для редактирования
-        this.userId = this.$route.params.userId
-        console.log(this.$route.params.userId)
-        if (this.userId == null) {
-            this.$router.push({
-                name: 'admin.dashboard'
-            })
-        } else {
-            // this.userId = this.id
-            this.getUserData(this.userId)
-
-            //console.log(this.ids)
-        }
-    },
-    methods: {
-        // Метод чтения нужного пользователя из БД
-        getUserData(id) {
-            // читаем выбранного пользователя get запросом с параметром id
-            this.$http.get(
-                'users/' + id
-                //{params: id}
-            ).then((res) => {
-                // получаем от сервера массив и записываем его в наш user_data
-                this.user_data = res.data.user
-            }).catch(() => {
-                this.$router.push({
-                    name: 'admin.dashboard'
-                })
-            })
-
-        },
-        // метод обновления данных пользовтеля в БД
-        updateUser() {
-            // отправляем массив с данными пользователя на сервер для последующей записи в БД
-            this.$http({
-                url: `update_user/` + this.userId,
-                method: 'POST',
-                data: this.user_data
-            }).then((res) => {
-                // получаем ответ и обновлем данные формы для данного пользователя
-                this.getUserData(this.userId)
-            })
-        },
-        deleteUser(id) {
-            // TODO
-        }
+  name: "EditUser",
+  props: ["id"],
+  data() {
+    return {
+      loading: false,
+      // данные для валидации формы
+      ruleValidate: {
+        first_name: [
+          {
+            required: true,
+            message: "Необходимо ввести имя",
+            trigger: "blur",
+          },
+        ],
+        last_name: [
+          {
+            required: true,
+            message: "Необходимо ввести фамилию",
+            trigger: "blur",
+          },
+        ],
+        middle_name: [
+          {
+            required: true,
+            message: "Необходимо ввести отчество",
+            trigger: "blur",
+          },
+        ],
+        name: [
+          {
+            required: true,
+            message: "Необходимо ввести логин",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          {
+            required: true,
+            message: "Необходимо ввести email",
+            trigger: "change",
+          },
+          {
+            type: "email",
+            message: "Введен некорректный email",
+            trigger: "blur",
+          },
+        ],
+      },
+      errors: {},
+      // данные для валидации формы
+      user_data: {},
+      userId: null,
+    };
+  },
+  created() {
+    // когда страница загрузилась проверяем наличие параметра id, если нет возвращаемся в панель
+    // если есть, то запрашиваем пользователя для редактирования
+    this.userId = this.$route.params.userId;
+    if (this.userId == null) {
+      this.$router.push({
+        name: "admin.dashboard",
+      });
+    } else {
+      this.getUserData(this.userId);
     }
-
-}
+  },
+  methods: {
+    // Метод чтения нужного пользователя из БД
+    getUserData(id) {
+      this.loading = true;
+      // читаем выбранного пользователя get запросом с параметром id
+      this.$http
+        .get(
+          "users/" + id
+          //{params: id}
+        )
+        .then((res) => {
+          // получаем от сервера массив и записываем его в наш user_data
+          this.user_data = res.data.user;
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+          this.$Message.error("Ошибка чтения пользователя");
+          this.$router.push({
+            name: "admin.dashboard",
+          });
+        });
+    },
+    // метод обновления данных пользовтеля в БД
+    updateUser() {
+      this.errors = {};
+      this.$refs["formValidate"].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          // отправляем массив с данными пользователя на сервер для последующей записи в БД
+          this.$http({
+            url: "users/" + this.userId + "/update_user",
+            method: "put",
+            data: this.user_data,
+          })
+            .then((res) => {
+              // получаем ответ и обновлем данные формы для данного пользователя
+              this.loading = false;
+              this.$Message.success("Пользователь успешно обновлен");
+              this.$router.push({
+                name: "admin.dashboard",
+              });
+            })
+            .catch((err) => {
+              this.loading = false;
+              this.$Message.error("Ошибка сохранения пользователя");
+              if (err.response) {
+                if (err.response.status == 422) {
+                  this.errors = err.response.data.errors;
+                }
+              }
+            });
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

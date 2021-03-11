@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Validator;
 /*
  * закрытый класс для администратора для работы с пользователями
  */
+
 class AdminController extends Controller
 {
     /**
-     * метод получения списка пользователей через api в json, либо конкретного пользователя, если прилетает параметр
+     * метод получения пользователя через api в json
      *
      * @param User $user
      * @param Request $request
