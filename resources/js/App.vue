@@ -51,6 +51,9 @@
   color: #fff;
   font-size: 16px;
   font-weight: bold;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .layout-logo img {
