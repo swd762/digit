@@ -125,33 +125,6 @@ const routes = [
             }
         ]
     },
-
-    // страница редактирования пользователя
-    // {
-    //     path: '/edit_user',
-    //     name: 'admin.edit_user',
-    //     component: AdminEditUser,
-    //     props: true,
-    //     meta: {
-    //         auth: {
-    //             roles: 'admin',
-    //             redirect: {name: 'login'}
-    //         }
-    //     },
-    // },
-    // страница создания пользователя
-    // {
-    //     path: '/create_user',
-    //     name: 'admin.create_user',
-    //     component: AdminCreateUser,
-    //     props: true,
-    //     meta: {
-    //         auth: {
-    //             roles: 'admin',
-    //             redirect: {name: 'login'}
-    //         }
-    //     },
-    // }
 ]
 
 const router = new VueRouter({
