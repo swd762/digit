@@ -18,7 +18,7 @@
     <h3>Список пациентов</h3>
     <Table :loading="isLoading" border :columns="tableColumns" :data="patients">
       <template slot-scope="{ row }" slot="birthDate">
-        <strong>{{ row.birth_date }}</strong>
+        <strong>{{ new Date(row.birth_date).toLocaleDateString() }}</strong>
       </template>
       <template slot-scope="{ row }" slot="product">
         <p v-for="(diagnos, index) in row.diagnoses" :key="index">

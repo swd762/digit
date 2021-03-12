@@ -17,7 +17,7 @@
             <FormItem label="Отчество" prop="middle_name">
                 <Input v-model="patient_data.middle_name" placeholder="Введите отчество"/>
             </FormItem>
-            <FormItem label="Дата рождения">
+            <FormItem label="Дата рождения" prop="date">
                 <Row>
                     <Col span="11">
                         <DatePicker type="date" @on-change="(val) => patient_data.date = val"
@@ -61,6 +61,13 @@ export default {
                         message: "Необходимо ввести отчество",
                         trigger: "blur",
                     },
+                ],
+                date: [
+                    {
+                        required:true,
+                        message: 'Необходимо ввести дату',
+                        trigger:"blur"
+                    }
                 ]
             },
             errors: {},

@@ -71,15 +71,14 @@ class PatientsController extends Controller
                 'errors' => $val->errors()
             ], 422);
         }
-
-        $date = Carbon::parse($request->date)->toDateString();
+        $date = Carbon::createFromFormat('Y-m-d',$request->date);
         $first_name = $request->first_name;
         $last_name = $request->last_name;
         $middle_name = $request->middle_name;
         $name = $last_name . " " . $first_name . " " . $middle_name;
         $patient = new Patient();
         $patient->name = $name;
-        $patient->birth_date = $date;
+        $patient->birth_date = $date->toDateString();
         $patient->save();
 
         return response()->json([
