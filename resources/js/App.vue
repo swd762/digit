@@ -9,12 +9,13 @@
     <Content :style="{ padding: '0 50px' }">
       <!-- хлебные крошки с возможностью перехода по маршруту-->
       <Breadcrumb :style="{ margin: '20px 0' }">
-        <BreadcrumbItem>
+        <BreadcrumbItem v-for="(route, index) in routes" :key="index">{{ route.meta.name }}</BreadcrumbItem>
+        <!-- <BreadcrumbItem>
           <router-link :to="{ name: 'home' }"> Главная </router-link>
         </BreadcrumbItem>
         <BreadcrumbItem v-if="this.$route.name != 'home'">
           {{ this.$route.meta.name }}
-        </BreadcrumbItem>
+        </BreadcrumbItem> -->
       </Breadcrumb>
       <!-- ****  -->
       <router-view></router-view>
@@ -28,10 +29,7 @@
       <div class="footer-copyright">
         <p>
           Разработка компании ведется при поддержке
-          <a href="http://fasie.ru/" target="blank"
-            >Фонда содействия развитию малых форм предприятий в
-            научно-технической сфере</a
-          >.
+          <a href="http://fasie.ru/" target="blank">Фонда содействия развитию малых форм предприятий в научно-технической сфере</a>.
         </p>
         <p>2020-2021 &copy; ООО "Цифра-Про"</p>
       </div>
@@ -120,7 +118,14 @@ export default {
   },
   watch: {
     $route: function (newVal) {
-      //   console.log(newVal.meta);
+      console.log(newVal);
+    },
+  },
+  computed: {
+    routes() {
+      return this.$route.matched.filter((route) => {
+        return typeof route.meta.name !== "undefined";
+      });
     },
   },
 

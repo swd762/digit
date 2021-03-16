@@ -84,7 +84,7 @@ const routes = [
     },
     // Страницы администратора
     {
-        path: '/admin',
+        path: '/admin/',
         //name: 'admin',
         component: AdminLayout,
         meta: {
@@ -96,19 +96,34 @@ const routes = [
         },
         children: [
             {
-                path: '',
-                component: Home
-            },
-            {
                 path: 'dashboard',
-                name: 'admin.dashboard',
-                component: AdminDashboard,
+                //name: 'admin',
+                component: AdminLayout,
                 meta: {
+                    auth: {
+                        roles: 'admin',
+                        redirect: {name: 'login'},
+                        forbiddenRedirect: 'admin.dashboard'
+                    },
                     name: "Панель администратора"
+
                 },
+                children: [
+                    {
+                        path: '',
+                        name: 'admin.dashboard',
+                        component: AdminDashboard,
 
-
-
+                    },
+                    {
+                        path: ':userId/edit',
+                        name: 'admin.edit',
+                        component: AdminEditUser,
+                        meta: {
+                            name: "Редактирование пользователя"
+                        }
+                    }
+                ]
             },
             {
                 path: 'products',
@@ -116,14 +131,6 @@ const routes = [
                 component: AdminProducts,
                 meta: {
                     name: "Редактирование изделий"
-                }
-            },
-            {
-                path: ':userId/edit',
-                name: 'admin.edit',
-                component: AdminEditUser,
-                meta: {
-                    name: "Редактирование пользователя"
                 }
             },
             {
