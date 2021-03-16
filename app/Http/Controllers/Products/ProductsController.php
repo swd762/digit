@@ -22,7 +22,7 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        return response(Product::get());
+        return response(Product::paginate(5));
     }
 
     /**

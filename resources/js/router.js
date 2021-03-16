@@ -13,6 +13,7 @@ import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminEdit from './pages/admin/Edit'
+import AdminProducts from './pages/admin/Products'
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
 import CreatePatient from "./pages/user/CreatePatient";
@@ -104,8 +105,18 @@ const routes = [
                 component: AdminDashboard,
                 meta: {
                     name: "Панель администратора"
-                }
+                },
 
+
+
+            },
+            {
+                path: 'products',
+                name: 'admin.products',
+                component: AdminProducts,
+                meta: {
+                    name: "Редактирование изделий"
+                }
             },
             {
                 path: ':userId/edit',

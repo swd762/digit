@@ -19,6 +19,19 @@
 </template>
 
 <script>
+export default {
+    name: "PatientsList",
+    data() {
+        return {}
+    },
+    mounted() {
+        if (!this.$auth.check()) {
+            this.$router.push({
+                name: "login"
+            });
+        }
+    }
+}
 </script>
 
 
