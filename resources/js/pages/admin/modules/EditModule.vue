@@ -1,19 +1,22 @@
-<!--Шаблон страницы редактирования изделия-->
+<!--Шаблон страницы редактирования модуля-->
 <template>
     <div style="max-width: 400px">
         <Form
             ref="formValidate"
-            :model="product_data"
+            :model="module_data"
             :rules="ruleValidate"
             label-position="top"
             :disabled="loading"
         >
             <FormItem label="Название" prop="name">
-                <Input v-model="product_data.name" placeholder="Название изделия"/>
+                <Input v-model="module_data.name" placeholder="Название модуля"/>
+            </FormItem>
+            <FormItem label="ID модуля" prop="module_id">
+                <Input v-model="module_data.module_id" placeholder="ID модуля"/>
             </FormItem>
             <FormItem>
-                <Button type="primary" @click="updateProduct(productId)">Сохранить</Button>
-                <Button type="primary" @click="getProductData(productId)">Прочитать</Button>
+                <Button type="primary" @click="updateModule(moduleId)">Сохранить</Button>
+                <Button type="primary" @click="getModuleData(moduleId)">Прочитать</Button>
             </FormItem>
         </Form>
     </div>
@@ -21,7 +24,7 @@
 
 <script>
 export default {
-    name: "EditProduct",
+    name: "EditModule",
     props: ["id"],
     data() {
         return {
@@ -34,58 +37,66 @@ export default {
                         message: "Необходимо ввести название",
                         trigger: "blur",
                     },
+                ],
+                module_id: [
+                    {
+                        required: true,
+                        message: "Необходимо ввести ID",
+                        trigger: "blur",
+                    }
                 ]
             },
             errors: {},
             // данные для валидации формы
-            product_data: {},
-            productId: null,
+            module_data: {},
+            moduleId: null,
         };
     },
     created() {
         // когда страница загрузилась проверяем наличие параметра id, если нет возвращаемся в панель
         // если есть, то запрашиваем продукт для редактирования
-        this.productId = this.$route.params.productId;
-        if (this.productId == null) {
+        this.moduleId = this.$route.params.moduleId;
+        if (this.moduleId == null) {
             this.$router.push({
-                name: "admin.dashboard.product",
+                name: "admin.dashboard.modules",
             });
         } else {
-            this.getProductData(this.productId);
+            this.getModuleData(this.moduleId);
         }
     },
     methods: {
-        getProductData(id) {
+        getModuleData(id) {
             this.loading = true;
             console.log(id)
-            // читаем продукт
+            // читаем модуль
             this.$http
                 .get(
-                    "products/" + id
+                    "modules/" + id
                 )
                 .then((res) => {
-                    // получаем от сервера массив и записываем его в product_data
-                    this.product_data = res.data;
+                    // получаем от сервера массив и записываем его в module_data
+                    this.module_data = res.data;
                     this.loading = false;
+
                 })
                 .catch(() => {
                     this.loading = false;
                     this.$Message.error("Ошибка чтения");
                     this.$router.push({
-                        name: "admin.dashboard.product",
+                        name: "admin.dashboard.modules",
                     });
                 });
         },
-        updateProduct(id) {
+        updateModule(id) {
             this.errors = {};
             this.$refs["formValidate"].validate((valid) => {
                 if (valid) {
-                    // записываем обновленную информацию о продукте
+                    // записываем обновленную информацию о модуле
                     this.loading = true;
                     this.$http({
-                            url: "products/" + id + "/update_product",
+                            url: "modules/" + id + "/update_module",
                             method: "put",
-                            data: this.product_data
+                            data: this.module_data
                         }
                     ).then((res) => {
                         this.loading = false;
@@ -94,7 +105,7 @@ export default {
                         this.loading = false;
                         this.$Message.error("Ошибка чтения");
                         this.$router.push({
-                            name: "admin.dashboard.products",
+                            name: "admin.dashboard.modules",
                         });
                     });
                 }

@@ -103,6 +103,80 @@ class ProductsController extends Controller
      */
     public function getModules()
     {
-        return response(Module::get());
+        return response(Module::paginate(10));
     }
+
+    public function getModuleInfo(Request $request)
+    {
+        $module = Module::find($request->module);
+
+        return response()->json(
+            $module
+        );
+    }
+
+    public function updateModule(Request $request)
+    {
+        $val = Validator::make($request->all(), [
+            'name' => 'required|min:3',
+            'module_id' => 'required|min:3'
+        ]);
+
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'update_validation_error',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $module = Module::find($request->module);
+        $module->name = $request->name;
+        $module->module_id = $request->module_id;
+        $module->save();
+
+        return response()->json([
+            'status' => 'success',
+            'module' => $module,
+        ]);
+    }
+
+    public function createModule(Request $request)
+    {
+        $val = Validator::make($request->all(), [
+            'name' => 'required|min:4'
+        ]);
+
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'update_validation_error',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $module = new Module();
+        $module->name = $request->name;
+        $module->module_id = $request->name;
+        $module->save();
+
+        return response()->json([
+            'msg' => 'success'
+        ]);
+    }
+
+    public function removeModule(Request $request)
+    {
+        if (!is_null($request->module)) {
+            $module = Module::find($request->module);
+            $module->delete();
+
+            return response()->json([
+                'msg' => 'success',
+                $module
+            ]);
+        }
+        return response()->json([
+            'msg' => 'remove error',
+        ], 422);
+    }
+
 }

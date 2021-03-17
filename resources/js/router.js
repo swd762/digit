@@ -16,10 +16,15 @@ import AdminLayout from './pages/admin/AdminLayout'
 import AdminProducts from './pages/admin/products/Products'
 import AdminProductEdit from './pages/admin/products/EditProduct'
 import AdminProductCreate from './pages/admin/products/CreateProduct'
+// modules
+import AdminModules from './pages/admin/modules/Modules'
+import AdminModulesEdit from './pages/admin/modules/EditModule'
+import AdminModulesCreate from './pages/admin/modules/CreateModule'
 
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
 import CreatePatient from "./pages/user/CreatePatient";
+
 
 //Routes
 const routes = [
@@ -119,7 +124,7 @@ const routes = [
                 }
             },
             {
-                path: ':productId/edit',
+                path: ':productId/edit_product',
                 name: 'admin.dashboard.product.edit',
                 component: AdminProductEdit,
                 meta: {
@@ -127,17 +132,42 @@ const routes = [
                 }
             },
             {
-                path: 'create',
+                path: 'create_product',
                 name: 'admin.dashboard.product.create',
                 component: AdminProductCreate,
                 meta: {
                     name: "Создание изделия"
                 }
             },
-
-
-
             // end products
+
+            // modules
+            {
+                path: 'modules',
+                name: 'admin.dashboard.modules',
+                component: AdminModules,
+                meta: {
+                    name: "Справочник модулей"
+                }
+            },
+            {
+                path: ':moduleId/edit_module',
+                name: 'admin.dashboard.modules.edit',
+                component: AdminModulesEdit,
+                meta: {
+                    name: "Редактирование модулей"
+                }
+            },
+            {
+                path: 'create_module',
+                name: 'admin.dashboard.modules.create',
+                component: AdminModulesCreate,
+                meta: {
+                    name: "Создание модуля"
+                }
+            },
+            // end modules
+
             {
                 path: ':userId/edit',
                 name: 'admin.edit',
