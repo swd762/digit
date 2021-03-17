@@ -7,6 +7,7 @@ use App\Models\Module;
 use App\Models\Patient;
 use App\Models\Products\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
@@ -22,7 +23,77 @@ class ProductsController extends Controller
      */
     public function index(Request $request)
     {
-        return response(Product::paginate(5));
+        return response(Product::paginate(10));
+    }
+
+    public function getProductInfo(Request $request)
+    {
+        $product = Product::find($request->product);
+
+        return response()->json(
+            $product
+        );
+    }
+
+    public function updateProduct(Request $request)
+    {
+        $val = Validator::make($request->all(), [
+            'name' => 'required|min:3'
+        ]);
+
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'update_validation_error',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $product = Product::find($request->product);
+        $product->name = $request->name;
+        $product->save();
+
+        return response()->json([
+            'status' => 'success',
+            'product' => $product,
+        ]);
+    }
+
+    public function removeProduct(Request $request)
+    {
+        if (!is_null($request->product)) {
+            $product = Product::find($request->product);
+            $product->delete();
+
+            return response()->json([
+                'msg' => 'success',
+                $product
+            ]);
+        }
+        return response()->json([
+            'msg' => 'remove error',
+        ], 422);
+    }
+
+    public function createProduct(Request $request)
+    {
+        $val = Validator::make($request->all(), [
+            'name' => 'required|min:4'
+        ]);
+
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'update_validation_error',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $product = new Product();
+        $product->name = $request->name;
+        $product->save();
+
+        return response()->json([
+            'msg' => 'success'
+        ]);
     }
 
     /**

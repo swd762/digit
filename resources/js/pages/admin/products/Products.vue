@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import productsList from "../../components/ProductsList.vue";
+import productsList from "../../../components/ProductsList.vue";
 
 export default {
     name: "Products",
@@ -16,5 +16,8 @@ export default {
 </script>
 
 <style scoped>
-
+.table {
+    display: flex;
+    justify-content: center;
+}
 </style>

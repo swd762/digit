@@ -35,11 +35,11 @@
                 type="primary"
                 @click="
           $router.push({
-            name: 'admin.create',
+            name: 'admin.dashboard.product.create',
           })
         "
             >
-                Добавить изделик
+                Добавить изделие
             </Button>
         </div>
     </div>
@@ -100,35 +100,35 @@ export default {
                 }
             );
         },
-        // метод роутера на страницу редактирования пользователя
-        editUser(row) {
+        // метод роутера на страницу редактирования изделия
+        edit(row) {
             this.$router.push({
-                name: "admin.edit",
-                params: {userId: row.id},
+                name: "admin.dashboard.product.edit",
+                params: {productId: row.id},
             });
         },
         // метод удаления полльзвателя
-        delUser(row) {
-            let user = row.id;
+        del(row) {
+            let product = row.id;
             this.$Modal.confirm({
-                title: "Подтверждени удаления пользователя",
+                title: "Подтверждени удаления изделия",
                 content: "<p>Вы уверены</p>",
                 okText: "Да",
                 cancelText: "Нет",
                 onOk: () => {
                     this.loading = true;
                     this.$http({
-                        url: "users/" + user + "/delete_user",
+                        url: "products/" + product + "/remove_product",
                         method: "delete",
                     })
                         .then((res) => {
                             this.loading = false;
-                            this.$Message.success("Пользователь удален");
-                            this.getUsers();
+                            this.$Message.success("Изделие удалено");
+                            this.getProducts();
                         })
                         .catch((e) => {
                             this.loading = false;
-                            this.$Message.error("Ошибка при удалении пользователя");
+                            this.$Message.error("Ошибка при удалении");
                             console.log(e);
                         });
                 },

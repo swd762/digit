@@ -58,6 +58,12 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('products')->namespace('Products')->group(function () {
         Route::get('/', 'ProductsController@index');
+        Route::post('create_product', 'ProductsController@createProduct');
+        Route::group(['prefix' => '{product}', 'where' => ['product' => '[0-9]+']], function () {
+            Route::put('update_product', 'ProductsController@updateProduct');
+            Route::delete('remove_product', 'ProductsController@removeProduct');
+            Route::get('/', 'ProductsController@getProductInfo');
+        });
     });
 
     Route::prefix('modules')->namespace('Products')->group(function () {

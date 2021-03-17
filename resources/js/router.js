@@ -12,8 +12,11 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
 import AdminLayout from './pages/admin/AdminLayout'
-import AdminEdit from './pages/admin/Edit'
-import AdminProducts from './pages/admin/Products'
+// products
+import AdminProducts from './pages/admin/products/Products'
+import AdminProductEdit from './pages/admin/products/EditProduct'
+import AdminProductCreate from './pages/admin/products/CreateProduct'
+
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
 import CreatePatient from "./pages/user/CreatePatient";
@@ -85,7 +88,6 @@ const routes = [
     // Страницы администратора
     {
         path: '/admin',
-        //name: 'admin',
         component: AdminLayout,
         meta: {
             auth: {
@@ -106,18 +108,36 @@ const routes = [
                 meta: {
                     name: "Панель администратора"
                 },
-
-
-
             },
+            // products
             {
                 path: 'products',
-                name: 'admin.products',
+                name: 'admin.dashboard.products',
                 component: AdminProducts,
                 meta: {
-                    name: "Редактирование изделий"
+                    name: "Справочник изделий"
                 }
             },
+            {
+                path: ':productId/edit',
+                name: 'admin.dashboard.product.edit',
+                component: AdminProductEdit,
+                meta: {
+                    name: "Редактирование изделия"
+                }
+            },
+            {
+                path: 'create',
+                name: 'admin.dashboard.product.create',
+                component: AdminProductCreate,
+                meta: {
+                    name: "Создание изделия"
+                }
+            },
+
+
+
+            // end products
             {
                 path: ':userId/edit',
                 name: 'admin.edit',
