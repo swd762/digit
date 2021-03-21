@@ -49,13 +49,6 @@ export default {
             trigger: "blur",
           },
         ],
-        middle_name: [
-          {
-            required: true,
-            message: "Необходимо ввести отчество",
-            trigger: "blur",
-          },
-        ],
         date: [
           {
             required: true,
