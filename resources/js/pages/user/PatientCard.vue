@@ -6,9 +6,7 @@
     </template>
     <template v-else>
       <Button type="primary" @click="returnBack">Назад</Button>
-      <Button type="success" @click="showDiagnosSelectingWindow">
-        Добавить диагноз
-      </Button>
+      <Button type="success" @click="showDiagnosSelectingWindow"> Добавить диагноз </Button>
       <Button type="success" @click="openReception()"> Добавить прием </Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
@@ -26,56 +24,37 @@
       <Card :dis-hover="true" style="margin: 10px 0">
         <p slot="title" style="height: auto">
           Диагнозы
-          <Button
-            icon="md-add"
-            shape="circle"
-            size="small"
-            type="success"
-            @click="showDiagnosSelectingWindow"
-          >
-          </Button>
+          <Button icon="md-add" shape="circle" size="small" type="success" @click="showDiagnosSelectingWindow"> </Button>
         </p>
 
         <div v-for="(diagnos, index) in patientData.diagnoses" :key="index">
           {{ diagnos.title }}
-          <Button
-            icon="md-close"
-            shape="circle"
-            size="small"
-            type="error"
-            @click="removeDiagnos(diagnos.id)"
-          />
+          <Button icon="md-close" shape="circle" size="small" type="error" @click="removeDiagnos(diagnos.id)" />
           <div v-if="diagnos.pivot.product">
             <div style="margin-top: 10px">
               <p style="display: inline-block">
-                Выданное изделие:
+                Выданное ПОИ:
                 <strong>{{ diagnos.pivot.product.name }}</strong>
               </p>
-              <Button
-                icon="md-close"
-                shape="circle"
-                size="small"
-                type="error"
-                @click="detachProduct(diagnos.id)"
-              />
+              <Button icon="md-close" shape="circle" size="small" type="error" @click="detachProduct(diagnos.id)" />
               <p>
                 Дата выдачи: <strong>{{ diagnos.pivot.issue_date }}</strong>
               </p>
             </div>
             <div style="margin-top: 10px" v-if="diagnos.pivot.module">
               <p>
-                Прикрепленный модуль:
+                Прикрепленный УСПД:
                 <strong>{{ diagnos.pivot.module.name }}</strong>
               </p>
               <p>
-                ID модуля:
+                ID УСПД:
                 <strong>{{ diagnos.pivot.module.module_id }}</strong>
               </p>
             </div>
-            <div v-else>Модуль не прикреплен</div>
+            <div v-else>УСПД не прикреплено</div>
           </div>
           <div v-else>
-            Изделие по данному диагнозу не выдавалось
+            ПОИ по данному диагнозу не выдавалось
             <Button
               size="small"
               type="success"
@@ -94,33 +73,14 @@
       <Card :dis-hover="true" style="margin: 10px 0">
         <p slot="title" style="height: auto">
           Приемы
-          <Button
-            icon="md-add"
-            shape="circle"
-            size="small"
-            type="success"
-            @click="openReception()"
-          >
-          </Button>
+          <Button icon="md-add" shape="circle" size="small" type="success" @click="openReception()"> </Button>
         </p>
 
         <div v-for="(reception, index) in patientData.receptions" :key="index">
           Прием
           {{ reception.id }}
-          <Button
-            icon="md-close"
-            shape="circle"
-            size="small"
-            type="error"
-            @click="removeReception(index)"
-          />
-          <Button
-            icon="md-open"
-            shape="circle"
-            size="small"
-            type="success"
-            @click="openReception(index)"
-          />
+          <Button icon="md-close" shape="circle" size="small" type="error" @click="removeReception(index)" />
+          <Button icon="md-open" shape="circle" size="small" type="success" @click="openReception(index)" />
           <br />
           Дата приема:
           {{ reception.receipt_date }}
@@ -129,63 +89,32 @@
       </Card>
     </template>
 
-    <diagnos-selecting
-      :isShowing="diagnosSelectingMode"
-      :patient-id="patientId"
-      @finished="processResponse"
-    />
+    <diagnos-selecting :isShowing="diagnosSelectingMode" :patient-id="patientId" @finished="processResponse" />
 
-    <Modal
-      v-model="productSelectingMode"
-      title="Выдача изделия"
-      @on-ok="attachProduct"
-    >
+    <Modal v-model="productSelectingMode" title="Выдача ПОИ" @on-ok="attachProduct">
       <Form :disabled="isLoading">
-        <FormItem label="Выберите изделие" prop="device">
+        <FormItem label="Выберите ПОИ" prop="device">
           <Select v-model="selectedProduct" :filterable="true">
-            <Option
-              v-for="(product, index) in products"
-              :key="index"
-              :value="product.id"
-              >{{ product.name }}
-            </Option>
+            <Option v-for="(product, index) in products" :key="index" :value="product.id">{{ product.name }} </Option>
           </Select>
         </FormItem>
-        <FormItem label="Выберите модуль" prop="device">
+        <FormItem label="Выберите УСПД" prop="device">
           <Select v-model="selectedModule" :filterable="true">
-            <Option
-              v-for="(module, index) in modules"
-              :key="index"
-              :value="module.id"
-              >{{ module.name }}
-            </Option>
+            <Option v-for="(module, index) in modules" :key="index" :value="module.id">{{ module.name }} </Option>
           </Select>
         </FormItem>
       </Form>
     </Modal>
 
-    <Modal
-      v-model="receptionSelectingMode"
-      title="Прием врача"
-      @on-ok="attachReception()"
-      @on-cancel="resetReceptionData()"
-    >
+    <Modal v-model="receptionSelectingMode" title="Прием врача" @on-ok="attachReception()" @on-cancel="resetReceptionData()">
       <p><strong>Пациент: </strong>{{ patientData.name }}</p>
       <p><strong>Дата приема: </strong>{{ receptionData.date }}</p>
       <Form :disabled="isLoading">
         <FormItem label="Комментарий к осмотру врача">
-          <Input
-            v-model="receptionData.comment"
-            type="textarea"
-            :autosize="{ minRows: 3, maxRows: 10 }"
-          />
+          <Input v-model="receptionData.comment" type="textarea" :autosize="{ minRows: 3, maxRows: 10 }" />
         </FormItem>
-        <Alert type="success" show-icon v-if="isModuleRead">{{
-          moduleStatusMessage
-        }}</Alert>
-        <Button type="success" @click="getModuleStatus">
-          Прочитать данные с модуля
-        </Button>
+        <Alert type="success" show-icon v-if="isModuleRead">{{ moduleStatusMessage }}</Alert>
+        <Button type="success" @click="getModuleStatus"> Прочитать данные с УСПД </Button>
       </Form>
     </Modal>
   </div>
@@ -201,28 +130,45 @@ export default {
   },
   data() {
     return {
+      //Статус загрузки
       isLoading: false,
+      //Статус проверки данных с УСПД
       isModuleRead: false,
+      //Флаг режима выбора диагноза
       diagnosSelectingMode: false,
+      //Флаг режима выбора ПОИ
       productSelectingMode: false,
+      //Флаг режима работы с приемами
       receptionSelectingMode: false,
 
+      //id пациента
       patientId: this.$route.params.patientId,
+      // данные пациента
       patientData: {},
 
+      // Список диагнозов
       diagnoses: [],
+      // Выбранный диагноз для добавления
       selectedDiagnos: null,
+      // Комментарий к выбранному диагнозу
       selectedDiagnosComment: null,
+      // Данные приема
       receptionData: {
         id: null,
         comment: null,
         date: null,
       },
+      // Список приемов
       receptions: [],
+      // Список доступных ПОИ
       products: [],
+      // Список доступных УСПД
       modules: [],
+      // Выбранное ПОИ
       selectedProduct: null,
+      // Выбранное УСПД
       selectedModule: null,
+      //Статус загрузки данных с УСПД
       moduleStatusMessage: null,
     };
   },
@@ -241,10 +187,10 @@ export default {
     }
   },
   methods: {
-    // Метод чтения нужного пользователя из БД
+    // Метод получения данных пациента
     getPatientData(id) {
       this.isLoading = true;
-      // читаем выбранного пользователя get запросом с параметром id
+      // читаем выбранного пациента get запросом с параметром id
       this.$http({
         url: "patients/" + id,
         method: "GET",
@@ -258,14 +204,13 @@ export default {
           this.isLoading = false;
         });
     },
-    // получаем статус модуля
+    // Метод получения статуса УСПД
     getModuleStatus() {
       this.isModuleRead = true;
       this.$http
         .post("patients/" + this.patientData.id + "/get_module_status")
         .then((res) => {
-          this.moduleStatusMessage =
-            "данные загружены успешно " + res.data["date"];
+          this.moduleStatusMessage = "данные загружены успешно " + res.data["date"];
         })
         .catch((err) => {
           this.has_error = true;
@@ -273,11 +218,10 @@ export default {
         });
     },
     /**
-     * Получаем список изделий
+     * Метод получения списка ПОИ
      */
     getProducts() {
       this.isLoading = true;
-      // Получаем список изделий
       this.$http
         .get("products")
         .then((res) => {
@@ -291,7 +235,7 @@ export default {
         });
     },
     /**
-     * Получаем список модулей
+     * Метод получения списка УСПД
      */
     getModules() {
       this.isLoading = true;
@@ -308,7 +252,7 @@ export default {
         });
     },
 
-    // Отображает списко диагнозов для выбора
+    // Отображает спискок диагнозов для выбора
     showDiagnosSelectingWindow() {
       this.diagnosSelectingMode = true;
     },
@@ -322,22 +266,14 @@ export default {
     },
 
     /**
-     * Прикрепляет продукт к диагнозу
-     * Прикрепляет также модуль к продукту
+     * Метод для прикрепления ПОИ и УСПД к диагнозу
      */
     attachProduct() {
       this.$http
-        .post(
-          "patients/" +
-            this.patientData.id +
-            "/diagnos/" +
-            this.selectedDiagnos +
-            "/attach_product",
-          {
-            productId: this.selectedProduct,
-            moduleId: this.selectedModule,
-          }
-        )
+        .post("patients/" + this.patientData.id + "/diagnos/" + this.selectedDiagnos + "/attach_product", {
+          productId: this.selectedProduct,
+          moduleId: this.selectedModule,
+        })
         .then((res) => {
           //todo show message
           this.isLoading = false;
@@ -348,20 +284,13 @@ export default {
           this.isLoading = false;
         });
     },
-    // открепляет продукт от диагноза
+    // Метод для открепления ПОИ от диагноза
     detachProduct(diagnosId) {
       console.log(diagnosId);
       this.$http
-        .post(
-          "patients/" +
-            this.patientData.id +
-            "/diagnos/" +
-            diagnosId +
-            "/detach_product",
-          {
-            params: {},
-          }
-        )
+        .post("patients/" + this.patientData.id + "/diagnos/" + diagnosId + "/detach_product", {
+          params: {},
+        })
         .then((res) => {
           //todo show message
           this.isLoading = false;
@@ -372,7 +301,7 @@ export default {
           this.isLoading = false;
         });
     },
-    // Удаляем выбранный диагноз у пациента
+    // Метод для удаления выбранного диагноза у пациента
     removeDiagnos(diagnosId) {
       let self = this;
       this.isLoading = true;
@@ -392,7 +321,7 @@ export default {
           this.isLoading = false;
         });
     },
-    // добавляем осмотр врача пациенту, либо обновляем уже существующий
+    // Метод для добавления приема врача пациенту, либо обновления уже существующего
     attachReception() {
       this.$http
         .post("patients/" + this.patientData.id + "/attach_reception", {
@@ -412,14 +341,12 @@ export default {
         });
       this.isModuleRead = false;
     },
-    // открываем модальное окно с для просмотра или редактирования приема
+    // Метод для отображения модального окна для просмотра или редактирования приема
     openReception(receiptId = -1) {
       this.receptionSelectingMode = true;
       if (receiptId != -1) {
         this.receptions = this.patientData.receptions;
-        this.receptionData.comment = this.receptions[
-          receiptId
-        ].receipt_description;
+        this.receptionData.comment = this.receptions[receiptId].receipt_description;
         this.receptionData.date = this.receptions[receiptId].receipt_date;
         this.receptionData.id = this.receptions[receiptId].id;
         console.log(this.receptionData.id);
@@ -428,7 +355,7 @@ export default {
         this.receptionData.date = date.toJSON().substr(0, 10);
       }
     },
-    // удаляем прием из списка
+    // Метод для удаления приема из списка
     removeReception(receiptId) {
       this.receptions = this.patientData.receptions;
       console.log(this.receptions[receiptId].id);
@@ -447,7 +374,7 @@ export default {
           this.isLoading = false;
         });
     },
-    // очищаем данные после закрытия окна приема
+    // Метод для очистки данных после закрытия окна приема
     resetReceptionData() {
       this.receptionData.comment = null;
       this.receptionData.date = null;

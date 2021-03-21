@@ -1,27 +1,14 @@
+<!--Компонент Список пользователей -->
 <template>
   <div class="list-table">
     <h3>Список пользователей</h3>
-    <Table
-      border
-      :columns="table_columns"
-      :data="users_data"
-      :loading="loading"
-    >
+    <Table border :columns="table_columns" :data="users_data" :loading="loading">
       <template slot-scope="{ row }" slot="login">
         <strong>{{ row.name }}</strong>
       </template>
       <template slot-scope="{ row, index }" slot="action">
-        <Button
-          type="primary"
-          size="small"
-          style="margin-right: 5px"
-          @click="editUser(row)"
-        >
-          Редактировать
-        </Button>
-        <Button type="error" size="small" @click="delUser(row)">
-          Удалить
-        </Button>
+        <Button type="primary" size="small" style="margin-right: 5px" @click="editUser(row)"> Редактировать </Button>
+        <Button type="error" size="small" @click="delUser(row)"> Удалить </Button>
       </template>
     </Table>
     <div class="buttons-cont">
@@ -44,10 +31,11 @@ export default {
   name: "Users-list",
   data() {
     return {
+      //Статус загрузки
       loading: false,
+      //Наличие ошибок
       has_error: false,
-      // users: null,
-
+      //Параметры отображения таблицы со списком
       table_columns: [
         {
           title: "ID",
@@ -109,11 +97,11 @@ export default {
         params: { userId: row.id },
       });
     },
-    // метод удаления полльзвателя
+    // метод удаления пользвателя
     delUser(row) {
       let user = row.id;
       this.$Modal.confirm({
-        title: "Подтверждени удаления пользователя",
+        title: "Подтверждение удаления пользователя",
         content: "<p>Вы уверены</p>",
         okText: "Да",
         cancelText: "Нет",
@@ -143,7 +131,6 @@ export default {
 };
 </script>
 
-<!--компонент список пользователей-->
 <style scoped>
 .buttons-cont {
   margin: 15px;

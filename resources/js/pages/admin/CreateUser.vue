@@ -1,37 +1,18 @@
 <!--шаблон компонента- формы для создания пользователя-->
 <template>
   <div style="max-width: 400px">
-    <Form
-      ref="formValidate"
-      :model="user_data"
-      :rules="ruleValidate"
-      label-position="top"
-      :disabled="loading"
-    >
+    <Form ref="formValidate" :model="user_data" :rules="ruleValidate" label-position="top" :disabled="loading">
       <FormItem label="Логин" prop="name">
         <Input v-model="user_data.name" placeholder="Введите логин" />
       </FormItem>
       <FormItem label="Пароль" prop="password">
-        <Input
-          type="password"
-          v-model="user_data.password"
-          placeholder="Ввведите пароль"
-        />
-        <div
-          style="line-height: 14px; color: #ed4014"
-          v-for="(error, i) in errors.password"
-          :key="i"
-          v-show="errors.password"
-        >
+        <Input type="password" v-model="user_data.password" placeholder="Ввведите пароль" />
+        <div style="line-height: 14px; color: #ed4014" v-for="(error, i) in errors.password" :key="i" v-show="errors.password">
           {{ error }}
         </div>
       </FormItem>
       <FormItem label="Подтверждение пароля" prop="password_confirmation">
-        <Input
-          type="password"
-          v-model="user_data.password_confirmation"
-          placeholder="Ввведите пароль"
-        />
+        <Input type="password" v-model="user_data.password_confirmation" placeholder="Ввведите пароль" />
       </FormItem>
       <FormItem label="E-mail" prop="email">
         <Input v-model="user_data.email" placeholder="Ввведите email" />
@@ -63,6 +44,7 @@ export default {
   name: "CreateUser",
   data() {
     return {
+      //Статус загрузки
       loading: false,
       // данные для валидации формы
       ruleValidate: {
@@ -121,7 +103,9 @@ export default {
           },
         ],
       },
+      // Ошибки при сохранении
       errors: {},
+      //Данные пользователя
       user_data: {
         first_name: "",
         last_name: "",

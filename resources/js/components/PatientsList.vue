@@ -29,28 +29,21 @@
       </template>
 
       <template slot-scope="{ row, index }" slot="action">
-        <Button
-          type="primary"
-          size="small"
-          style="margin-right: 5px"
-          @click="openPatientCard(row)"
-        >
-          Карточка пациента
-        </Button>
+        <Button type="primary" size="small" style="margin-right: 5px" @click="openPatientCard(row)"> Карточка пациента </Button>
       </template>
     </Table>
-      <div class="buttons-cont">
-          <Button
-              type="primary"
-              @click="
+    <div class="buttons-cont">
+      <Button
+        type="primary"
+        @click="
           $router.push({
             name: 'user.create',
           })
         "
-          >
-              Добавить пациента
-          </Button>
-      </div>
+      >
+        Добавить пациента
+      </Button>
+    </div>
   </div>
 </template>
 
@@ -59,8 +52,11 @@ export default {
   name: "PatientsList",
   data() {
     return {
+      //Статус загрузки
       isLoading: false,
+      //Наличие ошибок
       has_error: false,
+      //Параметры отображения таблицы со списком
       tableColumns: [
         {
           title: "ФИО",
@@ -93,7 +89,7 @@ export default {
     };
   },
   mounted() {
-    // запрос с сервера списка пользователй после загрузки страницы
+    // запрос с сервера списка пациентов после загрузки страницы
     this.getPatients();
   },
   methods: {
@@ -113,7 +109,7 @@ export default {
           this.isLoading = false;
         });
     },
-    // метод роутера на страницу редактирования пользователя
+    // метод роутера на страницу редактирования пациента
     openPatientCard(row) {
       let id = row.id;
       // console.log(id)

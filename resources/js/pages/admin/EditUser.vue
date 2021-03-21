@@ -1,13 +1,7 @@
 <!--Шаблон страницы редактирования пользователя-->
 <template>
   <div style="max-width: 400px">
-    <Form
-      ref="formValidate"
-      :model="user_data"
-      :rules="ruleValidate"
-      label-position="top"
-      :disabled="loading"
-    >
+    <Form ref="formValidate" :model="user_data" :rules="ruleValidate" label-position="top" :disabled="loading">
       <FormItem label="Логин" prop="name">
         <Input v-model="user_data.name" placeholder="Введите логин" disabled />
       </FormItem>
@@ -42,6 +36,7 @@ export default {
   props: ["id"],
   data() {
     return {
+      //Статус загрузки
       loading: false,
       // данные для валидации формы
       ruleValidate: {
@@ -56,13 +51,6 @@ export default {
           {
             required: true,
             message: "Необходимо ввести фамилию",
-            trigger: "blur",
-          },
-        ],
-        middle_name: [
-          {
-            required: true,
-            message: "Необходимо ввести отчество",
             trigger: "blur",
           },
         ],
@@ -86,9 +74,11 @@ export default {
           },
         ],
       },
+      // Ошибки при сохранении
       errors: {},
-      // данные для валидации формы
+      // данные пользователя
       user_data: {},
+      // id пользователя
       userId: null,
     };
   },
