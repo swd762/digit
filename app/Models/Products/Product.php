@@ -4,27 +4,18 @@ namespace App\Models\Products;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Модель для работы с таблицей протезно-ортопедических изделий и ее связями
+ */
 class Product extends Model
 {
 
     /**
-     * Модель к таблице с изделиями
-     * @var string
+     * Имя таблицы
      */
     protected $table = 'products';
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = ['name'];
-
 }

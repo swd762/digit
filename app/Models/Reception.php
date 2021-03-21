@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Модель для работы с таблицей приемов пациентов
+ */
 class Reception extends Model
 {
     /**
-     * Модель для таблицы, с данными о приеме врача
-     *
-     * @var string
+     * Имя таблицы
      */
     protected $table = 'receptions';
 
