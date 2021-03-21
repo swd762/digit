@@ -9,12 +9,16 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Контроллер для управления пациентами. Вывод и добавление информации о диагнозах, устройствах сбора и передачи данных (УСПД),
+ * протезно-ортопедических изделиях (ПОИ), приемах и т.д.
+ */
 class PatientsController extends Controller
 {
     /**
-     * Возвращает список пациентов
+     * Метод для получения списка пациентов
      *
-     * @return
+     * @return Json
      */
     public function patientsList()
     {
@@ -28,11 +32,11 @@ class PatientsController extends Controller
     }
 
     /**
-     * Возвращает данные о конкретном пациенте с назначенными диагнозами, изделиями и модулями
+     * Метод для получения данных о конкретном пациенте с назначенными диагнозами, ПОИ и УСПД
      *
-     * @param Patient $patient
+     * @param Patient $patient - модель пациента
      *
-     * @return
+     * @return Json
      */
     public function patientInfo(Patient $patient)
     {
@@ -45,24 +49,26 @@ class PatientsController extends Controller
             }
         ]);
 
-
         return response()->json($patient);
     }
 
     /**
-     * API добавление пациента
-     *
-     * входящие параметры Имя, фамилия, Отчество, дата рождения
+     * Метод для добавления нового пациента
+     * Входящие параметры имя, фамилия, отчество, дата рождения
      *
      * @param Request $request
+     * @var String first_name - имя пациента
+     * @var String last_name - фамилия пациента
+     * @var String middle_name - отчество пациента
+     * @var String date - Дата рождения
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function patientAdd(Request $request)
     {
         $val = Validator::make($request->all(), [
             'first_name' => 'required',
-            'last_name' => 'required',
-            'middle_name' => 'required'
+            'last_name' => 'required'
         ]);
 
         if ($val->fails()) {
@@ -71,15 +77,18 @@ class PatientsController extends Controller
                 'errors' => $val->errors()
             ], 422);
         }
-        $date = Carbon::createFromFormat('Y-m-d',$request->date);
-        $first_name = $request->first_name;
-        $last_name = $request->last_name;
-        $middle_name = $request->middle_name;
-        $name = $last_name . " " . $first_name . " " . $middle_name;
-        $patient = new Patient();
-        $patient->name = $name;
-        $patient->birth_date = $date->toDateString();
-        $patient->save();
+        $date = Carbon::createFromFormat('Y-m-d', $request->date);
+
+        $name = $request->last_name . " " . $request->first_name;
+
+        if ($request->middle_name) {
+            $name .= " " . $request->middle_name;
+        }
+
+        Patient::create([
+            'name' => $name,
+            'birth_date' => $date->toDateString()
+        ]);
 
         return response()->json([
             'message' => 'Пациент успешно добавлен'
@@ -87,14 +96,14 @@ class PatientsController extends Controller
     }
 
     /**
-     * Добавляет диагноз пациенту
+     * Метод для прикрепления диагноза к пациенту
      *
-     * @param Patient $patient
+     * @param Patient $patient - модель пациента
      * @param Request $request
-     * @return
-     * @var string $diagnosComment - комментарий врача к поставленному диагнозу
+     * @var String diagnosComment - комментарий врача к поставленному диагнозу
+     * @var Int diagnosId - id диагноза для прикрепления
      *
-     * @var int $diagnosId - id диагноза для прикрепления
+     * @return Json
      */
     public function attachDiagnos(Patient $patient, Request $request)
     {
@@ -111,14 +120,14 @@ class PatientsController extends Controller
 
 
     /**
-     * Удаляет диагноз и сопутствующее изделие у пациента.
+     * Метод для удаления диагноза и сопутствующего ПОИ у пациента.
      * Фактически запись не удаляется, а переводится в неактивный режим
      *
-     * @param Patient $patient
+     * @param Patient $patient - модель пациента
      * @param Request $request
-     * @return
      * @var int $diagnosId - id диагноза для удаления
      *
+     * @return Json
      */
     public function detachDiagnos(Patient $patient, Request $request)
     {
@@ -131,22 +140,22 @@ class PatientsController extends Controller
     }
 
     /**
-     * Прикрепляет изделие к диагнозу пациента
+     * Метод для прикрепления ПОИ к диагнозу пациента
      *
-     * @param Patient $patient
-     * @param Int $diagnosId
+     * @param Patient $patient - модель пациента
+     * @param Int $diagnosId - id диагноза, к которому необходимо прикрепить ПОИ
      * @param Request $request
-     * @return
-     * @var Int productId - id изделия для прикрепления
+     * @var Int productId - id ПОИ для прикрепления
      *
+     * @return Json
      */
     public function attachProduct(Patient $patient, $diagnosId, Request $request)
     {
         /**
-         * Изделие можно прикрепить как в момент выбора диагноза, так и после.
-         * Если после и прикрепляется в этот же день (Предположим, что врач в течение приема может сначала задать диагноз, а потом прикрепить изделие),
+         * ПОИ можно прикрепить как в момент выбора диагноза, так и после.
+         * Если после и прикрепляется в этот же день (Предположим, что врач в течение приема может сначала задать диагноз, а потом прикрепить ПОИ),
          * то запись о диагнозе оставляем прежнюю.
-         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
+         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с ПОИ.
          */
         $patient
             ->diagnoses()
@@ -164,19 +173,19 @@ class PatientsController extends Controller
     }
 
     /**
-     * Открепляет устройство от диагноза
+     * Метод для открепления ПОИ от диагноза
      *
-     * @param Patient $patient
-     * @param $diagnosId
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Patient $patient - модель пациента
+     * @param $diagnosId - id диагноза, от которого необходимо открепить ПОИ
+     *
+     * @return Json
      */
-    public function detachProduct(Patient $patient, $diagnosId, Request $request)
+    public function detachProduct(Patient $patient, $diagnosId)
     {
         /**
-         * Изделие можно открепить как в момент выбора диагноза, так и после.
+         * ПОИ можно открепить как в момент выбора диагноза, так и после.
          *
-         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с изделием.
+         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с ПОИ.
          */
         $oldDiag = $patient->diagnosesWithPivot()
             ->wherePivot('diagnos_id', $diagnosId)
@@ -212,12 +221,14 @@ class PatientsController extends Controller
     }
 
     /**
-     * Добавляем осмотр или обновляем существующий
+     * Метод для добавления или обновления приема пациента
      *
-     *
-     * @param Patient $patient
+     * @param Patient $patient - модель пациента
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @var Int|null id - id приема. Передается при редактировании
+     * @var String comment - комментарий врача к приему
+     *
+     * @return Json
      */
     public function attachReception(Patient $patient, Request $request)
     {
@@ -242,12 +253,13 @@ class PatientsController extends Controller
     }
 
     /**
-     * Удалем осмотр из списка
+     * Метод для удаления приема пациента
      *
-     * @param Patient $patient
+     * @param Patient $patient - модель пациента
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @var Int id - id приема
+     *
+     * @return Json
      */
     public function removeReception(Patient $patient, Request $request)
     {
@@ -261,9 +273,9 @@ class PatientsController extends Controller
     }
 
     /**
-     * Возвращает информацию о получении данных с модуля, пока в тестовом режиме
+     * Метод для получения информации о наличии данных с УСПД, пока в тестовом режиме
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return Json
      */
     public function getModuleDownloadStatus()
     {

@@ -11,20 +11,22 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
+/**
+ * Контроллер аутентификации и регистрации пользователей
+ */
 class AuthController extends Controller
 {
     /**
-     *
-     * Контроллер аутентификации и регистрации пользователей
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-
-    /**
-     * метод регистрации нового пользователя. Входные данные: логин, пароль, имя, фамилия, отчество, email
+     * Метод для регистрации нового пользователя. Входные данные: логин, пароль, имя, фамилия, отчество, email
      *
      * @param Request $request
+     * @var String name - логин
+     * @var String password - пароль
+     * @var String first_name - имя
+     * @var String last_name - фамилия
+     * @var String middle_name - отчество
+     * @var String email - email
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
@@ -60,9 +62,14 @@ class AuthController extends Controller
 
 
     /**
-     * метод для аутентификации пользователя (проверяет "паспорт" -> возвращает статус в json и token в хэдере)
+     * Метод для аутентификации пользователя.
+     * Проверяет логин и пароль пользователя и возвращает ключ доступа (token) в заголовке (header)
+     * В случае несовпадения - ошибку в json
      *
      * @param Request $request
+     * @var String name - логин пользователя
+     * @var String password - пароль пользователя
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
@@ -80,7 +87,10 @@ class AuthController extends Controller
 
     /**
      *
-     * метод выхода пользователя (возвращает статус в json)
+     * Метод выхода пользователя из системы.
+     * Помечает ранее выданный ключ доступа некактивным
+     *
+     * Возвращает результат в json
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -94,7 +104,7 @@ class AuthController extends Controller
     }
 
     /**
-     * метод чтения данных пользвателя для последующей авторизации
+     * Метод возвращает данные о текущем пользователе в json
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -111,7 +121,7 @@ class AuthController extends Controller
     }
 
     /**
-     * метод проверки "свежести" пользователя и токена
+     * Метод для проверки активности ранее выданного ключа доступа
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -139,7 +149,7 @@ class AuthController extends Controller
     }
 
     /**
-     * метод посредник, чтобы не обращаться напрямую к фасаду Auth
+     * Метод посредник, чтобы не обращаться напрямую к фасаду Auth
      *
      * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */

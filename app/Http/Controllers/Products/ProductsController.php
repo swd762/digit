@@ -3,39 +3,52 @@
 namespace App\Http\Controllers\Products;
 
 use App\Http\Controllers\Controller;
-use App\Models\Module;
-use App\Models\Patient;
 use App\Models\Products\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Контроллер для управления справочником протезно-ортопедических изделий (ПОИ).
+ */
 class ProductsController extends Controller
 {
     /**
-     *  Класс для работы с изделиями
-     */
-
-    /**
-     * Поулчаем список изделий
+     * Метод для получения списка ПОИ
+     * Возвращает результат с постраничной разбивкой
      *
-     * @param Request $request
-     * @return
+     * @return Json
      */
-    public function index(Request $request)
+    public function index()
     {
         return response(Product::paginate(10));
     }
 
-    public function getProductInfo(Request $request)
+    /**
+     * Метод для получения информации о конкретном ПОИ
+     *
+     * @param Product $product - модель ПОИ
+     *
+     * @return Json
+     */
+    public function getProductInfo(Product $product)
     {
-        $product = Product::find($request->product);
-
         return response()->json(
             $product
         );
     }
 
-    public function updateProduct(Request $request)
+    /**
+     * Метод для обновления данных ПОИ
+     * Входные параметры:
+     *  Имя ПОИ
+     *
+     * @param Product $product - модель ПОИ
+     * @param Request $request
+     * @var String name - имя ПОИ
+     *
+     * @return Json
+     */
+    public function updateProduct(Product $product, Request $request)
     {
         $val = Validator::make($request->all(), [
             'name' => 'required|min:3'
@@ -48,7 +61,6 @@ class ProductsController extends Controller
             ], 422);
         }
 
-        $product = Product::find($request->product);
         $product->name = $request->name;
         $product->save();
 
@@ -58,22 +70,31 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function removeProduct(Request $request)
+    /**
+     * Метод для удаления ПОИ
+     *
+     * @param Product $product - модель ПОИ
+     *
+     * @return Json
+     */
+    public function removeProduct(Product $product)
     {
-        if (!is_null($request->product)) {
-            $product = Product::find($request->product);
-            $product->delete();
+        $product->delete();
 
-            return response()->json([
-                'msg' => 'success',
-                $product
-            ]);
-        }
         return response()->json([
-            'msg' => 'remove error',
-        ], 422);
+            'msg' => 'success'
+        ]);
     }
 
+    /**
+     * Метод для создания ПОИ
+     * Входные параметры:
+     *  Имя ПОИ
+     * @param Request $request
+     * @var String name - имя ПОИ
+     *
+     * @return Json
+     */
     public function createProduct(Request $request)
     {
         $val = Validator::make($request->all(), [
@@ -87,96 +108,12 @@ class ProductsController extends Controller
             ], 422);
         }
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->save();
+        Product::create([
+            'name' => $request->name
+        ]);
 
         return response()->json([
             'msg' => 'success'
         ]);
     }
-
-    /**
-     * Получаем список модулей для изделий
-     *
-     * @return
-     */
-    public function getModules()
-    {
-        return response(Module::paginate(10));
-    }
-
-    public function getModuleInfo(Request $request)
-    {
-        $module = Module::find($request->module);
-
-        return response()->json(
-            $module
-        );
-    }
-
-    public function updateModule(Request $request)
-    {
-        $val = Validator::make($request->all(), [
-            'name' => 'required|min:3',
-            'module_id' => 'required|min:3'
-        ]);
-
-        if ($val->fails()) {
-            return response()->json([
-                'error' => 'update_validation_error',
-                'errors' => $val->errors()
-            ], 422);
-        }
-
-        $module = Module::find($request->module);
-        $module->name = $request->name;
-        $module->module_id = $request->module_id;
-        $module->save();
-
-        return response()->json([
-            'status' => 'success',
-            'module' => $module,
-        ]);
-    }
-
-    public function createModule(Request $request)
-    {
-        $val = Validator::make($request->all(), [
-            'name' => 'required|min:4'
-        ]);
-
-        if ($val->fails()) {
-            return response()->json([
-                'error' => 'update_validation_error',
-                'errors' => $val->errors()
-            ], 422);
-        }
-
-        $module = new Module();
-        $module->name = $request->name;
-        $module->module_id = $request->name;
-        $module->save();
-
-        return response()->json([
-            'msg' => 'success'
-        ]);
-    }
-
-    public function removeModule(Request $request)
-    {
-        if (!is_null($request->module)) {
-            $module = Module::find($request->module);
-            $module->delete();
-
-            return response()->json([
-                'msg' => 'success',
-                $module
-            ]);
-        }
-        return response()->json([
-            'msg' => 'remove error',
-        ], 422);
-    }
-
 }

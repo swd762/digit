@@ -7,17 +7,25 @@ use App\Models\ModuleData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * Контроллер для работы с данными с устройств сбора и передачи данных (УСПД)
+ */
 class DataController extends Controller
 {
     /**
-     * Контроллер для работы с данными с модулей
+     * Метод для сохранения данных, полученных с устройств сбора и передачи данных (УСПД).
+     * Входные параметры:
+     *  id УСПД
+     *  данные в json формате
+     *
+     * Возвращает результат операции в json формате
      *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @var String id - id УСПД
+     * @var String data - данные с УСПД в json формате
      *
+     * @return Json
      */
-
-    // модуль для импорта данных с модуля и запись в таблицу
     public function import(Request $request)
     {
         Log::info('module id: ' . $request->id);

@@ -67,12 +67,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::prefix('modules')->namespace('Products')->group(function () {
-        Route::get('/', 'ProductsController@getModules');
-        Route::post('create_module', 'ProductsController@createModule');
-        Route::group(['prefix'=>'{module}', 'where' => ['module' => '[0-9]+']], function (){
-            Route::put('update_module', 'ProductsController@updateModule');
-            Route::delete('remove_module', 'ProductsController@removeModule');
-            Route::get('/', 'ProductsController@getModuleInfo');
+        Route::get('/', 'ModulesController@getModules');
+        Route::post('create_module', 'ModulesController@createModule');
+        Route::group(['prefix' => '{module}', 'where' => ['module' => '[0-9]+']], function () {
+            Route::put('update_module', 'ModulesController@updateModule');
+            Route::delete('remove_module', 'ModulesController@removeModule');
+            Route::get('/', 'ModulesController@getModuleInfo');
         });
     });
 
