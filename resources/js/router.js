@@ -120,7 +120,7 @@ const routes = [
                 name: 'admin.dashboard.products',
                 component: AdminProducts,
                 meta: {
-                    name: "Справочник изделий"
+                    name: "Справочник ПОИ"
                 }
             },
             {
@@ -128,7 +128,7 @@ const routes = [
                 name: 'admin.dashboard.product.edit',
                 component: AdminProductEdit,
                 meta: {
-                    name: "Редактирование изделия"
+                    name: "Редактирование ПОИ"
                 }
             },
             {
@@ -136,7 +136,7 @@ const routes = [
                 name: 'admin.dashboard.product.create',
                 component: AdminProductCreate,
                 meta: {
-                    name: "Создание изделия"
+                    name: "Создание ПОИ"
                 }
             },
             // end products
@@ -147,7 +147,7 @@ const routes = [
                 name: 'admin.dashboard.modules',
                 component: AdminModules,
                 meta: {
-                    name: "Справочник модулей"
+                    name: "Справочник УСПД"
                 }
             },
             {
@@ -155,7 +155,7 @@ const routes = [
                 name: 'admin.dashboard.modules.edit',
                 component: AdminModulesEdit,
                 meta: {
-                    name: "Редактирование модулей"
+                    name: "Редактирование УСПД"
                 }
             },
             {
@@ -163,7 +163,7 @@ const routes = [
                 name: 'admin.dashboard.modules.create',
                 component: AdminModulesCreate,
                 meta: {
-                    name: "Создание модуля"
+                    name: "Создание УСПД"
                 }
             },
             // end modules
