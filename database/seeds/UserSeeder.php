@@ -23,6 +23,8 @@ class UserSeeder extends Seeder
         $adminUser->name = 'admin';
         $adminUser->email = 'jhon@deo.com';
         $adminUser->password = bcrypt('secret');
+        $adminUser->first_name = 'Дмитрий';
+        $adminUser->last_name = 'Борисович';
         $adminUser->save();
         $adminUser->roles()->attach($adminRole);
 
@@ -30,7 +32,8 @@ class UserSeeder extends Seeder
         $userUser = new User();
         $userUser->name = 'saul';
         $userUser->email = 'Saul@deo.com';
-        $userUser->first_name = 'Saul Иванович';
+        $userUser->first_name = 'Алексей';
+        $userUser->last_name = 'Иванович';
         $userUser->password = bcrypt('123456');
         $userUser->save();
         $userUser->roles()->attach($userRole);
@@ -39,7 +42,8 @@ class UserSeeder extends Seeder
             $user = User::create([
                 'name' => "user$i",
                 'email' => "user$i@deo.com",
-                'first_name' => "Пользователь $i",
+                'first_name' => "Иван",
+                'last_name' => 'Иванов',
                 'password' => Hash::make('123456')
             ]);
 
