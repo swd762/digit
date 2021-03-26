@@ -17,7 +17,7 @@
         </div>
         <div class="patient-card-row">
           <h4>Дата рождения:</h4>
-          <p>{{ patientData.birth_date }}</p>
+          <p>{{ mtz(patientData.birth_date, "DD-MM-YYYY") }}</p>
         </div>
       </Card>
 
@@ -83,7 +83,7 @@
           <Button icon="md-open" shape="circle" size="small" type="success" @click="openReception(index)" />
           <br />
           Дата приема:
-          {{ reception.receipt_date }}
+          {{ mtz(reception.receipt_date, "DD-MM-YYYY") }}
           <br /><br />
         </div>
       </Card>
@@ -108,7 +108,7 @@
 
     <Modal v-model="receptionSelectingMode" title="Прием врача" @on-ok="attachReception()" @on-cancel="resetReceptionData()">
       <p><strong>Пациент: </strong>{{ patientData.name }}</p>
-      <p><strong>Дата приема: </strong>{{ receptionData.date }}</p>
+      <p><strong>Дата приема: </strong>{{ mtz(receptionData.date, "DD-MM-YYYY") }}</p>
       <Form :disabled="isLoading">
         <FormItem label="Комментарий к осмотру врача">
           <Input v-model="receptionData.comment" type="textarea" :autosize="{ minRows: 3, maxRows: 10 }" />
@@ -122,12 +122,14 @@
 
 <script>
 import DiagnosSelecting from "../../components/DiagnosSelecting.vue";
+import dateFormat from "../../mixins/dateFormat";
 
 export default {
   name: "PatientCard",
   components: {
     DiagnosSelecting,
   },
+  mixins: [dateFormat],
   data() {
     return {
       //Статус загрузки
@@ -206,11 +208,11 @@ export default {
     },
     // Метод получения статуса УСПД
     getModuleStatus() {
-      this.isModuleRead = true;
       this.$http
         .post("patients/" + this.patientData.id + "/get_module_status")
         .then((res) => {
-          this.moduleStatusMessage = "данные загружены успешно " + res.data["date"];
+          this.isModuleRead = true;
+          this.moduleStatusMessage = "данные загружены успешно " + this.mtz(res.data["date"], "DD-MM-YYYY");
         })
         .catch((err) => {
           this.has_error = true;
@@ -223,7 +225,7 @@ export default {
     getProducts() {
       this.isLoading = true;
       this.$http
-        .get("products")
+        .get("products?all=1")
         .then((res) => {
           this.products = res.data;
           this.isLoading = false;
@@ -240,7 +242,7 @@ export default {
     getModules() {
       this.isLoading = true;
       this.$http
-        .get("modules")
+        .get("modules?all=1")
         .then((res) => {
           this.modules = res.data;
           this.isLoading = false;

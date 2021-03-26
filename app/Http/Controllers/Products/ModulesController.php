@@ -18,8 +18,11 @@ class ModulesController extends Controller
      *
      * @return Json
      */
-    public function getModules()
+    public function getModules(Request $request)
     {
+        if ($request->all) {
+            return response(Module::all());
+        }
         return response(Module::paginate(10));
     }
 

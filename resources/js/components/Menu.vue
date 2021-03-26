@@ -11,10 +11,10 @@
         <Icon type="ios-navigate"></Icon>
         Вход
       </MenuItem>
-      <MenuItem v-if="!$auth.check()" name="{name: register}" :to="{ name: 'register' }">
+      <!-- <MenuItem v-if="!$auth.check()" name="{name: register}" :to="{ name: 'register' }">
         <Icon type="ios-navigate"></Icon>
         Регистрация
-      </MenuItem>
+      </MenuItem> -->
       <MenuItem v-if="$auth.check('admin')" name="admin.dashboard" :to="{ name: 'admin.dashboard' }">
         <Icon type="ios-desktop-outline" />
         Панель

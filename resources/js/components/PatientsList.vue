@@ -72,7 +72,7 @@ export default {
           align: "center",
         },
         {
-          title: "Выданные изделия",
+          title: "Выданные ПОИ",
           slot: "product",
           width: 200,
           align: "center",
