@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(PatientAndProductSeeder::class);
+        $this->call(ModuleSeeder::class);
         factory(App\User::class, 5)->create()->each(function ($user) {
             $role = Role::where('name', 'user')->first();
             $user->roles()->attach($role);

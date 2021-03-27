@@ -31,7 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('patients')->namespace('Patients')->group(function () {
         Route::get('/', 'PatientsController@patientsList');
-
+        Route::post('add', 'PatientsController@patientAdd');
         Route::group(['prefix' => '{patient}', 'where' => ['patient' => '[0-9]+']], function () {
             Route::get('/', 'PatientsController@patientInfo');
 
@@ -58,13 +58,34 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::prefix('products')->namespace('Products')->group(function () {
         Route::get('/', 'ProductsController@index');
+        Route::post('create_product', 'ProductsController@createProduct');
+        Route::group(['prefix' => '{product}', 'where' => ['product' => '[0-9]+']], function () {
+            Route::put('update_product', 'ProductsController@updateProduct');
+            Route::delete('remove_product', 'ProductsController@removeProduct');
+            Route::get('/', 'ProductsController@getProductInfo');
+        });
     });
 
+    Route::prefix('modules')->namespace('Products')->group(function () {
+        Route::get('/', 'ModulesController@getModules');
+        Route::post('create_module', 'ModulesController@createModule');
+        Route::group(['prefix' => '{module}', 'where' => ['module' => '[0-9]+']], function () {
+            Route::put('update_module', 'ModulesController@updateModule');
+            Route::delete('remove_module', 'ModulesController@removeModule');
+            Route::get('/', 'ModulesController@getModuleInfo');
+        });
+    });
 
-    // Маршруты для чтения и редактирования пользователей в бд
-    Route::get('users/{user?}', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
-    Route::post('update_user/{user}', 'Dashboard\AdminController@updateUser')->middleware('isAdmin');
-    Route::post('delete_user/{user}', 'Dashboard\AdminController@deleteUser')->middleware('isAdmin');
+    // Маршруты дляработы с пользователями в бд
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', 'Dashboard\AdminController@usersList')->middleware('isAdmin');
+
+        Route::group(['prefix' => '{user}', 'where' => ['user' => '[0-9]+']], function () {
+            Route::get('/', 'Dashboard\AdminController@getUser')->middleware('isAdmin');
+            Route::put('update_user', 'Dashboard\AdminController@updateUser')->middleware('isAdmin');
+            Route::delete('delete_user', 'Dashboard\AdminController@deleteUser')->middleware('isAdmin');
+        });
+    });
 });
 
 Route::post('data', 'DataController@import');

@@ -5,31 +5,37 @@ namespace App\Models;
 use App\Models\Products\Product;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * Модель для работы с промежуточной (pivot) таблицей, связывающей таблицы с пациентами и диагнозами.
+ * В ней дополнительно хранятся данные прикрепленных протезно-ортопедических изделиях (ПОИ), устройствах сбора и передачи данных (УСПД),
+ * датах их установки и снятия, а так же датах постановки и снятия диагнозов
+ *
+ * Так же используется для логирования действий связанных с постановкой и снятием диагнозов, ПОИ и УСПД.
+ */
 class PatientDiagnosPivot extends Pivot
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Имя таблицы
      */
     protected $table = 'patients_diagnoses';
 
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
     public $incrementing = true;
 
+    /**
+     * Связь с таблицей протезно-ортопедических изделий
+     */
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    /**
+     * Связь с таблицей устройств сбора и передачи данных
+     */
+    public function module()
+    {
+        return $this->belongsTo(Module::class, 'module_id', 'id');
     }
 }

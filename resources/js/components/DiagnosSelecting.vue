@@ -1,27 +1,14 @@
+<!--компонент выбора диагноза-->
 <template>
-  <Modal
-    :value="isShowing"
-    title="Назначение диагноза"
-    @on-ok="attachDiagnos"
-    @on-cancel="closeModal"
-  >
+  <Modal :value="isShowing" title="Назначение диагноза" @on-ok="attachDiagnos" @on-cancel="closeModal">
     <Form ref="formDiagnos" :model="newDiagnosData" :disabled="isLoading">
       <FormItem label="Диагноз" prop="diagnos">
         <Select :filterable="true" v-model="newDiagnosData.diagnos">
-          <Option
-            v-for="(diagnos, index) in diagnoses"
-            :key="index"
-            :value="diagnos.id"
-            >{{ diagnos.title }}</Option
-          >
+          <Option v-for="(diagnos, index) in diagnoses" :key="index" :value="diagnos.id">{{ diagnos.title }}</Option>
         </Select>
       </FormItem>
       <FormItem label="Комментарий к диагнозу" prop="comment">
-        <Input
-          v-model="newDiagnosData.comment"
-          type="textarea"
-          :autosize="{ minRows: 2, maxRows: 5 }"
-        />
+        <Input v-model="newDiagnosData.comment" type="textarea" :autosize="{ minRows: 2, maxRows: 5 }" />
       </FormItem>
     </Form>
   </Modal>
@@ -32,11 +19,15 @@ export default {
   name: "DiagnosSelecting",
   data() {
     return {
+      //Статус загрузки
       isLoading: false,
+      //Наличие ошибок
       has_error: false,
 
+      // Список диагнозов
       diagnoses: [],
 
+      //Данные диагноза для привязки
       newDiagnosData: {
         diagnos: null,
         comment: null,
@@ -44,9 +35,11 @@ export default {
     };
   },
   props: {
+    //id пациента
     patientId: {
       required: true,
     },
+    // Флаг для отображения компонента
     isShowing: {
       type: Boolean,
       default: false,
@@ -73,7 +66,7 @@ export default {
           this.has_error = true;
         });
     },
-
+    // Привязка диагноза
     attachDiagnos() {
       this.isLoading = true;
       // Добавляем выбранный диагноз пациенту
@@ -96,11 +89,12 @@ export default {
         });
     },
 
+    // Закрытие модального окна
     closeModal() {
       this.clearSelectedDiagnos();
       this.$emit("finished", false);
     },
-
+    // Очистка данных диагноза
     clearSelectedDiagnos() {
       this.newDiagnosData = {
         diagnos: null,

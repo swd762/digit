@@ -1,3 +1,4 @@
+<!--компонент списка пациента-->
 <style scoped>
 .buttons-cont {
   margin: 15px;
@@ -17,7 +18,7 @@
     <h3>Список пациентов</h3>
     <Table :loading="isLoading" border :columns="tableColumns" :data="patients">
       <template slot-scope="{ row }" slot="birthDate">
-        <strong>{{ row.birth_date }}</strong>
+        <strong>{{ new Date(row.birth_date).toLocaleDateString() }}</strong>
       </template>
       <template slot-scope="{ row }" slot="product">
         <p v-for="(diagnos, index) in row.diagnoses" :key="index">
@@ -28,16 +29,21 @@
       </template>
 
       <template slot-scope="{ row, index }" slot="action">
-        <Button
-          type="primary"
-          size="small"
-          style="margin-right: 5px"
-          @click="openPatientCard(row)"
-        >
-          Карточка пациента
-        </Button>
+        <Button type="primary" size="small" style="margin-right: 5px" @click="openPatientCard(row)"> Карточка пациента </Button>
       </template>
     </Table>
+    <div class="buttons-cont">
+      <Button
+        type="primary"
+        @click="
+          $router.push({
+            name: 'user.create',
+          })
+        "
+      >
+        Добавить пациента
+      </Button>
+    </div>
   </div>
 </template>
 
@@ -46,8 +52,11 @@ export default {
   name: "PatientsList",
   data() {
     return {
+      //Статус загрузки
       isLoading: false,
+      //Наличие ошибок
       has_error: false,
+      //Параметры отображения таблицы со списком
       tableColumns: [
         {
           title: "ФИО",
@@ -63,7 +72,7 @@ export default {
           align: "center",
         },
         {
-          title: "Выданные изделия",
+          title: "Выданные ПОИ",
           slot: "product",
           width: 200,
           align: "center",
@@ -80,7 +89,7 @@ export default {
     };
   },
   mounted() {
-    // запрос с сервера списка пользователй после загрузки страницы
+    // запрос с сервера списка пациентов после загрузки страницы
     this.getPatients();
   },
   methods: {
@@ -100,7 +109,7 @@ export default {
           this.isLoading = false;
         });
     },
-    // метод роутера на страницу редактирования пользователя
+    // метод роутера на страницу редактирования пациента
     openPatientCard(row) {
       let id = row.id;
       // console.log(id)

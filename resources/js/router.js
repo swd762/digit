@@ -12,9 +12,19 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminEditUser from './pages/admin/EditUser'
 import AdminCreateUser from './pages/admin/CreateUser'
 import AdminLayout from './pages/admin/AdminLayout'
-import AdminEdit from './pages/admin/Edit'
+// products
+import AdminProducts from './pages/admin/products/Products'
+import AdminProductEdit from './pages/admin/products/EditProduct'
+import AdminProductCreate from './pages/admin/products/CreateProduct'
+// modules
+import AdminModules from './pages/admin/modules/Modules'
+import AdminModulesEdit from './pages/admin/modules/EditModule'
+import AdminModulesCreate from './pages/admin/modules/CreateModule'
+
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
+import CreatePatient from "./pages/user/CreatePatient";
+
 
 //Routes
 const routes = [
@@ -23,7 +33,8 @@ const routes = [
         name: 'home',
         component: Home,
         meta: {
-            auth: undefined
+            auth: undefined,
+            name: "Главная"
         }
     },
     {
@@ -31,7 +42,8 @@ const routes = [
         name: 'register',
         component: Register,
         meta: {
-            auth: false
+            auth: false,
+            name: "Регистрация"
         }
     },
     {
@@ -39,7 +51,8 @@ const routes = [
         name: 'login',
         component: Login,
         meta: {
-            auth: false
+            auth: false,
+            name: "Авторизация"
         }
     },
     // Страницы пользователей
@@ -50,23 +63,36 @@ const routes = [
             auth: true
         },
         children: [
+
             {
                 path: 'dashboard',
                 name: 'user.dashboard',
-                component: UserDashboard
-
+                component: UserDashboard,
+                meta: {
+                    name: "Панель врача"
+                }
             },
             {
                 path: ':patientId/card',
                 name: 'user.card',
-                component: PatientCard
+                component: PatientCard,
+                meta: {
+                    name: "Карточка пациента"
+                }
+            },
+            {
+                path: 'create',
+                name: 'user.create',
+                component: CreatePatient,
+                meta: {
+                    name: "Добавление пациента"
+                }
             }
         ]
     },
     // Страницы администратора
     {
         path: '/admin',
-        //name: 'admin',
         component: AdminLayout,
         meta: {
             auth: {
@@ -83,48 +109,83 @@ const routes = [
             {
                 path: 'dashboard',
                 name: 'admin.dashboard',
-                component: AdminDashboard
-
+                component: AdminDashboard,
+                meta: {
+                    name: "Панель администратора"
+                },
             },
+            // products
+            {
+                path: 'products',
+                name: 'admin.dashboard.products',
+                component: AdminProducts,
+                meta: {
+                    name: "Справочник ПОИ"
+                }
+            },
+            {
+                path: ':productId/edit_product',
+                name: 'admin.dashboard.product.edit',
+                component: AdminProductEdit,
+                meta: {
+                    name: "Редактирование ПОИ"
+                }
+            },
+            {
+                path: 'create_product',
+                name: 'admin.dashboard.product.create',
+                component: AdminProductCreate,
+                meta: {
+                    name: "Создание ПОИ"
+                }
+            },
+            // end products
+
+            // modules
+            {
+                path: 'modules',
+                name: 'admin.dashboard.modules',
+                component: AdminModules,
+                meta: {
+                    name: "Справочник УСПД"
+                }
+            },
+            {
+                path: ':moduleId/edit_module',
+                name: 'admin.dashboard.modules.edit',
+                component: AdminModulesEdit,
+                meta: {
+                    name: "Редактирование УСПД"
+                }
+            },
+            {
+                path: 'create_module',
+                name: 'admin.dashboard.modules.create',
+                component: AdminModulesCreate,
+                meta: {
+                    name: "Создание УСПД"
+                }
+            },
+            // end modules
+
             {
                 path: ':userId/edit',
                 name: 'admin.edit',
-                component: AdminEditUser
+                component: AdminEditUser,
+                meta: {
+                    name: "Редактирование пользователя"
+                }
             },
             {
                 path: 'create',
                 name: 'admin.create',
-                component: AdminCreateUser
+                component: AdminCreateUser,
+                meta: {
+                    name: "Создание пользователя"
+                }
             }
         ]
     },
-
-    // страница редактирования пользователя
-    // {
-    //     path: '/edit_user',
-    //     name: 'admin.edit_user',
-    //     component: AdminEditUser,
-    //     props: true,
-    //     meta: {
-    //         auth: {
-    //             roles: 'admin',
-    //             redirect: {name: 'login'}
-    //         }
-    //     },
-    // },
-    // страница создания пользователя
-    {
-        path: '/create_user',
-        name: 'admin.create_user',
-        component: AdminCreateUser,
-        props: true,
-        meta: {
-            auth: {
-                roles: 'admin',
-                redirect: {name: 'login'}
-            }
-        },
-    }
 ]
 
 const router = new VueRouter({

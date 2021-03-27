@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 
+/**
+ * Модель для работы с таблицей ролей
+ */
 class Role extends Model
 {
-    // модель для работы с таблицей 'roles'
-    protected $fillable = [
-        //'user_id'
-    ];
-
-    // обратное отношение один к одному
+    /**
+     * Связь с таблицей пользователей
+     */
     public function users()
     {
         return $this->belongsToMany(User::class);
     }
-
-//    public function permissions()
-//    {
-//        return $this->belongsToMany('Permission');
-//    }
 }

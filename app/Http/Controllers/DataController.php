@@ -5,23 +5,59 @@ namespace App\Http\Controllers;
 use App\Models\Module;
 use App\Models\ModuleData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
+/**
+ * Контроллер для работы с данными с устройств сбора и передачи данных (УСПД)
+ */
 class DataController extends Controller
 {
-    // модуль для импорта данных с модуля и запись в таблицу
+    /**
+     * Метод для сохранения данных, полученных с устройств сбора и передачи данных (УСПД).
+     * Входные параметры:
+     *  id УСПД
+     *  данные в json формате
+     *
+     * Возвращает результат операции в json формате
+     *
+     * @param Request $request
+     * @var String id - id УСПД
+     * @var String data - данные с УСПД в json формате
+     *
+     * @return Json
+     */
+    public function import(Request $request)
+    {
+        Log::info('module id: ' . $request->id);
+        Log::info('data: ' . $request->data);
+        Log::info('all: ' . json_encode($request->all()));
 
-    public function import(Request $request) {
+        $module = Module::where('module_id', $request->id)->first();
+        if ($module == null) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Module not found'
+            ], 404);
+        }
 
-        $module = new Module;
-        $module->module_name = '1';
-        $module->module_key = '1';
-        $module->save();
-        $moduleData = new ModuleData;
-        $moduleData->module_key = $module->key;
-        $moduleData->data = $request->all();
-        $moduleData->save();
+        $patient = $module->currentPatient()->first();
+
+        $data = json_decode($request->data);
+
+        $temperaturePropName = "Temperature (grad C)";
+
+        foreach ($data as $item) {
+            ModuleData::create([
+                'patient_id' => $patient->id,
+                'module_id' => $module->id,
+                'temperature' => $item->$temperaturePropName,
+                'bend' => $item->Bend,
+                'created_at' => $item->Date
+            ]);
+        }
+
         return response()->json([
-            'status'=>'success',
+            'status' => 'success',
         ], 200);
     }
 }

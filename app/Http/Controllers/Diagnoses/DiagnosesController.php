@@ -7,16 +7,19 @@ use App\Models\Diagnos;
 use App\Models\Patient;
 use Illuminate\Http\Request;
 
+/**
+ * Контроллер для управления справочником диагнозов.
+ */
 class DiagnosesController extends Controller
 {
     /**
-     * Возвращает список диагнозов
+     * Метод для получения списка диагнозов
      * Если передан id пациента - исключается уже привязанные диагнозы из списка
      *
      * @param Request $request
-     * @var Int patientId
+     * @var Int|null patientId - id пациента
      *
-     * @return json
+     * @return Json
      */
     public function index(Request $request)
     {

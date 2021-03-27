@@ -12,7 +12,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    // Модель для работы с таблицей 'users', также для аутентификаци
+    /**
+     * Модель для работы с таблицей 'users', также для аутентификаци
+     */
 
     use Notifiable;
 
@@ -55,7 +57,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    // свзяь один к одному с таблицей 'roles'
+    // свзяь один ко многим с таблицей 'roles'
     public function roles()
     {
         return $this->belongsToMany(Models\Role::class);
