@@ -16,6 +16,7 @@ class AddModuleIdFieldPatientsDiagnosesTable extends Migration
         //
         Schema::table('patients_diagnoses', function (Blueprint $table) {
             $table->unsignedBigInteger('module_id')->nullable()->default(null)->comment('ID модуля');
+            $table->foreign('module_id')->references('id')->on('modules');
         });
     }
 
