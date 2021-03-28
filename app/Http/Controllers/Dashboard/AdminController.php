@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -39,24 +36,18 @@ class AdminController extends Controller
      */
     public function usersList(Request $request)
     {
-        $users = User::get(['id', 'name', 'first_name', 'last_name', 'email', 'middle_name']);
+        //$users = User::get(['id', 'name', 'first_name', 'last_name', 'email', 'middle_name']);
+        $users = User::paginate(5);
         foreach ($users as $user) {
             $role = $user->roles->first()->name;
             $user->role = $role;
         }
-        $pagUsers = $this->paginate($users, 5, $request->page);
+
         return response()->json([
             'status' => 'success',
-            'users' => $pagUsers,
+            'users' => $users,
             'msg' => $request->page
         ]);
-    }
-
-    public function paginate($items, $perPage = 5, $page = null, $options = [])
-    {
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     /**
