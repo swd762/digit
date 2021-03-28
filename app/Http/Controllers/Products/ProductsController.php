@@ -18,8 +18,11 @@ class ProductsController extends Controller
      *
      * @return Json
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->all) {
+            return response(Product::all());
+        }
         return response(Product::paginate(10));
     }
 

@@ -18,6 +18,8 @@ import locale from 'view-design/dist/locale/ru-RU';
 import 'view-design/dist/styles/iview.css';
 
 
+window.moment = require('moment-timezone');
+
 // Устанавливаем Vue глобально
 window.Vue = Vue
 

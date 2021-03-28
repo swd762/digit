@@ -29,7 +29,7 @@ label_train = label_train[:-100]
 
 
 model = tf.keras.models.Sequential([
-    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(128, activation='sigmoid'),
     tf.keras.layers.Dropout(0.2),
     tf.keras.layers.Dense(1)
 ])
@@ -63,12 +63,3 @@ print('Образцы:', feature_test[:3])
 predictions = model.predict(feature_test[:3])
 print('размерность прогнозов:', predictions.shape)
 print('Прогнозы:', predictions)
-
-
-probability_model = tf.keras.Sequential([
-    model,
-    tf.keras.layers.Softmax()
-])
-
-
-probability_model(feature_test[:5])
