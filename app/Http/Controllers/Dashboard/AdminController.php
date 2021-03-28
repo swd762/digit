@@ -34,16 +34,19 @@ class AdminController extends Controller
      *
      * @return Json
      */
-    public function usersList()
+    public function usersList(Request $request)
     {
-        $users = User::get(['id', 'name', 'first_name', 'last_name', 'email', 'middle_name']);
+        //$users = User::get(['id', 'name', 'first_name', 'last_name', 'email', 'middle_name']);
+        $users = User::paginate(5);
         foreach ($users as $user) {
             $role = $user->roles->first()->name;
             $user->role = $role;
         }
+
         return response()->json([
             'status' => 'success',
-            'users' => $users->toArray(),
+            'users' => $users,
+            'msg' => $request->page
         ]);
     }
 
@@ -56,13 +59,13 @@ class AdminController extends Controller
      *
      * @param User $user - модель пользователя
      * @param Request $request
-     * @var String email - email пользователя
+     * @return \Illuminate\Http\JsonResponse
      * @var String first_name - имя пользователя
      * @var String last_name - фамилия пользователя
      * @var String middle_name - отчество пользователя
      * @var String role - имя роли пользователя
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @var String email - email пользователя
      */
     public function updateUser(User $user, Request $request)
     {
