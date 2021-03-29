@@ -53,7 +53,7 @@ export default {
     //Получаем список диагнозов на случай назначения
     getDiagnoses() {
       this.$http({
-        url: "diagnoses",
+        url: "diagnoses?all=1",
         method: "GET",
         params: {
           patientId: this.patientId,

@@ -52,10 +52,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         });
     });
 
-    Route::prefix('diagnoses')->namespace('Diagnoses')->group(function () {
-        Route::get('/', 'DiagnosesController@index');
-    });
-
     Route::prefix('products')->namespace('Products')->group(function () {
         Route::get('/', 'ProductsController@index');
         Route::post('create_product', 'ProductsController@createProduct');
@@ -73,6 +69,16 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::put('update_module', 'ModulesController@updateModule');
             Route::delete('remove_module', 'ModulesController@removeModule');
             Route::get('/', 'ModulesController@getModuleInfo');
+        });
+    });
+
+    Route::prefix('diagnoses')->namespace('Diagnoses')->group(function () {
+        Route::get('/', 'DiagnosesController@index');
+        Route::post('create', 'DiagnosesController@create');
+        Route::group(['prefix' => '{diagnos}', 'where' => ['diagnos' => '[0-9]+']], function () {
+            Route::put('update', 'DiagnosesController@update');
+            Route::delete('remove', 'DiagnosesController@remove');
+            Route::get('/', 'DiagnosesController@getDiagnosInfo');
         });
     });
 

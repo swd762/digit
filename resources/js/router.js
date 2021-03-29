@@ -21,6 +21,11 @@ import AdminModules from './pages/admin/modules/Modules'
 import AdminModulesEdit from './pages/admin/modules/EditModule'
 import AdminModulesCreate from './pages/admin/modules/CreateModule'
 
+// diagnoses
+import AdminDiagnoses from './pages/admin/diagnoses/Diagnoses'
+import AdminDiagnosesEdit from './pages/admin/diagnoses/EditDiagnose'
+import AdminDiagnosesCreate from './pages/admin/diagnoses/CreateDiagnose'
+
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
 import CreatePatient from "./pages/user/CreatePatient";
@@ -167,6 +172,33 @@ const routes = [
                 }
             },
             // end modules
+
+            // diagnoses
+            {
+                path: 'diagnoses',
+                name: 'admin.dashboard.diagnoses',
+                component: AdminDiagnoses,
+                meta: {
+                    name: "Справочник диагнозов"
+                }
+            },
+            {
+                path: ':diagnosId/edit_diagnos',
+                name: 'admin.dashboard.diagnoses.edit',
+                component: AdminDiagnosesEdit,
+                meta: {
+                    name: "Редактирование диагноза"
+                }
+            },
+            {
+                path: 'create_diagnos',
+                name: 'admin.dashboard.diagnoses.create',
+                component: AdminDiagnosesCreate,
+                meta: {
+                    name: "Создание диагноза"
+                }
+            },
+            // end diagnoses
 
             {
                 path: ':userId/edit',
