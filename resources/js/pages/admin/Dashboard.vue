@@ -10,6 +10,7 @@
       <h3>Справочники</h3>
       <Button type="primary" @click="$router.push('products')">Протезно-ортопедические изделия</Button>
       <Button type="primary" @click="$router.push('modules')">Устройства сбора и передачи данных (УСПД)</Button>
+      <Button type="primary" @click="$router.push('diagnoses')">Диагнозы</Button>
     </div>
     <div class="table">
       <usersList></usersList>
