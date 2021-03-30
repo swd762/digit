@@ -10,7 +10,7 @@
       <Button type="success" @click="openReception()"> Добавить прием </Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
-        <p slot="title">Данные пациента <Button icon="md-add" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
+        <p slot="title">Данные пациента <Button icon="md-create" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
         <div class="patient-card-row">
           <h4>ФИО:</h4>
           <p>{{ patientData.name }}</p>
@@ -476,5 +476,8 @@ export default {
 .patient-card-row p {
   display: flex;
   align-items: center;
+}
+.ivu-card-head p {
+  overflow: inherit;
 }
 </style>
