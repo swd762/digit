@@ -96,6 +96,39 @@ class PatientsController extends Controller
     }
 
     /**
+     * Метод для обновления существующего пациента
+     * Входящие параметры ФИО, дата рождения
+     *
+     * @param Request $request
+     * @var String name - ФИО пациента
+     * @var String date - Дата рождения
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Patient $patient, Request $request)
+    {
+        $val = Validator::make($request->all(), [
+            'name' => 'required',
+            'birth_date' => 'required'
+        ]);
+
+        if ($val->fails()) {
+            return response()->json([
+                'error' => 'ошибка обновления пациента',
+                'errors' => $val->errors()
+            ], 422);
+        }
+
+        $patient->name = $request->name;
+        $patient->birth_date = Carbon::createFromFormat('d-m-Y', $request->birth_date);
+        $patient->save();
+
+        return response()->json([
+            'message' => 'Пациент успешно обновлен'
+        ]);
+    }
+
+    /**
      * Метод для прикрепления диагноза к пациенту
      *
      * @param Patient $patient - модель пациента

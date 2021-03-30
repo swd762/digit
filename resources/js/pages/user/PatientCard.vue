@@ -10,7 +10,7 @@
       <Button type="success" @click="openReception()"> Добавить прием </Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
-        <p slot="title">Данные пациента</p>
+        <p slot="title">Данные пациента <Button icon="md-add" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
         <div class="patient-card-row">
           <h4>ФИО:</h4>
           <p>{{ patientData.name }}</p>
@@ -106,6 +106,24 @@
       </Form>
     </Modal>
 
+    <Modal v-model="patientEditingFlag" title="Редактирование пациента" :footer-hide="true">
+      <Form ref="patientValidate" :model="changedPatientData" :rules="patientRulesValidate" label-position="top" :disabled="isLoading">
+        <FormItem label="ФИО пациента" prop="name">
+          <Input v-model="changedPatientData.name" />
+        </FormItem>
+        <FormItem label="Дата рождения пациента" prop="birth_date">
+          <DatePicker
+            format="dd-MM-yyyy"
+            type="date"
+            @on-change="(val) => (changedPatientData.birth_date = val)"
+            :value="changedPatientData.birth_date"
+            placeholder="Выберите дату"
+          />
+        </FormItem>
+      </Form>
+      <Button type="success" @click="savePatient">Сохранить</Button>
+    </Modal>
+
     <Modal v-model="receptionSelectingMode" title="Прием врача" @on-ok="attachReception()" @on-cancel="resetReceptionData()">
       <p><strong>Пациент: </strong>{{ patientData.name }}</p>
       <p><strong>Дата приема: </strong>{{ mtz(receptionData.date, "DD-MM-YYYY") }}</p>
@@ -143,10 +161,33 @@ export default {
       //Флаг режима работы с приемами
       receptionSelectingMode: false,
 
+      patientEditingFlag: false,
+
       //id пациента
       patientId: this.$route.params.patientId,
       // данные пациента
       patientData: {},
+      changedPatientData: {
+        name: "",
+        birth_date: "",
+      },
+
+      patientRulesValidate: {
+        name: [
+          {
+            required: true,
+            message: "Необходимо ввести фио",
+            trigger: "blur",
+          },
+        ],
+        birth_date: [
+          {
+            required: true,
+            message: "Необходимо ввести дату",
+            trigger: "blur",
+          },
+        ],
+      },
 
       // Список диагнозов
       diagnoses: [],
@@ -265,6 +306,30 @@ export default {
       if (response) {
         this.getPatientData(this.patientData.id);
       }
+    },
+
+    /**
+     * Метод для обновления данных пациента
+     */
+    savePatient() {
+      this.$refs["patientValidate"].validate((valid) => {
+        if (valid) {
+          this.isLoading = true;
+          this.$http
+            .put("patients/" + this.patientData.id, this.changedPatientData)
+            .then((res) => {
+              this.$Message.success("Пациент успешно изменен");
+              this.isLoading = false;
+              this.patientEditingFlag = false;
+              this.getPatientData(this.patientData.id);
+            })
+            .catch((err) => {
+              this.$Message.error("Ошибка при изменении пациента");
+              this.has_error = true;
+              this.isLoading = false;
+            });
+        }
+      });
     },
 
     /**
@@ -387,6 +452,12 @@ export default {
     // возвращаемся на страницу назад
     returnBack() {
       this.$router.go(-1);
+    },
+
+    showPatientEditingWindow() {
+      this.changedPatientData.name = this.patientData.name;
+      this.changedPatientData.birth_date = this.mtz(this.patientData.birth_date, "DD-MM-YYYY");
+      this.patientEditingFlag = true;
     },
   },
 };
