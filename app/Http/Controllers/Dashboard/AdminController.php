@@ -108,7 +108,7 @@ class AdminController extends Controller
      */
     public function deleteUser(User $user)
     {
-        if ($user->name == 'admin' || $user->name == 'saul') {
+        if ($user->name == 'admin') {
             return response()->json([
                 'status' => 'error',
                 'error' => 'you can\'t delete admin',
