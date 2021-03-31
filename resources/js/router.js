@@ -26,6 +26,10 @@ import AdminDiagnoses from './pages/admin/diagnoses/Diagnoses'
 import AdminDiagnosesEdit from './pages/admin/diagnoses/EditDiagnose'
 import AdminDiagnosesCreate from './pages/admin/diagnoses/CreateDiagnose'
 
+import UserDiagnoses from './pages/user/diagnoses/Diagnoses'
+import UserDiagnosesEdit from './pages/user/diagnoses/EditDiagnose'
+import UserDiagnosesCreate from './pages/user/diagnoses/CreateDiagnose'
+
 import UserLayout from "./pages/user/UserLayout";
 import PatientCard from "./pages/user/PatientCard";
 import CreatePatient from "./pages/user/CreatePatient";
@@ -92,7 +96,33 @@ const routes = [
                 meta: {
                     name: "Добавление пациента"
                 }
-            }
+            },
+            // diagnoses
+            {
+                path: 'diagnoses',
+                name: 'user.dashboard.diagnoses',
+                component: UserDiagnoses,
+                meta: {
+                    name: "Справочник диагнозов"
+                }
+            },
+            {
+                path: ':diagnosId/edit_diagnos',
+                name: 'user.dashboard.diagnoses.edit',
+                component: UserDiagnosesEdit,
+                meta: {
+                    name: "Редактирование диагноза"
+                }
+            },
+            {
+                path: 'create_diagnos',
+                name: 'user.dashboard.diagnoses.create',
+                component: UserDiagnosesCreate,
+                meta: {
+                    name: "Создание диагноза"
+                }
+            },
+            // end diagnoses
         ]
     },
     // Страницы администратора

@@ -11,6 +11,10 @@
       <strong>Врач:</strong>
       {{ this.$auth.user().first_name }}
     </h4>
+    <div class="dashboard-group">
+      <h3>Справочники</h3>
+      <Button style="margin: 0 auto; display: block" type="primary" @click="$router.push('diagnoses')">Диагнозы</Button>
+    </div>
     <!--    <p>Здесь будут ссылки на пациентов, данные модулей и прочее.</p>-->
     <div class="table">
       <patientsList></patientsList>
