@@ -96,3 +96,4 @@ Route::group(['middleware' => 'auth:api'], function () {
 });
 
 Route::post('data', 'DataController@import');
+Route::post('get_data', 'DataController@getData');

@@ -7,7 +7,8 @@
     <template v-else>
       <Button type="primary" @click="returnBack">Назад</Button>
       <Button type="success" @click="showDiagnosSelectingWindow"> Добавить диагноз </Button>
-      <Button type="success" @click="openReception()"> Добавить прием </Button>
+      <Button type="success" @click="openReception"> Добавить прием </Button>
+      <Button type="success" @click="showModuleDataWindow">Просмотр данных с УСПД</Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
         <p slot="title">Данные пациента <Button icon="md-create" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
@@ -135,17 +136,23 @@
         <Button type="success" @click="getModuleStatus"> Прочитать данные с УСПД </Button>
       </Form>
     </Modal>
+
+    <Modal v-model="moduleDataMode" title="Просмотр данных с УСПД" cancelText="" okText="Закрыть">
+      <module-data-browser />
+    </Modal>
   </div>
 </template>
 
 <script>
 import DiagnosSelecting from "../../components/DiagnosSelecting.vue";
+import ModuleDataBrowser from "../../components/ModuleDataBrowser.vue";
 import dateFormat from "../../mixins/dateFormat";
 
 export default {
   name: "PatientCard",
   components: {
     DiagnosSelecting,
+    ModuleDataBrowser,
   },
   mixins: [dateFormat],
   data() {
@@ -160,8 +167,10 @@ export default {
       productSelectingMode: false,
       //Флаг режима работы с приемами
       receptionSelectingMode: false,
-
+      //Флаг режима редактирования пациента
       patientEditingFlag: false,
+      //Флаг режима просмотра данных с УСПД
+      moduleDataMode: false,
 
       //id пациента
       patientId: this.$route.params.patientId,
@@ -298,6 +307,11 @@ export default {
     // Отображает спискок диагнозов для выбора
     showDiagnosSelectingWindow() {
       this.diagnosSelectingMode = true;
+    },
+
+    // Отображает окно с формой загрузки данных, полученных с успд
+    showModuleDataWindow() {
+      this.moduleDataMode = true;
     },
 
     // Обработка ответа от компонента добавления диагноза

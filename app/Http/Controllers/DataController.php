@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Module;
 use App\Models\ModuleData;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -59,5 +60,31 @@ class DataController extends Controller
         return response()->json([
             'status' => 'success',
         ], 200);
+    }
+
+
+    /**
+     * Метод для получения данных, собранных с УСПД
+     *
+     * @param Request $request
+     * @var Int moduleId - id УСПд
+     * @var String dateFrom - дата начала выборки
+     * @var String dateTo - дата окончания выборки
+     *
+     * @return json
+     */
+    public function getData(Request $request)
+    {
+        $query = ModuleData::where('id', $request->moduleId);
+
+        if ($request->dateFrom) {
+            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString());
+        }
+
+        if ($request->dateTo) {
+            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString());
+        }
+
+        return response()->json($query->get());
     }
 }
