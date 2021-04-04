@@ -38,4 +38,12 @@ class PatientDiagnosPivot extends Pivot
     {
         return $this->belongsTo(Module::class, 'module_id', 'id');
     }
+
+    /**
+     * Связь с таблицей диагнозов
+     */
+    public function diagnos()
+    {
+        return $this->belongsTo(Diagnos::class, 'diagnos_id', 'id');
+    }
 }

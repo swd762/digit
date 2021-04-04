@@ -93,6 +93,8 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::delete('delete_user', 'Dashboard\AdminController@deleteUser')->middleware('isAdmin');
         });
     });
+
+    Route::get('logs', 'LogsController@index');
 });
 
 Route::post('data', 'DataController@import');

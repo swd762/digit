@@ -9,6 +9,7 @@
       <Button type="success" @click="showDiagnosSelectingWindow"> Добавить диагноз </Button>
       <Button type="success" @click="openReception"> Добавить прием </Button>
       <Button type="success" @click="showModuleDataWindow">Просмотр данных с УСПД</Button>
+      <Button type="success" @click="showLogs">История</Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
         <p slot="title">Данные пациента <Button icon="md-create" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
@@ -67,6 +68,8 @@
             </Button>
           </div>
 
+          <div>Комментарий: {{ diagnos.pivot.comment ? diagnos.pivot.comment : "Комментарий не указан" }}</div>
+
           <Divider />
         </div>
       </Card>
@@ -86,6 +89,7 @@
           Дата приема:
           {{ mtz(reception.receipt_date, "DD-MM-YYYY") }}
           <br /><br />
+          Комментарий: {{ reception.receipt_description }}
         </div>
       </Card>
     </template>
@@ -140,6 +144,30 @@
     <Modal v-model="moduleDataMode" title="Просмотр данных с УСПД" cancelText="" okText="Закрыть">
       <module-data-browser />
     </Modal>
+
+    <Modal v-model="LogDataMode" title="История" cancelText="" okText="Закрыть" width="1000">
+      <Table border :columns="logColumns" :data="logs" :loading="isLoading">
+        <template slot-scope="{ row }" slot="diagnos">
+          <div>{{ row.diagnos.title }}</div>
+          <div>Поставлен: {{ row.issue_date }}</div>
+          <div v-if="row.detach_date">Снят: {{ row.detach_date }}</div>
+        </template>
+        <template slot-scope="{ row }" slot="product">
+          <div v-if="row.product_id">
+            <div>{{ row.product.name }}</div>
+            <div v-if="row.product_attach_date">Выдано: {{ row.product_attach_date }}</div>
+            <div v-if="row.product_detach_date">Изъято: {{ row.product_detach_date }}</div>
+          </div>
+          <div v-else>ПОИ не выдано</div>
+        </template>
+        <template slot-scope="{ row }" slot="module">
+          <div v-if="row.module_id">
+            <div>{{ row.module.name }}</div>
+          </div>
+          <div v-else>УСПД не устанавливалось</div>
+        </template>
+      </Table>
+    </Modal>
   </div>
 </template>
 
@@ -171,6 +199,8 @@ export default {
       patientEditingFlag: false,
       //Флаг режима просмотра данных с УСПД
       moduleDataMode: false,
+      //Флаг режима просмотра истории
+      LogDataMode: false,
 
       //id пациента
       patientId: this.$route.params.patientId,
@@ -197,6 +227,23 @@ export default {
           },
         ],
       },
+      //Описание таблицы для истории
+      logColumns: [
+        {
+          title: "Диагноз",
+          slot: "diagnos",
+        },
+        {
+          title: "Выдано ПОИ",
+          slot: "product",
+        },
+        {
+          title: "Выдано УСПД",
+          slot: "module",
+        },
+      ],
+      //Записи истории
+      logs: [],
 
       // Список диагнозов
       diagnoses: [],
@@ -472,6 +519,25 @@ export default {
       this.changedPatientData.name = this.patientData.name;
       this.changedPatientData.birth_date = this.mtz(this.patientData.birth_date, "DD-MM-YYYY");
       this.patientEditingFlag = true;
+    },
+
+    showLogs() {
+      this.LogDataMode = true;
+      this.getLogs();
+    },
+
+    getLogs() {
+      this.isLoading = true;
+      this.$http
+        .post("logs/?patientId=" + this.patientData.id)
+        .then((res) => {
+          this.logs = res.data;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          this.has_error = true;
+          this.isLoading = false;
+        });
     },
   },
 };
