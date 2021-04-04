@@ -529,7 +529,7 @@ export default {
     getLogs() {
       this.isLoading = true;
       this.$http
-        .post("logs/?patientId=" + this.patientData.id)
+        .get("logs/?patientId=" + this.patientData.id)
         .then((res) => {
           this.logs = res.data;
           this.isLoading = false;
