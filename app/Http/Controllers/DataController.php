@@ -49,7 +49,7 @@ class DataController extends Controller
 
         foreach ($data as $item) {
             ModuleData::create([
-                'patient_id' => $patient->id,
+                'patient_id' => $patient ? $patient->id : null,
                 'module_id' => $module->id,
                 'temperature' => $item->$temperaturePropName,
                 'bend' => $item->Bend,
@@ -75,7 +75,7 @@ class DataController extends Controller
      */
     public function getData(Request $request)
     {
-        $query = ModuleData::where('id', $request->moduleId);
+        $query = ModuleData::where('module_id', $request->moduleId);
 
         if ($request->dateFrom) {
             $query->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString());

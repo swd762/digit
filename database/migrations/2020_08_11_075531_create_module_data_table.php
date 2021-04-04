@@ -15,7 +15,7 @@ class CreateModuleDataTable extends Migration
     {
         Schema::create('module_data', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('patient_id');
+            $table->unsignedBigInteger('patient_id')->nullable()->default(null);
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->unsignedBigInteger('module_id');
             $table->foreign('module_id')->references('id')->on('modules');
