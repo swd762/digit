@@ -10,6 +10,7 @@
       <Button type="success" @click="openReception"> Добавить прием </Button>
       <Button type="success" @click="showModuleDataWindow">Просмотр данных с УСПД</Button>
       <Button type="success" @click="showLogs">История</Button>
+      <Button type="success" @click="showAssessment">Оценка</Button>
 
       <Card :dis-hover="true" style="margin-top: 10px">
         <p slot="title">Данные пациента <Button icon="md-create" shape="circle" size="small" type="success" @click="showPatientEditingWindow" /></p>
@@ -168,6 +169,21 @@
         </template>
       </Table>
     </Modal>
+
+    <Modal v-model="assessmentMode" title="Оценка данных УСПД" cancelText="" okText="Закрыть" width="1000" @on-ok="clearAssessment">
+      <Form ref="formAssessment" :model="assessmentFilter" :disabled="isLoading" :rules="assessmentRuleValidate" :inline="true">
+        <FormItem label="С" prop="dateFrom" style="width: 120px">
+          <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (assessmentFilter.dateFrom = val)" placeholder="С" />
+        </FormItem>
+        <FormItem label="По" prop="dateTo" style="width: 120px">
+          <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (assessmentFilter.dateTo = val)" placeholder="По" />
+        </FormItem>
+        <div style="display: flex; justify-content: start; margin-bottom: 10px">
+          <Button type="primary" @click="getAssessmentResult">Оценить</Button>
+        </div>
+      </Form>
+      <div v-if="assessmentResult">{{ assessmentResult }}</div>
+    </Modal>
   </div>
 </template>
 
@@ -201,6 +217,8 @@ export default {
       moduleDataMode: false,
       //Флаг режима просмотра истории
       LogDataMode: false,
+      //Флаг режима оценки данных
+      assessmentMode: false,
 
       //id пациента
       patientId: this.$route.params.patientId,
@@ -210,6 +228,14 @@ export default {
         name: "",
         birth_date: "",
       },
+
+      // Период оценки
+      assessmentFilter: {
+        dateFrom: null,
+        dateTo: null,
+      },
+      // Результат оценки
+      assessmentResult: null,
 
       patientRulesValidate: {
         name: [
@@ -223,6 +249,23 @@ export default {
           {
             required: true,
             message: "Необходимо ввести дату",
+            trigger: "blur",
+          },
+        ],
+      },
+      // Правила валидации фильтра оценки
+      assessmentRuleValidate: {
+        dateFrom: [
+          {
+            required: true,
+            message: "Выберите период",
+            trigger: "blur",
+          },
+        ],
+        dateTo: [
+          {
+            required: true,
+            message: "Выберите период",
             trigger: "blur",
           },
         ],
@@ -538,6 +581,37 @@ export default {
           this.has_error = true;
           this.isLoading = false;
         });
+    },
+
+    showAssessment() {
+      this.assessmentMode = true;
+      //   this.getAssessmentResult();
+    },
+
+    getAssessmentResult() {
+      this.$refs["formAssessment"].validate((valid) => {
+        if (valid) {
+          this.isLoading = true;
+          this.$http
+            .post("run_assessment", {
+              patientId: this.patientData.id,
+              dateFrom: this.assessmentFilter.dateFrom,
+              dateTo: this.assessmentFilter.dateTo,
+            })
+            .then((res) => {
+              this.assessmentResult = res.data.msg;
+              this.isLoading = false;
+            })
+            .catch((err) => {
+              this.has_error = true;
+              this.isLoading = false;
+            });
+        }
+      });
+    },
+
+    clearAssessment() {
+      this.assessmentResult = null;
     },
   },
 };

@@ -95,7 +95,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::get('logs', 'LogsController@index');
+
+    Route::post('get_data', 'DataController@getData');
+    Route::post('run_assessment', 'DataController@runAssessment');
 });
 
 Route::post('data', 'DataController@import');
-Route::post('get_data', 'DataController@getData');

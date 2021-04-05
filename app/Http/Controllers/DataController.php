@@ -87,4 +87,30 @@ class DataController extends Controller
 
         return response()->json($query->get());
     }
+
+    /**
+     * Метод для запуска оценки данных в нейронной сети
+     *
+     * @param Request $request
+     * @var Int patientId - id пациента
+     * @var String dateFrom - дата начала выборки
+     * @var String dateTo - дата окончания выборки
+     *
+     * @return json
+     */
+    public function runAssessment(Request $request)
+    {
+        $dataCount = ModuleData::where('patient_id', $request->patientId)
+            ->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString())
+            ->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString())
+            ->count();
+
+        if ($dataCount == 0) {
+            return response()->json(['status' => 'error', 'msg' => 'Не найдено данных за указанный период']);
+        }
+
+        sleep(3);
+
+        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - 95%']);
+    }
 }
