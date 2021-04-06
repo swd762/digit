@@ -317,4 +317,38 @@ class PatientsController extends Controller
             'date' => Carbon::now()->toDateString()
         ]);
     }
+
+    /**
+     * Метод для прикрепления ПОИ к диагнозу пациента
+     *
+     * @param Patient $patient - модель пациента
+     * @param Int $diagnosId - id диагноза, к которому необходимо прикрепить ПОИ
+     * @param Request $request
+     * @var Int productId - id ПОИ для прикрепления
+     *
+     * @return Json
+     */
+    public function updateRecord(Patient $patient, $diagnosId, Request $request)
+    {
+        /**
+         * ПОИ можно прикрепить как в момент выбора диагноза, так и после.
+         * Если после и прикрепляется в этот же день (Предположим, что врач в течение приема может сначала задать диагноз, а потом прикрепить ПОИ),
+         * то запись о диагнозе оставляем прежнюю.
+         * Если дата не совпадает, то старую отключаем, добавляем новую дублирующую, но уже с ПОИ.
+         */
+        $patient
+            ->diagnoses()
+            ->wherePivot('active', 1)
+            ->updateExistingPivot($diagnosId, [
+                'comment' => $request->comment,
+                'product_id' => $request->product_id,
+                'module_id' => $request->module_id,
+                'issue_date' => Carbon::parse($request->issue_date)->toDateString()
+            ]);
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Обновлено'
+        ]);
+    }
 }

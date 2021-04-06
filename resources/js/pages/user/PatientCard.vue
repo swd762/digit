@@ -33,6 +33,7 @@
         <div v-for="(diagnos, index) in patientData.diagnoses" :key="index">
           {{ diagnos.title }}
           <Button icon="md-close" shape="circle" size="small" type="error" @click="removeDiagnos(diagnos.id)" />
+          <Button icon="md-create" shape="circle" size="small" type="success" @click="runEditingDiagnos(diagnos)" />
           <div v-if="diagnos.pivot.product">
             <div style="margin-top: 10px">
               <p style="display: inline-block">
@@ -184,6 +185,31 @@
       </Form>
       <div v-if="assessmentResult">{{ assessmentResult }}</div>
     </Modal>
+
+    <Modal v-model="diagnosEditingMode" title="Редактирование" :footer-hide="true">
+      <Form ref="formEditing" :model="selectedDiagnosForEdit" :disabled="isLoading" :rules="diagnosEditingRuleValidate">
+        <FormItem label="Комментарий к диагнозу" prop="comment">
+          <Input v-model="selectedDiagnosForEdit.comment" type="textarea" :autosize="{ minRows: 2, maxRows: 5 }" />
+        </FormItem>
+        <FormItem label="Дата постановки диагноза" prop="issueDate">
+          <DatePicker type="date" :value="selectedDiagnosForEdit.issueDate" @on-change="(val) => (selectedDiagnosForEdit.issueDate = val)" placeholder="Дата постановки диагноза" />
+        </FormItem>
+        <FormItem label="УСПД" prop="moduleId">
+          <Select :filterable="true" v-model="selectedDiagnosForEdit.moduleId">
+            <Option v-for="(module, index) in modules" :key="index" :value="module.id">{{ module.name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="ПОИ" prop="productId">
+          <Select :filterable="true" v-model="selectedDiagnosForEdit.productId">
+            <Option v-for="(product, index) in products" :key="index" :value="product.id">{{ product.name }}</Option>
+          </Select>
+        </FormItem>
+        <div style="display: flex; justify-content: start; margin-bottom: 10px">
+          <Button type="error" @click="closeEditingDiagnos" style="margin-right: 5px">Закрыть</Button>
+          <Button type="primary" @click="saveEditedDiagnos">Сохранить</Button>
+        </div>
+      </Form>
+    </Modal>
   </div>
 </template>
 
@@ -219,6 +245,8 @@ export default {
       LogDataMode: false,
       //Флаг режима оценки данных
       assessmentMode: false,
+      //Флаг режима редактирования диагноза
+      diagnosEditingMode: false,
 
       //id пациента
       patientId: this.$route.params.patientId,
@@ -229,6 +257,14 @@ export default {
         birth_date: "",
       },
 
+      selectedDiagnosForEdit: {
+        diagnosId: null,
+        comment: null,
+        issueDate: null,
+        moduleId: null,
+        productId: null,
+      },
+
       // Период оценки
       assessmentFilter: {
         dateFrom: null,
@@ -236,6 +272,16 @@ export default {
       },
       // Результат оценки
       assessmentResult: null,
+
+      diagnosEditingRuleValidate: {
+        issueDate: [
+          {
+            required: true,
+            message: "Выберите дату",
+            trigger: "blur",
+          },
+        ],
+      },
 
       patientRulesValidate: {
         name: [
@@ -612,6 +658,54 @@ export default {
 
     clearAssessment() {
       this.assessmentResult = null;
+    },
+
+    runEditingDiagnos(diagnos) {
+      this.selectedDiagnosForEdit.diagnosId = diagnos.id;
+      this.selectedDiagnosForEdit.comment = diagnos.pivot.comment;
+      this.selectedDiagnosForEdit.issueDate = diagnos.pivot.issue_date;
+      this.selectedDiagnosForEdit.moduleId = diagnos.pivot.module_id;
+      this.selectedDiagnosForEdit.productId = diagnos.pivot.product_id;
+      this.diagnosEditingMode = true;
+    },
+
+    saveEditedDiagnos() {
+      this.$refs["formEditing"].validate((valid) => {
+        if (valid) {
+          this.isLoading = true;
+          this.$http
+            .post("patients/" + this.patientData.id + "/diagnos/" + this.selectedDiagnosForEdit.diagnosId + "/update", {
+              issue_date: this.selectedDiagnosForEdit.issueDate,
+              comment: this.selectedDiagnosForEdit.comment,
+              product_id: this.selectedDiagnosForEdit.productId,
+              module_id: this.selectedDiagnosForEdit.moduleId,
+            })
+            .then((res) => {
+              this.isLoading = false;
+              this.closeEditingDiagnos();
+              this.getPatientData(this.patientData.id);
+            })
+            .catch((err) => {
+              this.has_error = true;
+              this.isLoading = false;
+            });
+        }
+      });
+    },
+
+    clearEditingDiagnos() {
+      this.selectedDiagnosForEdit = {
+        diagnosId: null,
+        comment: null,
+        issueDate: null,
+        moduleId: null,
+        productId: null,
+      };
+    },
+
+    closeEditingDiagnos() {
+      this.diagnosEditingMode = false;
+      this.clearEditingDiagnos();
     },
   },
 };
