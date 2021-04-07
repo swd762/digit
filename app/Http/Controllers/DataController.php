@@ -111,7 +111,7 @@ class DataController extends Controller
             return response()->json(['status' => 'error', 'msg' => 'Не найдено данных за указанный период']);
         }
 
-        $result = exec('python python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
+        $result = exec('python3 python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
         // $result = exec('"C:\Program Files\Python38\python.exe" python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
         dd($result);
 
