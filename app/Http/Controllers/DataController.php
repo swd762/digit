@@ -100,16 +100,20 @@ class DataController extends Controller
      */
     public function runAssessment(Request $request)
     {
+        $dateFrom = Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString();
+        $dateTo = Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString();
         $dataCount = ModuleData::where('patient_id', $request->patientId)
-            ->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString())
-            ->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString())
+            ->whereDate('created_at', '>=', $dateFrom)
+            ->whereDate('created_at', '<=', $dateTo)
             ->count();
 
         if ($dataCount == 0) {
             return response()->json(['status' => 'error', 'msg' => 'Не найдено данных за указанный период']);
         }
 
-        sleep(3);
+        $result = exec('python3 ../storage/app/python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
+
+        // sleep(3);
 
         return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - 95%']);
     }

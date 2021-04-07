@@ -14,14 +14,6 @@ checkpoint_path = "training_1/cp.ckpt"
 model = createModel.create()
 model.load_weights(checkpoint_path)
 
-
-# Сгенерируем прогнозы (вероятности - выходные данные последнего слоя)
-# на новых данных с помощью "predict"
-print('\n# Генерируем прогнозы для 3 образцов')
-predictions = model.predict(feature_test[:3])
-print('размерность прогнозов:', predictions.shape)
-print('прогнозы:', predictions)
-
 # Получаем период за который необходимо оценить данные
 dateRange = sys.argv[1]
 dates = json.loads(sys.argv[1])
@@ -56,16 +48,13 @@ for record in data:
 
     with connection:
         with connection.cursor() as cursor:
-            #Сохраняем результат оценки
+            # Сохраняем результат оценки
             sql = "UPDATE `module_data` SET `is_real` = %s WHERE `id` = %s"
             cursor.execute(sql, (predictions[0], record.id))
 
         # connection is not autocommit by default. So you must commit to save
         # your changes.
         connection.commit()
-
-
-
 
 
 # probability_model = tf.keras.Sequential([
