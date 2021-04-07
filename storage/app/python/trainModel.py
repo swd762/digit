@@ -18,7 +18,7 @@ features = df.drop('result', axis=1)
 labels = df['result']
 
 feature_train, feature_test, label_train, label_test = train_test_split(
-    features, labels, test_size=0.33)
+    features.values, labels.values, test_size=0.33)
 
 # Зарезервируем 100 примеров для валидации
 feature_val = feature_train[-100:]  # последние 100
@@ -52,14 +52,14 @@ model.summary()
 print('\nhistory dict:', history.history)
 
 # Оценим модель на тестовых данных, используя "evaluate"
-print('\n# Оцениваем на тестовых данных')
+print('\n# assess test data')
 results = model.evaluate(feature_test, label_test, batch_size=32)
 print('test loss, test acc:', results)
 
 # Сгенерируем прогнозы (вероятности - выходные данные последнего слоя)
 # на новых данных с помощью "predict"
-print('\n# Генерируем прогнозы для 3 образцов')
-print('Образцы:', feature_test[:3])
+print('\n# Generating predictions for 3 samples')
+print('Samples:', feature_test[:3])
 predictions = model.predict(feature_test[:3])
-print('размерность прогнозов:', predictions.shape)
-print('Прогнозы:', predictions)
+print('Prediction\'s size:', predictions.shape)
+print('Predictions:', predictions)
