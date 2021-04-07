@@ -113,10 +113,17 @@ class DataController extends Controller
 
         $result = exec('python3 python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
         // $result = exec('"C:\Program Files\Python38\python.exe" python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
-        dd($result);
 
-        // sleep(3);
+        $data = ModuleData::where('patient_id', $request->patientId)
+            ->whereDate('created_at', '>=', $dateFrom)
+            ->whereDate('created_at', '<=', $dateTo)
+            ->get();
 
-        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - 95%']);
+        $counter = 0;
+        foreach ($data as $item) {
+            if ($item->is_real == 1) $counter++;
+        }
+
+        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - ' . $counter / $data->count]);
     }
 }
