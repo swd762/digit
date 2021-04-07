@@ -14,8 +14,8 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  verbose=1)
 
 
-features = df.drop('true', axis=1)
-labels = df['true']
+features = df.drop('result', axis=1)
+labels = df['result']
 
 feature_train, feature_test, label_train, label_test = train_test_split(
     features, labels, test_size=0.33)

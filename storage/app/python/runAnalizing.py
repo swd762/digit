@@ -8,6 +8,7 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 import createModel
 
+# Загружаем обученную модель из папки
 checkpoint_path = "training_1/cp.ckpt"
 
 model = createModel.create()
@@ -21,12 +22,11 @@ predictions = model.predict(feature_test[:3])
 print('размерность прогнозов:', predictions.shape)
 print('прогнозы:', predictions)
 
-
+# Получаем период за который необходимо оценить данные
 dateRange = sys.argv[1]
 dates = json.loads(sys.argv[1])
 
 print(dates)
-
 
 connection = pymysql.connect(host='localhost',
                              user='root',
