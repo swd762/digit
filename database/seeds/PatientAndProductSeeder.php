@@ -59,7 +59,7 @@ class PatientAndProductSeeder extends Seeder
         // create Patients
         $patientFirst = Patient::create([
             'name' => 'Иванов Иван Иванович',
-            'birth_date' => Carbon::createFromDate(1950,02,01)->toDateString()
+            'birth_date' => Carbon::createFromDate(1950, 02, 01)->toDateString()
         ]);
 
         $patientFirst->diagnoses()->attach($diagnos1, [
@@ -74,14 +74,20 @@ class PatientAndProductSeeder extends Seeder
 
         $patientSecond = new Patient();
         $patientSecond->name = 'Алексеев Иван Иванович';
-        $patientSecond->birth_date = Carbon::createFromDate(1960,02,01)->toDateString();
+        $patientSecond->birth_date = Carbon::createFromDate(1960, 02, 01)->toDateString();
         $patientSecond->save();
 
 
         $patientThird = new Patient();
         $patientThird->name = 'Больнов Алексей Иванович';
-        $patientThird->birth_date = Carbon::createFromDate(1963,02,01)->toDateString();;
+        $patientThird->birth_date = Carbon::createFromDate(1963, 02, 01)->toDateString();;
         $patientThird->save();
 
+        for ($i = 0; $i < 10; $i++) {
+            $newPatient = Patient::create([
+                'name' => "Пациент$i",
+                'birth_date' => Carbon::createFromDate(1963 + $i, 02, 01)->toDateString(),
+            ]);
+        }
     }
 }
