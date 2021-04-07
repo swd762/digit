@@ -124,6 +124,6 @@ class DataController extends Controller
             if ($item->is_real == 1) $counter++;
         }
 
-        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - ' . $counter / $data->count()]);
+        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - ' . $counter / $data->count() * 100 . '%']);
     }
 }
