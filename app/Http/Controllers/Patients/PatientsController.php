@@ -22,9 +22,13 @@ class PatientsController extends Controller
      */
     public function patientsList()
     {
+//        $patients = Patient::with(['diagnoses' => function ($q) {
+//            $q->wherePivot('active', 1);
+//        }, 'diagnoses.pivot.product'])->get();
+
         $patients = Patient::with(['diagnoses' => function ($q) {
             $q->wherePivot('active', 1);
-        }, 'diagnoses.pivot.product'])->get();
+        }, 'diagnoses.pivot.product'])->paginate(8);
 
         return response()->json(
             $patients
