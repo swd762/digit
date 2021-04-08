@@ -183,6 +183,7 @@
           <Button type="primary" @click="getAssessmentResult">Оценить</Button>
         </div>
       </Form>
+      <div v-if="isLoading"><Spin></Spin>Оценка данных в нейронной сети...</div>
       <div v-if="assessmentResult">{{ assessmentResult }}</div>
     </Modal>
 
@@ -635,6 +636,7 @@ export default {
     },
 
     getAssessmentResult() {
+      this.assessmentResult = null;
       this.$refs["formAssessment"].validate((valid) => {
         if (valid) {
           this.isLoading = true;
