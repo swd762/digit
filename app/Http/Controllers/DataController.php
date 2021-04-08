@@ -45,13 +45,11 @@ class DataController extends Controller
 
         $data = json_decode($request->data);
 
-        $temperaturePropName = "Temperature (grad C)";
-
         foreach ($data as $item) {
             ModuleData::create([
                 'patient_id' => $patient ? $patient->id : null,
                 'module_id' => $module->id,
-                'temperature' => $item->$temperaturePropName,
+                'temperature' => $item->Temperature,
                 'bend' => $item->Bend,
                 'created_at' => $item->Date
             ]);
