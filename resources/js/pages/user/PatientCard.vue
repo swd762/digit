@@ -178,11 +178,11 @@
             <Option v-for="(module, index) in modules" :key="index" :value="module.id.toString()">{{ module.name }}</Option>
           </Select>
         </FormItem>
-        <FormItem label="С" prop="dateFrom" style="width: 120px">
-          <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (assessmentFilter.dateFrom = val)" placeholder="С" />
+        <FormItem label="С" prop="dateFrom" style="width: 200px">
+          <DatePicker format="dd-MM-yyyy HH:mm:ss" type="datetime" @on-change="(val) => (assessmentFilter.dateFrom = val)" placeholder="С" />
         </FormItem>
-        <FormItem label="По" prop="dateTo" style="width: 120px">
-          <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (assessmentFilter.dateTo = val)" placeholder="По" />
+        <FormItem label="По" prop="dateTo" style="width: 200px">
+          <DatePicker format="dd-MM-yyyy HH:mm:ss" type="datetime" @on-change="(val) => (assessmentFilter.dateTo = val)" placeholder="По" />
         </FormItem>
         <div style="display: flex; justify-content: start; margin-bottom: 10px">
           <Button type="primary" @click="getAssessmentResult">Оценить</Button>

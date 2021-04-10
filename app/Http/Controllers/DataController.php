@@ -76,9 +76,6 @@ class DataController extends Controller
     {
         $query = ModuleData::where('module_id', $request->moduleId);
 
-        $test = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateFrom)->toDateTimeString();
-        $test1 = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateTo)->toDateTimeString();
-
         if ($request->dateFrom) {
             $query->where('created_at', '>=', Carbon::createFromFormat('d-m-Y H:i:s', $request->dateFrom)->toDateTimeString());
         }
@@ -132,12 +129,12 @@ class DataController extends Controller
      */
     public function runAssessment(Request $request)
     {
-        $dateFrom = Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString();
-        $dateTo = Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString();
+        $dateFrom = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateFrom)->toDateTimeString();
+        $dateTo = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateTo)->toDateTimeString();
         $dataCount = ModuleData::where('patient_id', $request->patientId)
             ->where('module_id', $request->moduleId)
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
+            ->where('created_at', '>=', $dateFrom)
+            ->where('created_at', '<=', $dateTo)
             ->count();
 
         if ($dataCount == 0) {
@@ -149,8 +146,8 @@ class DataController extends Controller
 
         $data = ModuleData::where('patient_id', $request->patientId)
             ->where('module_id', $request->moduleId)
-            ->whereDate('created_at', '>=', $dateFrom)
-            ->whereDate('created_at', '<=', $dateTo)
+            ->where('created_at', '>=', $dateFrom)
+            ->where('created_at', '<=', $dateTo)
             ->get();
 
         $counter = 0;
