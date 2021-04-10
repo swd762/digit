@@ -1,31 +1,33 @@
 <!--компонент просмотра данных, полученных с УСПД-->
 <template>
   <div>
-    <div>Доступны данные за периоды:</div>
-    <div v-for="(period, index) in periods" :key="index">{{ period }}</div>
     <Form ref="formFilter" :model="filterData" :disabled="isLoading" :rules="ruleValidate" :inline="true">
       <FormItem label="id УСПД" prop="moduleId">
         <Select :filterable="true" v-model="filterData.moduleId">
           <Option v-for="(module, index) in modules" :key="index" :value="module.id.toString()">{{ module.name }}</Option>
         </Select>
       </FormItem>
-      <FormItem label="С" prop="dateFrom" style="width: 120px">
-        <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (filterData.dateFrom = val)" placeholder="С" />
+      <FormItem label="С" prop="dateFrom" style="width: 200px">
+        <DatePicker format="dd-MM-yyyy HH:mm:ss" type="datetime" @on-change="(val) => (filterData.dateFrom = val)" placeholder="С" />
       </FormItem>
-      <FormItem label="По" prop="dateTo" style="width: 120px">
-        <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (filterData.dateTo = val)" placeholder="По" />
+      <FormItem label="По" prop="dateTo" style="width: 200px">
+        <DatePicker format="dd-MM-yyyy HH:mm:ss" type="datetime" @on-change="(val) => (filterData.dateTo = val)" placeholder="По" />
       </FormItem>
       <div style="display: flex; justify-content: start; margin-bottom: 10px">
         <Button type="primary" @click="getData">Показать</Button>
       </div>
     </Form>
+    <div v-if="periods.length">
+      <div>Доступны данные за периоды:</div>
+      <div v-for="(period, index) in periods" :key="index">{{ period }}</div>
+    </div>
     <div style="max-height: 400px; overflow: auto">
       <Table border :columns="table_columns" :data="data" :loading="isLoading">
         <template slot-scope="{ row }" slot="temperature">
           <strong>{{ row.temperature / 10 }}</strong>
         </template>
         <template slot-scope="{ row }" slot="date">
-          <strong>{{ mtz(row.created_at, "DD-MM-YYYY hh:mm:ss") }}</strong>
+          <strong>{{ mtz(row.created_at, "DD-MM-YYYY HH:mm:ss") }}</strong>
         </template>
       </Table>
     </div>
@@ -94,7 +96,12 @@ export default {
   props: {},
   created() {
     this.getModules();
-    this.getPeriods();
+  },
+  watch: {
+    "filterData.moduleId": function (newVal) {
+      this.periods = [];
+      this.getPeriods();
+    },
   },
   methods: {
     //Получаем список доступных УСПД
@@ -133,7 +140,9 @@ export default {
     getPeriods() {
       this.isLoading = true;
       this.$http
-        .post("get_periods")
+        .post("get_periods", {
+          moduleId: this.filterData.moduleId,
+        })
         .then((res) => {
           this.periods = res.data;
           this.has_error = false;

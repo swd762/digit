@@ -143,7 +143,7 @@
       </Form>
     </Modal>
 
-    <Modal v-model="moduleDataMode" title="Просмотр данных с УСПД" cancelText="" okText="Закрыть">
+    <Modal v-model="moduleDataMode" title="Просмотр данных с УСПД" cancelText="" okText="Закрыть" width="800">
       <module-data-browser />
     </Modal>
 

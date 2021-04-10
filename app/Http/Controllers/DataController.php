@@ -76,22 +76,28 @@ class DataController extends Controller
     {
         $query = ModuleData::where('module_id', $request->moduleId);
 
+        $test = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateFrom)->toDateTimeString();
+        $test1 = Carbon::createFromFormat('d-m-Y H:i:s', $request->dateTo)->toDateTimeString();
+
         if ($request->dateFrom) {
-            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString());
+            $query->where('created_at', '>=', Carbon::createFromFormat('d-m-Y H:i:s', $request->dateFrom)->toDateTimeString());
         }
 
         if ($request->dateTo) {
-            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString());
+            $query->where('created_at', '<=', Carbon::createFromFormat('d-m-Y H:i:s', $request->dateTo)->toDateTimeString());
         }
 
         return response()->json($query->get());
     }
 
-    public function getPeriods()
+    public function getPeriods(Request $request)
     {
         $periods = [];
         $period = '';
-        $dates = DB::select('select date(created_at) as date from module_data group by date(created_at)');
+        $dates = DB::select('select date(created_at) as date from module_data where module_id=' . (int)$request->moduleId . ' group by date(created_at)');
+
+        if (!count($dates)) return response()->json([]);
+
         $prev = null;
         foreach ($dates as $oDate) {
             $date = $oDate->date;
