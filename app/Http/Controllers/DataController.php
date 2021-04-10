@@ -6,6 +6,7 @@ use App\Models\Module;
 use App\Models\ModuleData;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -49,7 +50,7 @@ class DataController extends Controller
             ModuleData::create([
                 'patient_id' => $patient ? $patient->id : null,
                 'module_id' => $module->id,
-                'temperature' => $item->Temperature,
+                'temperature' => $item->Temperature * 10,
                 'bend' => $item->Bend,
                 'created_at' => $item->Date
             ]);
@@ -84,6 +85,33 @@ class DataController extends Controller
         }
 
         return response()->json($query->get());
+    }
+
+    public function getPeriods()
+    {
+        $periods = [];
+        $period = '';
+        $dates = DB::select('select date(created_at) as date from module_data group by date(created_at)');
+        $prev = null;
+        foreach ($dates as $oDate) {
+            $date = $oDate->date;
+            if (!$prev) {
+                $period .= Carbon::parse($date)->format('d-m-Y');
+            } else {
+                $cDate = Carbon::parse($date);
+                if (Carbon::parse($prev)->diffInDays($cDate) > 1) {
+                    $period .= ' - ' . Carbon::parse($prev)->format('d-m-Y');
+                    $periods[] = $period;
+                    $period = '';
+                    $period .= $cDate->format('d-m-Y');
+                }
+            }
+            $prev = $date;
+        }
+
+        $period .= ' - ' . Carbon::parse($prev)->format('d-m-Y');
+        $periods[] = $period;
+        return response()->json($periods);
     }
 
     /**
@@ -122,6 +150,6 @@ class DataController extends Controller
             if ($item->is_real == 1) $counter++;
         }
 
-        return response()->json(['status' => 'success', 'msg' => 'Оценка ношения - ' . $counter / $data->count() * 100 . '%']);
+        return response()->json(['status' => 'success', 'msg' => 'Уровень комплаенса - ' . $counter / $data->count() * 100 . '%']);
     }
 }

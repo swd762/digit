@@ -1,6 +1,8 @@
 <!--компонент просмотра данных, полученных с УСПД-->
 <template>
   <div>
+    <div>Доступны данные за периоды:</div>
+    <div v-for="(period, index) in periods" :key="index">{{ period }}</div>
     <Form ref="formFilter" :model="filterData" :disabled="isLoading" :rules="ruleValidate" :inline="true">
       <FormItem label="id УСПД" prop="moduleId">
         <Select :filterable="true" v-model="filterData.moduleId">
@@ -43,6 +45,8 @@ export default {
       // Список УСПД
       modules: [],
       data: [],
+
+      periods: [],
 
       filterData: {
         moduleId: null,
@@ -88,6 +92,7 @@ export default {
   props: {},
   created() {
     this.getModules();
+    this.getPeriods();
   },
   methods: {
     //Получаем список доступных УСПД
@@ -121,6 +126,21 @@ export default {
             });
         }
       });
+    },
+    // Получение периодов наличия данных
+    getPeriods() {
+      this.isLoading = true;
+      this.$http
+        .post("get_periods")
+        .then((res) => {
+          this.periods = res.data;
+          this.has_error = false;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          this.has_error = true;
+          this.isLoading = false;
+        });
     },
   },
 };
