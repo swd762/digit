@@ -173,6 +173,11 @@
 
     <Modal v-model="assessmentMode" title="Оценка данных УСПД" cancelText="" okText="Закрыть" width="1000" @on-ok="clearAssessment">
       <Form ref="formAssessment" :model="assessmentFilter" :disabled="isLoading" :rules="assessmentRuleValidate" :inline="true">
+        <FormItem label="id УСПД" prop="moduleId">
+          <Select :filterable="true" v-model="assessmentFilter.moduleId">
+            <Option v-for="(module, index) in modules" :key="index" :value="module.id.toString()">{{ module.name }}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="С" prop="dateFrom" style="width: 120px">
           <DatePicker format="dd-MM-yyyy" type="date" @on-change="(val) => (assessmentFilter.dateFrom = val)" placeholder="С" />
         </FormItem>
@@ -270,6 +275,7 @@ export default {
       assessmentFilter: {
         dateFrom: null,
         dateTo: null,
+        moduleId: null,
       },
       // Результат оценки
       assessmentResult: null,
@@ -643,6 +649,7 @@ export default {
           this.$http
             .post("run_assessment", {
               patientId: this.patientData.id,
+              moduleId: this.assessmentFilter.moduleId,
               dateFrom: this.assessmentFilter.dateFrom,
               dateTo: this.assessmentFilter.dateTo,
             })

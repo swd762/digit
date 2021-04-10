@@ -129,6 +129,7 @@ class DataController extends Controller
         $dateFrom = Carbon::createFromFormat('d-m-Y', $request->dateFrom)->toDateString();
         $dateTo = Carbon::createFromFormat('d-m-Y', $request->dateTo)->toDateString();
         $dataCount = ModuleData::where('patient_id', $request->patientId)
+            ->where('module_id', $request->moduleId)
             ->whereDate('created_at', '>=', $dateFrom)
             ->whereDate('created_at', '<=', $dateTo)
             ->count();
@@ -141,6 +142,7 @@ class DataController extends Controller
         // $result = exec('"C:\Program Files\Python38\python.exe" python/runAnalizing.py "{\"dateFrom\" : ' . $dateFrom . ', \"dateTo\" : ' . $dateTo . '}"');
 
         $data = ModuleData::where('patient_id', $request->patientId)
+            ->where('module_id', $request->moduleId)
             ->whereDate('created_at', '>=', $dateFrom)
             ->whereDate('created_at', '<=', $dateTo)
             ->get();
