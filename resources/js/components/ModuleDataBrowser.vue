@@ -19,14 +19,16 @@
         <Button type="primary" @click="getData">Показать</Button>
       </div>
     </Form>
-    <Table border :columns="table_columns" :data="data" :loading="isLoading">
-      <template slot-scope="{ row }" slot="temperature">
-        <strong>{{ row.temperature / 10 }}</strong>
-      </template>
-      <template slot-scope="{ row }" slot="date">
-        <strong>{{ mtz(row.created_at, "DD-MM-YYYY hh:mm:ss") }}</strong>
-      </template>
-    </Table>
+    <div style="max-height: 400px; overflow: auto">
+      <Table border :columns="table_columns" :data="data" :loading="isLoading">
+        <template slot-scope="{ row }" slot="temperature">
+          <strong>{{ row.temperature / 10 }}</strong>
+        </template>
+        <template slot-scope="{ row }" slot="date">
+          <strong>{{ mtz(row.created_at, "DD-MM-YYYY hh:mm:ss") }}</strong>
+        </template>
+      </Table>
+    </div>
   </div>
 </template>
 
