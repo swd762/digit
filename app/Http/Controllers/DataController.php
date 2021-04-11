@@ -47,13 +47,16 @@ class DataController extends Controller
         $data = json_decode($request->data);
 
         foreach ($data as $item) {
-            ModuleData::create([
-                'patient_id' => $patient ? $patient->id : null,
-                'module_id' => $module->id,
-                'temperature' => $item->Temperature * 10,
-                'bend' => $item->Bend,
-                'created_at' => $item->Date
-            ]);
+            ModuleData::updateOrCreate(
+                [
+                    'created_at' => $item->Date,
+                    'module_id' => $module->id,
+                ],
+                [
+                    'temperature' => $item->Temperature * 10,
+                    'bend' => $item->Bend,
+                ]
+            );
         }
 
         return response()->json([
@@ -83,6 +86,8 @@ class DataController extends Controller
         if ($request->dateTo) {
             $query->where('created_at', '<=', Carbon::createFromFormat('d-m-Y H:i:s', $request->dateTo)->toDateTimeString());
         }
+
+        $query->orderBy('created_at');
 
         return response()->json($query->get());
     }
